@@ -1,0 +1,480 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../../core/constants/app_colors.dart';
+
+class RenovationScreen extends StatefulWidget {
+  const RenovationScreen({super.key});
+
+  @override
+  State<RenovationScreen> createState() => _RenovationScreenState();
+}
+
+class _RenovationScreenState extends State<RenovationScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final List<String> _selectedServices = ['Plumbing'];
+
+  String _selectedLocation = 'Erode, Tamil Nadu';
+  String _selectedServiceRequired = 'Plumbing & Electrical';
+  String _selectedTimeSlot = 'Morning (9:00 AM - 12:00 PM)';
+  DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
+
+  final List<String> _locations = [
+    'Erode, Tamil Nadu',
+    'Ahmedabad, Gujarat',
+    'Vadodara, Gujarat',
+    'Surat, Gujarat',
+    'Rajkot, Gujarat',
+  ];
+
+  final List<String> _serviceOptions = [
+    'Plumbing & Electrical',
+    'Masonry & Structural Repair',
+    'Carpentry & Woodwork',
+    'Interior Painting',
+    'General Home Maintenance',
+  ];
+
+  final List<String> _timeSlots = [
+    'Morning (9:00 AM - 12:00 PM)',
+    'Afternoon (12:00 PM - 3:00 PM)',
+    'Evening (3:00 PM - 6:00 PM)',
+  ];
+
+  final List<Map<String, dynamic>> _services = [
+    {'name': 'Plumbing', 'icon': Icons.plumbing_rounded},
+    {'name': 'Electrical', 'icon': Icons.lightbulb_outline_rounded},
+    {'name': 'Masonry', 'icon': Icons.grid_view_rounded},
+    {'name': 'Carpentry', 'icon': Icons.carpenter_rounded},
+    {'name': 'Painting', 'icon': Icons.format_paint_rounded},
+    {'name': 'General Maintenance', 'icon': Icons.build_rounded},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Hero Banner - Renovation Van
+          _buildRenovationVanHero(),
+
+          const SizedBox(height: 20),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Services Offered',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Services Horizontal Grid
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: _services.length,
+                  itemBuilder: (context, index) {
+                    final s = _services[index];
+                    final name = s['name'] as String;
+                    final icon = s['icon'] as IconData;
+                    final isSelected = _selectedServices.contains(name);
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (isSelected) {
+                            _selectedServices.remove(name);
+                          } else {
+                            _selectedServices.add(name);
+                          }
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.lightYellowBg : AppColors.cardWhite,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: isSelected ? AppColors.primaryYellow : AppColors.borderLight,
+                            width: isSelected ? 2 : 1,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? AppColors.primaryYellow : AppColors.backgroundLight,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                icon,
+                                color: AppColors.darkCharcoal,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                                color: isSelected ? AppColors.darkCharcoal : AppColors.textPrimary,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 24),
+
+                // Book Your Renovation Van Form
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardWhite,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.borderLight),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 18,
+                              color: AppColors.primaryYellow,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Book Your Renovation Van',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Client Name
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Client Name *',
+                            prefixIcon: Icon(Icons.person_outline_rounded, size: 20),
+                          ),
+                          validator: (v) => v == null || v.isEmpty ? 'Please enter name' : null,
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Phone Number
+                        TextFormField(
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(10),
+                            TextInputFormatter.withFunction((oldValue, newValue) {
+                              if (newValue.text.startsWith('0')) {
+                                return oldValue;
+                              }
+                              return newValue;
+                            }),
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: 'Phone Number *',
+                            hintText: 'e.g. 9876543210',
+                            prefixIcon: Icon(Icons.phone_outlined, size: 20),
+                          ),
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return 'Please enter phone number';
+                            if (v.trim().startsWith('0')) return 'Phone number cannot start with 0';
+                            if (v.trim().length != 10) return 'Phone number must be exactly 10 digits';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Location Dropdown
+                        DropdownButtonFormField<String>(
+                          initialValue: _selectedLocation,
+                          isExpanded: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Location',
+                            prefixIcon: Icon(Icons.location_on_outlined, size: 20),
+                          ),
+                          items: _locations.map((loc) {
+                            return DropdownMenuItem(
+                              value: loc,
+                              child: Text(
+                                loc,
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) setState(() => _selectedLocation = val);
+                          },
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Service Required Dropdown
+                        DropdownButtonFormField<String>(
+                          initialValue: _selectedServiceRequired,
+                          isExpanded: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Service Required',
+                            prefixIcon: Icon(Icons.build_outlined, size: 20),
+                          ),
+                          items: _serviceOptions.map((serv) {
+                            return DropdownMenuItem(
+                              value: serv,
+                              child: Text(
+                                serv,
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) setState(() => _selectedServiceRequired = val);
+                          },
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Date & Time Selectors Row / Vertical
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: () async {
+                                  final picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: _selectedDate,
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime.now().add(const Duration(days: 60)),
+                                  );
+                                  if (picked != null) {
+                                    setState(() => _selectedDate = picked);
+                                  }
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                                ),
+                                icon: const Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.darkYellow),
+                                label: Text(
+                                  '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textPrimary),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Preferred Time Slot Dropdown
+                        DropdownButtonFormField<String>(
+                          initialValue: _selectedTimeSlot,
+                          isExpanded: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Preferred Time Slot',
+                            prefixIcon: Icon(Icons.access_time_rounded, size: 20),
+                          ),
+                          items: _timeSlots.map((slot) {
+                            return DropdownMenuItem(
+                              value: slot,
+                              child: Text(
+                                slot,
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) setState(() => _selectedTimeSlot = val);
+                          },
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Additional Notes
+                        TextFormField(
+                          maxLines: 2,
+                          decoration: const InputDecoration(
+                            labelText: 'Additional Notes (Optional)',
+                            prefixIcon: Icon(Icons.description_outlined, size: 18),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Book Appointment CTA
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _showConfirmationModal(context);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryYellow,
+                              foregroundColor: AppColors.darkCharcoal,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: const Text('Book Appointment', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRenovationVanHero() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(
+            'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1000&auto=format&fit=crop',
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.darkCharcoal.withValues(alpha: 0.92),
+              AppColors.darkCharcoal.withValues(alpha: 0.60),
+            ],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'YELOLINE RENOVATION VAN',
+              style: TextStyle(
+                color: AppColors.primaryYellow,
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.2,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Renovation Made Easy',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Our Renovation Van brings expertise to your doorstep. Book a visit and let our specialists handle the rest.',
+              style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.3),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showConfirmationModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryYellow,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_rounded, color: AppColors.darkCharcoal, size: 36),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Appointment Request Sent!',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Our Renovation Van technician will reach your site at $_selectedLocation on ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}.',
+                style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Great, Got it!'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}

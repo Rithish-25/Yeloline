@@ -1,0 +1,268 @@
+import 'package:flutter/material.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/utils/url_helper.dart';
+
+class ContactScreen extends StatefulWidget {
+  const ContactScreen({super.key});
+
+  @override
+  State<ContactScreen> createState() => _ContactScreenState();
+}
+
+class _ContactScreenState extends State<ContactScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _contactController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Message Sent Successfully!', style: TextStyle(fontWeight: FontWeight.w700)),
+          backgroundColor: AppColors.darkCharcoal,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      _nameController.clear();
+      _contactController.clear();
+      _messageController.clear();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Get in Touch',
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'We are here to discuss your upcoming construction project.',
+            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 20),
+
+          // Quick Action Cards
+          Row(
+            children: [
+              Expanded(
+                child: _buildContactCard(
+                  context,
+                  icon: Icons.phone_in_talk_rounded,
+                  title: 'Call Us',
+                  subtitle: '+91 98765 43210',
+                  color: AppColors.primaryYellow,
+                  onTap: () => UrlHelper.makePhoneCall('+919876543210'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildContactCard(
+                  context,
+                  icon: Icons.chat_rounded,
+                  title: 'WhatsApp',
+                  subtitle: '+91 98765 43210',
+                  color: const Color(0xFF25D366),
+                  onTap: () => UrlHelper.openWhatsApp('+919876543210'),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // Location Card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.cardWhite,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.borderLight),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 8,
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: AppColors.lightYellowBg,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.location_on_rounded, color: AppColors.darkCharcoal, size: 24),
+                ),
+                const SizedBox(width: 14),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Head Office Location',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'YeloLine Tower, Perundurai Road, Erode, Tamil Nadu 638011',
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.3),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Message Form with Strict Validation
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.cardWhite,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.borderLight),
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Send Us a Message',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Your Name *',
+                      hintText: 'Enter full name',
+                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13),
+                      prefixIcon: const Icon(Icons.person_outline_rounded),
+                    ),
+                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Please enter your name' : null,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _contactController,
+                    decoration: InputDecoration(
+                      labelText: 'Phone / Email *',
+                      hintText: 'e.g. 9876543210 or name@example.com',
+                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13),
+                      prefixIcon: const Icon(Icons.email_outlined),
+                    ),
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) return 'Please enter phone or email';
+                      final trimmed = v.trim();
+                      if (RegExp(r'^\d+$').hasMatch(trimmed)) {
+                        if (trimmed.startsWith('0')) return 'Phone number cannot start with 0';
+                        if (trimmed.length != 10) return 'Phone number must be exactly 10 digits';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _messageController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Your Message *',
+                      hintText: 'Type your message or project requirements...',
+                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13),
+                      alignLabelWithHint: true,
+                    ),
+                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Please enter your message' : null,
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _submitForm,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryYellow,
+                        foregroundColor: AppColors.darkCharcoal,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: const Text('Send Message', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.cardWhite,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.borderLight),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: AppColors.darkCharcoal, size: 22),
+            ),
+            const SizedBox(height: 12),
+            Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+            const SizedBox(height: 2),
+            Text(subtitle, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          ],
+        ),
+      ),
+    );
+  }
+}
