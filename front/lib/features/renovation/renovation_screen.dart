@@ -76,7 +76,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Services Horizontal Grid
+                // Services Horizontal Grid (3 per row)
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -84,7 +84,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                     crossAxisCount: 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.0,
+                    childAspectRatio: 0.88,
                   ),
                   itemCount: _services.length,
                   itemBuilder: (context, index) {
@@ -92,44 +92,70 @@ class _RenovationScreenState extends State<RenovationScreen> {
                     final name = s['name'] as String;
                     final icon = s['icon'] as IconData;
 
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.cardWhite,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: AppColors.borderLight,
-                          width: 1,
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          final match = _serviceOptions.firstWhere(
+                            (opt) => opt.toLowerCase().contains(name.toLowerCase()),
+                            orElse: () => _serviceOptions.first,
+                          );
+                          _selectedServiceRequired = match;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardWhite,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.borderLight,
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: AppColors.backgroundLight,
-                              shape: BoxShape.circle,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryYellow,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primaryYellow.withValues(alpha: 0.35),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                icon,
+                                color: AppColors.darkCharcoal,
+                                size: 24,
+                              ),
                             ),
-                            child: Icon(
-                              icon,
-                              color: AppColors.darkCharcoal,
-                              size: 20,
+                            const SizedBox(height: 10),
+                            Text(
+                              name,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -146,7 +172,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                     border: Border.all(color: AppColors.borderLight),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
+                        color: Colors.black.withValues(alpha: 0.10),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),

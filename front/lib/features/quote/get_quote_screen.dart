@@ -22,43 +22,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
   final QuoteData _quoteData = QuoteData();
   final _formKey = GlobalKey<FormState>();
 
-  final Map<String, List<String>> _options = {
-    'Structure': [
-      'RCC Frame Structure (M25 Grade)',
-      'RCC Frame Structure (M30 Grade)',
-      'Steel Frame Structure',
-    ],
-    'Cement': [
-      'UltraTech PPC',
-      'Ambuja PPC',
-      'ACC PPC',
-    ],
-    'Steel': [
-      'TATA Tiscon 550D',
-      'JSW Neosteel',
-      'SAIL TMT (Fe 550)',
-    ],
-    'Bricks / Blocks': [
-      'Red Bricks',
-      'AAC Blocks',
-      'Fly Ash Bricks',
-    ],
-    'Flooring': [
-      'Vitrified Tiles',
-      'Italian Marble',
-      'Granite Flooring',
-    ],
-    'Doors': [
-      'Teak Wood Doors',
-      'Flush Doors with Teak Frame',
-      'UPVC Doors',
-    ],
-    'Windows': [
-      'Aluminium Windows',
-      'UPVC Sliding Windows',
-      'Teak Wood Windows',
-    ],
-  };
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +49,18 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
 
   Widget _buildStep2StickyFooter() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.darkCharcoal,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: const Border(
+          top: BorderSide(color: Colors.white12, width: 1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 16,
+            offset: const Offset(0, -6),
           ),
         ],
       ),
@@ -105,11 +73,11 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryYellow,
               foregroundColor: AppColors.darkCharcoal,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               elevation: 3,
               shadowColor: AppColors.primaryYellow.withValues(alpha: 0.4),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(14),
               ),
             ),
             child: const Row(
@@ -248,8 +216,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
     }
   }
 
-  // Currently expanded categories in Step 1 (default: all closed)
-  final Set<String> _expandedCategories = {};
+
 
   final Map<String, IconData> _categoryIcons = {
     'Structure': Icons.home_work_outlined,
@@ -308,175 +275,197 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
     );
   }
 
-  // STEP 1: Select Specifications (Clean Expandable Category Cards)
+  final Map<String, List<Map<String, String>>> _specOptions = {
+    'Structure': [
+      {'title': 'RCC Frame Structure', 'sub': '(M25 Grade)', 'full': 'RCC Frame Structure (M25 Grade)'},
+      {'title': 'RCC Frame Structure', 'sub': '(M30 Grade)', 'full': 'RCC Frame Structure (M30 Grade)'},
+      {'title': 'Steel Frame Structure', 'sub': '(Heavy Duty)', 'full': 'Steel Frame Structure (Heavy Duty)'},
+    ],
+    'Cement': [
+      {'title': 'UltraTech PPC', 'sub': '(Premium)', 'full': 'UltraTech PPC (Premium)'},
+      {'title': 'Ambuja PPC', 'sub': '(Premium)', 'full': 'Ambuja PPC (Premium)'},
+      {'title': 'ACC PPC', 'sub': '(Premium)', 'full': 'ACC PPC (Premium)'},
+    ],
+    'Steel': [
+      {'title': 'TATA Tiscon 550D', 'sub': '(High Strength)', 'full': 'TATA Tiscon 550D (High Strength)'},
+      {'title': 'JSW Neosteel', 'sub': '(Premium)', 'full': 'JSW Neosteel (Premium)'},
+      {'title': 'SAIL TMT', 'sub': '(Fe 550)', 'full': 'SAIL TMT (Fe 550)'},
+    ],
+    'Bricks / Blocks': [
+      {'title': 'Red Bricks', 'sub': '(Premium)', 'full': 'Red Bricks (Premium)'},
+      {'title': 'AAC Blocks', 'sub': '(Lightweight)', 'full': 'AAC Blocks (Lightweight)'},
+      {'title': 'Fly Ash Bricks', 'sub': '(Eco Friendly)', 'full': 'Fly Ash Bricks (Eco Friendly)'},
+    ],
+    'Flooring': [
+      {'title': 'Vitrified Tiles', 'sub': '(Premium)', 'full': 'Vitrified Tiles (Premium)'},
+      {'title': 'Italian Marble', 'sub': '(Imported)', 'full': 'Italian Marble (Imported)'},
+      {'title': 'Granite Flooring', 'sub': '(Premium)', 'full': 'Granite Flooring (Premium)'},
+    ],
+    'Doors': [
+      {'title': 'Teak Wood Doors', 'sub': '(Premium)', 'full': 'Teak Wood Doors (Premium)'},
+      {'title': 'Flush Doors', 'sub': '(Teak Frame)', 'full': 'Flush Doors (Teak Frame)'},
+      {'title': 'UPVC Doors', 'sub': '(Modern)', 'full': 'UPVC Doors (Modern)'},
+    ],
+    'Windows': [
+      {'title': 'Aluminium Windows', 'sub': '(Powder Coated)', 'full': 'Aluminium Windows (Powder Coated)'},
+      {'title': 'UPVC Sliding Windows', 'sub': '(Soundproof)', 'full': 'UPVC Sliding Windows (Soundproof)'},
+      {'title': 'Teak Wood Windows', 'sub': '(Classic)', 'full': 'Teak Wood Windows (Classic)'},
+    ],
+  };
+
+  // STEP 1: Select Specifications (Horizontal Option Cards with Category Thumbnails)
   Widget _buildStep1SelectSpecs() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Select Specifications',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.lightYellowBg,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.primaryYellow),
-              ),
-              child: const Text(
-                '7 Categories',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.darkCharcoal),
-              ),
-            ),
-          ],
+        const Text(
+          'Step 1 of 3 – Select Specifications',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            color: AppColors.textPrimary,
+            letterSpacing: -0.3,
+          ),
         ),
         const SizedBox(height: 4),
         const Text(
-          'Tap any category below to select or change materials for your estimate.',
-          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+          'Choose premium materials for an accurate estimate',
+          style: TextStyle(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textSecondary,
+          ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 18),
 
-        // List of Clean Expandable Category Cards
-        ..._options.entries.map((entry) {
+        ..._specOptions.entries.map((entry) {
           final category = entry.key;
-          final choices = entry.value;
-          final currentSelected = _getCategoryValue(category);
-          final isExpanded = _expandedCategories.contains(category);
+          final optionsList = entry.value;
+          final currentValue = _getCategoryValue(category);
 
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            margin: const EdgeInsets.only(bottom: 12),
-            decoration: BoxDecoration(
-              color: AppColors.cardWhite,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isExpanded ? AppColors.primaryYellow : AppColors.borderLight,
-                width: isExpanded ? 2 : 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: isExpanded ? 0.06 : 0.02),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header Bar - Tapping toggles expansion (accordion: closes others)
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (_expandedCategories.contains(category)) {
-                        _expandedCategories.remove(category);
-                      } else {
-                        _expandedCategories.clear();
-                        _expandedCategories.add(category);
-                      }
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Row(
-                      children: [
-                        _buildCategoryBadge(category, size: 52, isExpanded: isExpanded),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                category,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                currentSelected.isEmpty ? 'Select option' : currentSelected,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: currentSelected.isNotEmpty ? AppColors.darkYellow : AppColors.textMuted,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                          color: isExpanded ? AppColors.darkCharcoal : AppColors.textMuted,
-                          size: 24,
-                        ),
-                      ],
-                    ),
+                // Category Title Header
+                Text(
+                  category,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary,
                   ),
                 ),
+                const SizedBox(height: 10),
 
-                // Expanded Options List
-                if (isExpanded) ...[
-                  const Divider(height: 1, color: AppColors.borderLight),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: choices.map((choice) {
-                        final isChoiceSelected = currentSelected == choice;
+                // Category Image Thumbnail + 3 Vertical Option Items with Radio Checkboxes
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Category Thumbnail Image
+                    _buildCategoryBadge(category, size: 90),
 
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _setCategoryValue(category, choice);
-                              _expandedCategories.remove(category);
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 150),
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: isChoiceSelected ? AppColors.lightYellowBg : AppColors.backgroundLight,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: isChoiceSelected ? AppColors.primaryYellow : AppColors.borderLight,
-                                width: isChoiceSelected ? 2 : 1,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  isChoiceSelected ? Icons.check_circle_rounded : Icons.radio_button_off_rounded,
-                                  color: isChoiceSelected ? AppColors.darkCharcoal : AppColors.textMuted,
-                                  size: 20,
+                    const SizedBox(width: 10),
+
+                    // 3 Items Column next to Image with Radio Checkboxes
+                    Expanded(
+                      child: Column(
+                        children: optionsList.map((opt) {
+                          final fullVal = opt['full']!;
+                          final title = opt['title']!;
+                          final sub = opt['sub']!;
+
+                          final isSelected = currentValue == fullVal;
+
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _setCategoryValue(category, fullVal);
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: isSelected ? AppColors.darkYellow : AppColors.borderLight,
+                                  width: isSelected ? 1.8 : 1,
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    choice,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: isChoiceSelected ? FontWeight.w900 : FontWeight.w600,
-                                      color: isChoiceSelected ? AppColors.darkCharcoal : AppColors.textPrimary,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: isSelected ? 0.04 : 0.02),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  // Radio Checkbox Icon
+                                  Container(
+                                    width: 18,
+                                    height: 18,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: isSelected ? AppColors.darkYellow : Colors.black38,
+                                        width: isSelected ? 2.0 : 1.5,
+                                      ),
+                                    ),
+                                    child: isSelected
+                                        ? Center(
+                                            child: Container(
+                                              width: 9,
+                                              height: 9,
+                                              decoration: const BoxDecoration(
+                                                color: AppColors.darkCharcoal,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                          )
+                                        : null,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          title,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                                            color: AppColors.textPrimary,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          sub,
+                                          style: const TextStyle(
+                                            fontSize: 10.5,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.textSecondary,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ],
             ),
           );
@@ -487,15 +476,18 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
 
   Widget _buildStep1StickyFooter() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        color: AppColors.darkCharcoal,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: const Border(
+          top: BorderSide(color: Colors.white12, width: 1),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 16,
-            offset: const Offset(0, -4),
+            offset: const Offset(0, -6),
           ),
         ],
       ),

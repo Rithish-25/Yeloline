@@ -21,12 +21,12 @@ class QuoteData {
 
   QuoteData({
     this.structure = 'RCC Frame Structure (M25 Grade)',
-    this.cement = 'UltraTech PPC',
-    this.steel = 'TATA Tiscon 550D',
-    this.bricks = 'Red Bricks',
-    this.flooring = 'Vitrified Tiles',
-    this.doors = 'Teak Wood Doors',
-    this.windows = 'Aluminium Windows',
+    this.cement = 'UltraTech PPC (Premium)',
+    this.steel = 'TATA Tiscon 550D (High Strength)',
+    this.bricks = 'Red Bricks (Premium)',
+    this.flooring = 'Vitrified Tiles (Premium)',
+    this.doors = 'Teak Wood Doors (Premium)',
+    this.windows = 'Aluminium Windows (Powder Coated)',
     this.elevation = 'Modern Elevation',
     this.clientName = '',
     this.mobileNumber = '',

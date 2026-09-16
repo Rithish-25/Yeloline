@@ -1,15 +1,20 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/url_helper.dart';
+import '../../models/project_model.dart';
 import '../../widgets/cards/quick_action_card.dart';
 import '../../widgets/cards/stat_card.dart';
+import '../../widgets/icons/whatsapp_icon.dart';
 
 class HomeScreen extends StatelessWidget {
-  final Function(int index) onNavigateTab;
+  final Function(int index, [String? category]) onNavigateTab;
+  final Function(Project project)? onSelectProject;
 
   const HomeScreen({
     super.key,
     required this.onNavigateTab,
+    this.onSelectProject,
   });
 
   @override
@@ -193,43 +198,13 @@ class HomeScreen extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
-                      height: 1.3,
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      _buildHeroBadge('⭐ 4.9 Rating'),
-                      const SizedBox(width: 8),
-                      _buildHeroBadge('150+ Projects'),
-                      const SizedBox(width: 8),
-                      _buildHeroBadge('Erode, TN'),
-                    ],
                   ),
                 ],
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildHeroBadge(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
       ),
     );
   }
@@ -241,42 +216,36 @@ class HomeScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
-      childAspectRatio: 1.15,
+      childAspectRatio: 1.55,
       children: [
         QuickActionCard(
           icon: Icons.info_outline_rounded,
           title: 'About Us',
-          subtitle: 'Know more about Yeloline Construction',
-          onTap: () => onNavigateTab(0), // Navigate / detail
+          onTap: () => onNavigateTab(0),
         ),
         QuickActionCard(
           icon: Icons.apartment_rounded,
           title: 'Our Projects',
-          subtitle: 'Explore our completed residential projects',
           onTap: () => onNavigateTab(1),
         ),
         QuickActionCard(
           icon: Icons.request_quote_rounded,
           title: 'Get Quote',
-          subtitle: 'Get a detailed estimate for your dream home',
           onTap: () => onNavigateTab(2),
         ),
         QuickActionCard(
           icon: Icons.local_shipping_rounded,
           title: 'Renovation Van',
-          subtitle: 'Book our service van for site visits & more',
           onTap: () => onNavigateTab(3),
         ),
         QuickActionCard(
           icon: Icons.phone_callback_rounded,
           title: 'Call Us',
-          subtitle: 'Speak to our experts for guidance',
           onTap: () => _showContactModal(context, 'Call', '+91 98765 43210'),
         ),
         QuickActionCard(
-          icon: Icons.chat_bubble_outline_rounded,
+          customIcon: const WhatsAppIcon(size: 15, color: AppColors.darkCharcoal),
           title: 'WhatsApp',
-          subtitle: 'Chat with us on WhatsApp',
           onTap: () => _showContactModal(context, 'WhatsApp', '+91 98765 43210'),
         ),
       ],
@@ -286,14 +255,14 @@ class HomeScreen extends StatelessWidget {
   Widget _buildCompanyStatsBanner() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.cardDark,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.white10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -303,21 +272,21 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [
-              const Icon(Icons.verified_rounded, color: AppColors.primaryYellow, size: 20),
-              const SizedBox(width: 8),
+            children: const [
+              Icon(Icons.verified_rounded, color: AppColors.primaryYellow, size: 18),
+              SizedBox(width: 8),
               Text(
                 'WHY YELOLINE?',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.primaryYellow,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.0,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Row(
             children: const [
               Expanded(
@@ -327,9 +296,10 @@ class HomeScreen extends StatelessWidget {
                   subtitle: 'Founded',
                   description: 'Building trust since 2017',
                   isDark: true,
+                  isCompact: true,
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 8),
               Expanded(
                 child: StatCard(
                   icon: Icons.military_tech_rounded,
@@ -337,9 +307,14 @@ class HomeScreen extends StatelessWidget {
                   subtitle: 'Projects',
                   description: 'Successfully completed homes',
                   isDark: true,
+                  isCompact: true,
                 ),
               ),
-              SizedBox(width: 10),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: const [
               Expanded(
                 child: StatCard(
                   icon: Icons.location_on_rounded,
@@ -347,7 +322,12 @@ class HomeScreen extends StatelessWidget {
                   subtitle: 'Based',
                   description: 'Proudly serving Erode & nearby',
                   isDark: true,
+                  isCompact: true,
                 ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: SizedBox.shrink(),
               ),
             ],
           ),
@@ -365,7 +345,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryYellow.withOpacity(0.35),
+            color: AppColors.primaryYellow.withValues(alpha: 0.35),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -505,26 +485,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildFeaturedProjectsSection(BuildContext context) {
-    final featuredProjects = [
-      {
-        'title': 'Skyline Residency',
-        'location': 'Erode, Tamil Nadu',
-        'year': 'Completed in 2023',
-        'image': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop',
-      },
-      {
-        'title': 'Emerald Villa',
-        'location': 'Salem, Tamil Nadu',
-        'year': 'Completed in 2024',
-        'image': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800&auto=format&fit=crop',
-      },
-      {
-        'title': 'Golden Heights',
-        'location': 'Coimbatore, Tamil Nadu',
-        'year': 'Completed in 2023',
-        'image': 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800&auto=format&fit=crop',
-      },
-    ];
+    final ongoingProjects = Project.sampleProjects
+        .where((p) => p.category == 'Ongoing')
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,7 +509,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'Featured Villa Projects',
+                    'Ongoing Projects',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
@@ -557,124 +520,220 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               InkWell(
-                onTap: () => onNavigateTab(1),
-                child: const Row(
-                  children: [
-                    Text(
-                      'View All ',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.darkYellow,
+                onTap: () => onNavigateTab(1, 'Ongoing'),
+                borderRadius: BorderRadius.circular(8),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  child: Row(
+                    children: [
+                      Text(
+                        'View All ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.darkYellow,
+                        ),
                       ),
-                    ),
-                    Icon(Icons.arrow_forward_rounded, size: 14, color: AppColors.darkYellow),
-                  ],
+                      Icon(Icons.arrow_forward_rounded, size: 14, color: AppColors.darkYellow),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 14),
-        SizedBox(
-          height: 170,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: featuredProjects.length,
-            itemBuilder: (context, index) {
-              final project = featuredProjects[index];
-              return Container(
-                width: 250,
-                margin: const EdgeInsets.only(right: 14),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      project['image']!,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.85),
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+        _AutoScrollOngoingProjectsList(
+          projects: ongoingProjects,
+          onSelectProject: onSelectProject,
+          onNavigateTab: onNavigateTab,
+        ),
+      ],
+    );
+  }
+}
+
+class _AutoScrollOngoingProjectsList extends StatefulWidget {
+  final List<Project> projects;
+  final Function(Project project)? onSelectProject;
+  final Function(int index, [String? category]) onNavigateTab;
+
+  const _AutoScrollOngoingProjectsList({
+    required this.projects,
+    required this.onSelectProject,
+    required this.onNavigateTab,
+  });
+
+  @override
+  State<_AutoScrollOngoingProjectsList> createState() => _AutoScrollOngoingProjectsListState();
+}
+
+class _AutoScrollOngoingProjectsListState extends State<_AutoScrollOngoingProjectsList> {
+  late final ScrollController _scrollController;
+  Timer? _timer;
+  int _currentIndex = 0;
+  static const double _cardStepOffset = 264.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (!_scrollController.hasClients || widget.projects.isEmpty) return;
+
+      _currentIndex = (_currentIndex + 1) % widget.projects.length;
+      final targetOffset = _currentIndex * _cardStepOffset;
+
+      _scrollController.animateTo(
+        targetOffset,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 170,
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: widget.projects.length,
+        itemBuilder: (context, index) {
+          final project = widget.projects[index];
+          return GestureDetector(
+            onTap: () {
+              if (widget.onSelectProject != null) {
+                widget.onSelectProject!(project);
+              } else {
+                widget.onNavigateTab(1);
+              }
+            },
+            child: Container(
+              width: 250,
+              margin: const EdgeInsets.only(right: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    project.heroImageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: AppColors.cardDark,
+                        child: const Center(
+                          child: Icon(Icons.home_work_rounded, color: AppColors.primaryYellow, size: 40),
                         ),
+                      );
+                    },
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.85),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
                     ),
-                    Positioned(
-                      left: 12,
-                      right: 12,
-                      bottom: 12,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryYellow,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Text(
-                              'Completed',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.darkCharcoal,
-                              ),
-                            ),
+                  ),
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: AppColors.warningOrange,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            project['title']!,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                          Row(
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.location_on_rounded, color: AppColors.primaryYellow, size: 13),
-                              const SizedBox(width: 4),
+                              Icon(Icons.access_time_rounded, size: 11, color: Colors.white),
+                              SizedBox(width: 4),
                               Text(
-                                project['location']!,
+                                'Ongoing',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          project.title,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: -0.3,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on_rounded, color: AppColors.primaryYellow, size: 13),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                project.location,
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white70,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

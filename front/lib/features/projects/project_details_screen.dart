@@ -83,7 +83,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                           gradient: LinearGradient(
                             colors: [
                               Colors.transparent,
-                              AppColors.darkCharcoal.withOpacity(0.9),
+                              AppColors.darkCharcoal.withValues(alpha: 0.9),
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -243,7 +243,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
-                      height: 120,
+                      height: 220,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
@@ -252,14 +252,21 @@ class ProjectDetailsScreen extends StatelessWidget {
                           return GestureDetector(
                             onTap: () => _openFullImageViewer(context, project.galleryImages, index),
                             child: Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              width: 160,
+                              margin: const EdgeInsets.only(right: 14),
+                              width: 280,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.borderLight),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: AppColors.borderLight, width: 1.5),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(16),
                                 child: Stack(
                                   fit: StackFit.expand,
                                   children: [
@@ -279,21 +286,21 @@ class ProjectDetailsScreen extends StatelessWidget {
                                         return Container(
                                           color: AppColors.backgroundLight,
                                           child: const Center(
-                                            child: Icon(Icons.photo_library_rounded, color: AppColors.darkYellow, size: 32),
+                                            child: Icon(Icons.photo_library_rounded, color: AppColors.darkYellow, size: 40),
                                           ),
                                         );
                                       },
                                     ),
                                     Positioned(
-                                      right: 6,
-                                      bottom: 6,
+                                      right: 10,
+                                      bottom: 10,
                                       child: Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black54,
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withValues(alpha: 0.6),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(Icons.fullscreen_rounded, color: Colors.white, size: 16),
+                                        child: const Icon(Icons.fullscreen_rounded, color: Colors.white, size: 20),
                                       ),
                                     ),
                                   ],
@@ -367,57 +374,66 @@ class ProjectDetailsScreen extends StatelessWidget {
         ),
 
         // Bottom Sticky CTAs protected by SafeArea from system navigation bar
-        bottomSheet: SafeArea(
-          top: false,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, -4),
+        bottomSheet: ColoredBox(
+          color: AppColors.backgroundLight,
+          child: SafeArea(
+            top: false,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.darkCharcoal,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                border: const Border(
+                  top: BorderSide(color: Colors.white12, width: 1),
                 ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onGetQuote,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryYellow,
-                      foregroundColor: AppColors.darkCharcoal,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text(
-                      'Get Similar Quote',
-                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, -6),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onGetQuote,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryYellow,
+                        foregroundColor: AppColors.darkCharcoal,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 2,
+                      ),
+                      child: const Text(
+                        'Get Similar Quote',
+                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onContact,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      side: const BorderSide(color: AppColors.darkCharcoal, width: 1.5),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text(
-                      'Contact Us',
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.darkCharcoal),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: onContact,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        side: const BorderSide(color: Colors.white38, width: 1.5),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        'Contact Us',
+                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Colors.white),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

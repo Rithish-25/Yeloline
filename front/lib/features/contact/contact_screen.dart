@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/url_helper.dart';
+import '../../widgets/icons/whatsapp_icon.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -79,7 +80,7 @@ class _ContactScreenState extends State<ContactScreen> {
               Expanded(
                 child: _buildContactCard(
                   context,
-                  icon: Icons.chat_rounded,
+                  customIcon: const WhatsAppIcon(size: 22, color: AppColors.darkCharcoal),
                   title: 'WhatsApp',
                   subtitle: '+91 98765 43210',
                   color: const Color(0xFF25D366),
@@ -224,7 +225,8 @@ class _ContactScreenState extends State<ContactScreen> {
 
   Widget _buildContactCard(
     BuildContext context, {
-    required IconData icon,
+    IconData? icon,
+    Widget? customIcon,
     required String title,
     required String subtitle,
     required Color color,
@@ -254,7 +256,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: AppColors.darkCharcoal, size: 22),
+              child: customIcon ?? Icon(icon!, color: AppColors.darkCharcoal, size: 22),
             ),
             const SizedBox(height: 12),
             Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),

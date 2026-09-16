@@ -12,80 +12,103 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Hero Banner Image
-          _buildHeroHeader(),
-
-          const SizedBox(height: 20),
-
-          // Story & Headline
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: const TextSpan(
+                // Hero Banner Image
+                _buildHeroHeader(),
+
+                const SizedBox(height: 20),
+
+                // Story & Headline
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextSpan(
-                        text: 'Building Trust. ',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.textPrimary,
-                          letterSpacing: -0.4,
+                      RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Building Trust. ',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.4,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Delivering Excellence.',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.primaryYellow,
+                                letterSpacing: -0.4,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      TextSpan(
-                        text: 'Delivering Excellence.',
+                      const SizedBox(height: 12),
+                      const Text(
+                        'At YeloLine Construction, we turn your dreams into timeless spaces. With a commitment to quality, transparency, and timely delivery, we have built a legacy of trust with hundreds of happy families.',
                         style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.primaryYellow,
-                          letterSpacing: -0.4,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                          height: 1.5,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                const Text(
-                  'At YeloLine Construction, we turn your dreams into timeless spaces. With a commitment to quality, transparency, and timely delivery, we have built a legacy of trust with hundreds of happy families.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
-                    height: 1.5,
-                  ),
-                ),
+
+                const SizedBox(height: 24),
+
+                // Key Statistics Grid
+                _buildStatisticsGrid(),
+
+                const SizedBox(height: 28),
+
+                // Founders & Partners Spotlight
+                _buildFoundersSection(),
+
+                const SizedBox(height: 28),
+
+                // Certifications
+                _buildCertificationsSection(),
+
+                const SizedBox(height: 24),
               ],
             ),
           ),
+        ),
 
-          const SizedBox(height: 24),
-
-          // Key Statistics Grid
-          _buildStatisticsGrid(),
-
-          const SizedBox(height: 28),
-
-          // Founders & Partners Spotlight
-          _buildFoundersSection(),
-
-          const SizedBox(height: 28),
-
-          // Certifications
-          _buildCertificationsSection(),
-
-          const SizedBox(height: 28),
-
-          // Bottom Sticky Contact Us Button Banner
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        // Fixed Bottom Contact Us Button Banner
+        Container(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+          decoration: BoxDecoration(
+            color: AppColors.darkCharcoal,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: const Border(
+              top: BorderSide(color: Colors.white12, width: 1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 16,
+                offset: const Offset(0, -6),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            top: false,
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -93,10 +116,12 @@ class AboutScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryYellow,
                   foregroundColor: AppColors.darkCharcoal,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
+                  elevation: 3,
+                  shadowColor: AppColors.primaryYellow.withValues(alpha: 0.4),
                 ),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -114,10 +139,8 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          const SizedBox(height: 32),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -139,7 +162,7 @@ class AboutScreen extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.transparent,
-              AppColors.darkCharcoal.withOpacity(0.85),
+              AppColors.darkCharcoal.withValues(alpha: 0.85),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -205,9 +228,9 @@ class AboutScreen extends StatelessWidget {
         itemCount: stats.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 1.25,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 1.55,
         ),
         itemBuilder: (context, index) {
           final item = stats[index];
@@ -215,6 +238,7 @@ class AboutScreen extends StatelessWidget {
             icon: item['icon'] as IconData,
             title: item['title'] as String,
             subtitle: item['subtitle'] as String,
+            isCompact: true,
           );
         },
       ),
@@ -280,31 +304,33 @@ class AboutScreen extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.borderLight),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
             child: Image.network(
               imageUrl,
-              width: 60,
-              height: 60,
+              width: 95,
+              height: 120,
               fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  width: 60,
-                  height: 60,
+                  width: 95,
+                  height: 120,
                   color: AppColors.lightYellowBg,
-                  child: const Icon(Icons.person_rounded, color: AppColors.primaryYellow, size: 32),
+                  child: const Icon(Icons.person_rounded, color: AppColors.primaryYellow, size: 48),
                 );
               },
             ),
@@ -317,25 +343,29 @@ class AboutScreen extends StatelessWidget {
                 Text(
                   name,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
                     color: AppColors.textPrimary,
+                    letterSpacing: -0.2,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   role,
                   style: const TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                     color: AppColors.darkYellow,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   experience,
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.textSecondary,
+                    height: 1.35,
                   ),
                 ),
               ],

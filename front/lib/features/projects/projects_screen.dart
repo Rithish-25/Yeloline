@@ -4,10 +4,12 @@ import '../../models/project_model.dart';
 
 class ProjectsScreen extends StatefulWidget {
   final Function(Project project) onSelectProject;
+  final String initialCategory;
 
   const ProjectsScreen({
     super.key,
     required this.onSelectProject,
+    this.initialCategory = 'ALL',
   });
 
   @override
@@ -15,7 +17,23 @@ class ProjectsScreen extends StatefulWidget {
 }
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
-  String _selectedCategory = 'ALL';
+  late String _selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = widget.initialCategory;
+  }
+
+  @override
+  void didUpdateWidget(covariant ProjectsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialCategory != widget.initialCategory) {
+      setState(() {
+        _selectedCategory = widget.initialCategory;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +114,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.darkCharcoal.withOpacity(0.2),
+                    color: AppColors.darkCharcoal.withValues(alpha: 0.2),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -128,8 +146,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           border: Border.all(color: AppColors.borderLight),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 10,
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 12,
+              spreadRadius: 1,
               offset: const Offset(0, 4),
             ),
           ],

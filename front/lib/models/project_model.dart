@@ -134,7 +134,7 @@ class Project {
     const Project(
       id: '4',
       title: 'Triveni Bungalows',
-      location: 'Rajkot, Gujarat',
+      location: 'Erode, Tamil Nadu',
       category: 'Ongoing',
       type: '3 BHK Villa',
       area: '3,500 sq.ft.',
@@ -159,6 +159,36 @@ class Project {
         'Red Bricks (Premium)',
         'Vitrified Tile Flooring',
         'UPVC Sliding Windows',
+      ],
+    ),
+    const Project(
+      id: '5',
+      title: 'Emerald Heights',
+      location: 'Salem, Tamil Nadu',
+      category: 'Ongoing',
+      type: '4 BHK Luxury Villa',
+      area: '4,500 sq.ft.',
+      status: 'Ongoing',
+      heroImageUrl: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=800&auto=format&fit=crop',
+      galleryImages: [
+        'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=800&auto=format&fit=crop',
+      ],
+      description:
+          'State of the art 4 BHK luxury villa currently under construction with contemporary elevation and smart features.',
+      highlights: [
+        '4 BHK Bedrooms',
+        'Landscaped Terrace',
+        'Smart Automation',
+      ],
+      features: [
+        'Modern Facade Design',
+        'Energy Efficient Lighting',
+        'Vastu Compliant',
+      ],
+      materials: [
+        'M25 Grade Concrete',
+        'Imported Tiles',
+        'Teak Woodwork',
       ],
     ),
   ];

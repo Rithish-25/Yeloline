@@ -23,12 +23,14 @@ class _MainLayoutState extends State<MainLayout> {
   int _currentIndex = 0;
   Project? _selectedProject;
   bool _showingAboutScreen = false;
+  String _projectsCategory = 'ALL';
 
-  void _navigateToTab(int index) {
+  void _navigateToTab(int index, [String? category]) {
     setState(() {
       _currentIndex = index;
       _selectedProject = null;
       _showingAboutScreen = false;
+      _projectsCategory = category ?? 'ALL';
     });
   }
 
@@ -82,13 +84,15 @@ class _MainLayoutState extends State<MainLayout> {
         systemNavigationBarIconBrightness: Brightness.light,
       ),
       child: PopScope(
-        canPop: isHomePage,
+        canPop: false,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
           if (_selectedProject != null) {
             setState(() => _selectedProject = null);
           } else if (_showingAboutScreen || _currentIndex != 0) {
             _navigateToTab(0);
+          } else {
+            _showExitConfirmationDialog(context);
           }
         },
         child: _selectedProject != null
@@ -121,6 +125,111 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
+  Future<void> _showExitConfirmationDialog(BuildContext context) async {
+    final bool? shouldExit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // Prevents closing when touching outside the alert box
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: AppColors.cardWhite,
+          surfaceTintColor: Colors.white,
+          titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+          actionsPadding: const EdgeInsets.all(16),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.lightYellowBg,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.exit_to_app_rounded,
+                  color: AppColors.darkYellow,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Exit App?',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Are you sure you want to exit Yeloline Construction?',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+              height: 1.4,
+            ),
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: const BorderSide(color: AppColors.borderLight, width: 1.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'No',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryYellow,
+                      foregroundColor: AppColors.darkCharcoal,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldExit == true) {
+      SystemNavigator.pop();
+    }
+  }
+
   Widget _buildBody() {
     if (_showingAboutScreen) {
       return AboutScreen(onContactTap: () => _navigateToTab(4));
@@ -129,17 +238,19 @@ class _MainLayoutState extends State<MainLayout> {
     switch (_currentIndex) {
       case 0:
         return HomeScreen(
-          onNavigateTab: (idx) {
+          onNavigateTab: (idx, [cat]) {
             if (idx == 0) {
               _showAboutUs();
             } else {
-              _navigateToTab(idx);
+              _navigateToTab(idx, cat ?? 'ALL');
             }
           },
+          onSelectProject: _showProjectDetails,
         );
       case 1:
         return ProjectsScreen(
           onSelectProject: _showProjectDetails,
+          initialCategory: _projectsCategory,
         );
       case 2:
         return GetQuoteScreen(
@@ -151,7 +262,10 @@ class _MainLayoutState extends State<MainLayout> {
       case 4:
         return const ContactScreen();
       default:
-        return HomeScreen(onNavigateTab: _navigateToTab);
+        return HomeScreen(
+          onNavigateTab: _navigateToTab,
+          onSelectProject: _showProjectDetails,
+        );
     }
   }
 }

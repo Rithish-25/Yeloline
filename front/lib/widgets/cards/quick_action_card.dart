@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 
 class QuickActionCard extends StatefulWidget {
-  final IconData icon;
+  final IconData? icon;
+  final Widget? customIcon;
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final VoidCallback onTap;
   final Color? iconBgColor;
 
   const QuickActionCard({
     super.key,
-    required this.icon,
+    this.icon,
+    this.customIcon,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.onTap,
     this.iconBgColor,
   });
@@ -34,7 +36,7 @@ class _QuickActionCardState extends State<QuickActionCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeInOut,
-        transform: _isPressed ? (Matrix4.identity()..scale(0.97)) : Matrix4.identity(),
+        transform: _isPressed ? Matrix4.diagonal3Values(0.97, 0.97, 1.0) : Matrix4.identity(),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.cardWhite,
@@ -45,7 +47,7 @@ class _QuickActionCardState extends State<QuickActionCard> {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.darkCharcoal.withValues(alpha: _isPressed ? 0.08 : 0.04),
+              color: Colors.black.withValues(alpha: _isPressed ? 0.16 : 0.08),
               blurRadius: _isPressed ? 14 : 10,
               offset: const Offset(0, 4),
             ),
@@ -59,29 +61,30 @@ class _QuickActionCardState extends State<QuickActionCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     gradient: widget.iconBgColor != null
                         ? null
                         : AppColors.yellowGradient,
                     color: widget.iconBgColor,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(9),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primaryYellow.withValues(alpha: 0.3),
-                        blurRadius: 6,
+                        blurRadius: 5,
                         offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: Icon(
-                    widget.icon,
-                    color: AppColors.darkCharcoal,
-                    size: 22,
-                  ),
+                  child: widget.customIcon ??
+                      Icon(
+                        widget.icon,
+                        color: AppColors.darkCharcoal,
+                        size: 15,
+                      ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(7),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: AppColors.lightYellowBg,
                     shape: BoxShape.circle,
@@ -90,7 +93,7 @@ class _QuickActionCardState extends State<QuickActionCard> {
                   child: const Icon(
                     Icons.arrow_forward_rounded,
                     color: AppColors.darkCharcoal,
-                    size: 14,
+                    size: 12,
                   ),
                 ),
               ],
@@ -107,18 +110,20 @@ class _QuickActionCardState extends State<QuickActionCard> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
-            Text(
-              widget.subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textSecondary,
-                height: 1.3,
+            if (widget.subtitle != null && widget.subtitle!.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                widget.subtitle!,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textSecondary,
+                  height: 1.3,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            ],
           ],
         ),
       ),
