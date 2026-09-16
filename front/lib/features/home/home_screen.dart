@@ -14,67 +14,78 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Modern Hero Banner Section
-          _buildHeroSection(context),
+    return ColoredBox(
+      color: AppColors.darkCharcoal,
+      child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Modern Hero Banner Section
+            _buildHeroSection(context),
 
-          const SizedBox(height: 14),
+            Container(
+              color: AppColors.backgroundLight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 14),
 
-          // Core Services & Navigation Section
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryYellow,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
+                  // Core Services & Navigation Section
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 4,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryYellow,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Explore Services & Details',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _buildQuickNavigationGrid(context),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Explore Services & Details',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                _buildQuickNavigationGrid(context),
-              ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Featured Villa Projects Preview Section
+                  _buildFeaturedProjectsSection(context),
+
+                  const SizedBox(height: 28),
+
+                  // Company Statistics Dark Banner
+                  _buildCompanyStatsBanner(),
+
+                  const SizedBox(height: 28),
+
+                  // Call to Action Banner
+                  _buildQuoteCTABanner(context),
+
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Featured Villa Projects Preview Section
-          _buildFeaturedProjectsSection(context),
-
-          const SizedBox(height: 28),
-
-          // Company Statistics Dark Banner
-          _buildCompanyStatsBanner(),
-
-          const SizedBox(height: 28),
-
-          // Call to Action Banner
-          _buildQuoteCTABanner(context),
-
-          const SizedBox(height: 32),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -82,6 +93,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildHeroSection(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
+        color: AppColors.darkCharcoal,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),
       clipBehavior: Clip.antiAlias,
@@ -92,6 +104,7 @@ class HomeScreen extends StatelessWidget {
             height: 220,
             width: double.infinity,
             decoration: const BoxDecoration(
+              color: AppColors.darkCharcoal,
               image: DecorationImage(
                 image: NetworkImage(
                   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop',

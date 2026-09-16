@@ -142,7 +142,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: AspectRatio(
-                    aspectRatio: 660 / 165,
+                    aspectRatio: 576 / 127,
                     child: CustomPaint(
                       painter: YelolineLogoPainter(
                         strokeProgress: _strokeAnimation.value,
@@ -203,9 +203,18 @@ class YelolineLogoPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double scale = min(size.width / 660, size.height / 165);
-    final double dx = (size.width - 660 * scale) / 2;
-    final double dy = (size.height - 165 * scale) / 2;
+    // Content vector bounds: X from 15.0 to 591.0 (width 576), Y from 15.0 to 142.0 (height 127)
+    const double contentMinX = 15.0;
+    const double contentMaxX = 591.0;
+    const double contentWidth = contentMaxX - contentMinX; // 576.0
+
+    const double contentMinY = 15.0;
+    const double contentMaxY = 142.0;
+    const double contentHeight = contentMaxY - contentMinY; // 127.0
+
+    final double scale = min(size.width / contentWidth, size.height / contentHeight);
+    final double dx = (size.width - contentWidth * scale) / 2 - (contentMinX * scale);
+    final double dy = (size.height - contentHeight * scale) / 2 - (contentMinY * scale);
 
     canvas.save();
     canvas.translate(dx, dy);

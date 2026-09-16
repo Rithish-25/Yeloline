@@ -78,7 +78,58 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
 
         // Sticky Bottom CTA / Calculation Bar
         if (_currentStep == 0) _buildStep1StickyFooter(),
+        if (_currentStep == 1) _buildStep2StickyFooter(),
       ],
+    );
+  }
+
+  Widget _buildStep2StickyFooter() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => setState(() => _currentStep = 2),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryYellow,
+              foregroundColor: AppColors.darkCharcoal,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              elevation: 3,
+              shadowColor: AppColors.primaryYellow.withValues(alpha: 0.4),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Continue to Get Quote',
+                  style: TextStyle(
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Icon(Icons.arrow_forward_rounded, size: 20, color: AppColors.darkCharcoal),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -618,43 +669,6 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 style: TextStyle(color: Colors.white54, fontSize: 11, height: 1.3),
               ),
             ],
-          ),
-        ),
-
-
-
-        const SizedBox(height: 20),
-
-        // Continue to Get Quote Button directly under rate box
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => setState(() => _currentStep = 2),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryYellow,
-              foregroundColor: AppColors.darkCharcoal,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              elevation: 3,
-              shadowColor: AppColors.primaryYellow.withValues(alpha: 0.4),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Continue to Get Quote',
-                  style: TextStyle(
-                    fontSize: 16.5,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Icon(Icons.arrow_forward_rounded, size: 20, color: AppColors.darkCharcoal),
-              ],
-            ),
           ),
         ),
 

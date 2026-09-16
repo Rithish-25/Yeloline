@@ -14,15 +14,14 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 16,
-            offset: const Offset(0, -4),
+      decoration: const BoxDecoration(
+        color: AppColors.darkCharcoal,
+        border: Border(
+          top: BorderSide(
+            color: Color(0xFF1E293B),
+            width: 1,
           ),
-        ],
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -93,7 +92,7 @@ class CustomBottomNav extends StatelessWidget {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: AppColors.primaryYellow.withValues(alpha: 0.35),
+                          color: AppColors.primaryYellow.withValues(alpha: 0.4),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
@@ -102,7 +101,7 @@ class CustomBottomNav extends StatelessWidget {
               ),
               child: Icon(
                 isSelected ? activeIcon : icon,
-                color: isSelected ? AppColors.darkCharcoal : AppColors.textMuted,
+                color: isSelected ? AppColors.darkCharcoal : Colors.white70,
                 size: 22,
               ),
             ),
@@ -112,7 +111,7 @@ class CustomBottomNav extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                color: isSelected ? AppColors.darkCharcoal : AppColors.textMuted,
+                color: isSelected ? AppColors.primaryYellow : Colors.white70,
               ),
             ),
           ],
@@ -152,7 +151,7 @@ class CustomBottomNav extends StatelessWidget {
               ),
               child: Icon(
                 isSelected ? Icons.assignment_rounded : Icons.assignment_outlined,
-                color: isSelected ? AppColors.darkCharcoal : AppColors.textMuted,
+                color: isSelected ? AppColors.darkCharcoal : Colors.white70,
                 size: 22,
               ),
             ),
@@ -161,8 +160,8 @@ class CustomBottomNav extends StatelessWidget {
               'Get Quote',
               style: TextStyle(
                 fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? AppColors.darkCharcoal : AppColors.textMuted,
+                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                color: isSelected ? AppColors.primaryYellow : Colors.white70,
               ),
             ),
           ],

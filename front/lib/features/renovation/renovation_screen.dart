@@ -11,7 +11,6 @@ class RenovationScreen extends StatefulWidget {
 
 class _RenovationScreenState extends State<RenovationScreen> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> _selectedServices = ['Plumbing'];
 
   String _selectedLocation = 'Erode, Tamil Nadu';
   String _selectedServiceRequired = 'Plumbing & Electrical';
@@ -92,58 +91,45 @@ class _RenovationScreenState extends State<RenovationScreen> {
                     final s = _services[index];
                     final name = s['name'] as String;
                     final icon = s['icon'] as IconData;
-                    final isSelected = _selectedServices.contains(name);
 
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (isSelected) {
-                            _selectedServices.remove(name);
-                          } else {
-                            _selectedServices.add(name);
-                          }
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: isSelected ? AppColors.lightYellowBg : AppColors.cardWhite,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: isSelected ? AppColors.primaryYellow : AppColors.borderLight,
-                            width: isSelected ? 2 : 1,
+                    return Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardWhite,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: AppColors.borderLight,
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: AppColors.backgroundLight,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              icon,
+                              color: AppColors.darkCharcoal,
+                              size: 20,
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: isSelected ? AppColors.primaryYellow : AppColors.backgroundLight,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                icon,
-                                color: AppColors.darkCharcoal,
-                                size: 20,
-                              ),
+                          const SizedBox(height: 6),
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
                             ),
-                            const SizedBox(height: 6),
-                            Text(
-                              name,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                                color: isSelected ? AppColors.darkCharcoal : AppColors.textPrimary,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     );
                   },

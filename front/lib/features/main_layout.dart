@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../core/constants/app_colors.dart';
 import '../models/project_model.dart';
 import '../widgets/common/custom_bottom_nav.dart';
 import '../widgets/common/custom_header.dart';
@@ -44,22 +46,14 @@ class _MainLayoutState extends State<MainLayout> {
 
   @override
   Widget build(BuildContext context) {
-    // If a project is selected, display project details screen overlay
-    if (_selectedProject != null) {
-      return ProjectDetailsScreen(
-        project: _selectedProject!,
-        onBack: () => setState(() => _selectedProject = null),
-        onGetQuote: () => _navigateToTab(2),
-        onContact: () => _navigateToTab(4),
-      );
-    }
+    // Bottom navigation bar is ONLY visible on the Home page
+    final bool isHomePage = _currentIndex == 0 && !_showingAboutScreen && _selectedProject == null;
 
     String? headerTitle;
-    bool showHeaderBack = false;
+    bool showHeaderBack = !isHomePage;
 
     if (_showingAboutScreen) {
       headerTitle = 'About Us';
-      showHeaderBack = true;
     } else {
       switch (_currentIndex) {
         case 1:
@@ -75,32 +69,54 @@ class _MainLayoutState extends State<MainLayout> {
           headerTitle = 'Contact Us';
           break;
         default:
-          headerTitle = null; // Shows logo.png brand header
+          headerTitle = null; // Shows logo.png brand header on Home
       }
     }
 
-    return Scaffold(
-      appBar: CustomHeader(
-        title: headerTitle,
-        showBackButton: showHeaderBack,
-        onBackTap: () => setState(() => _showingAboutScreen = false),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+        systemNavigationBarColor: AppColors.darkCharcoal,
+        systemNavigationBarIconBrightness: Brightness.light,
       ),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        child: _buildBody(),
-      ),
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index == 0 && _currentIndex == 0 && !_showingAboutScreen) {
-            // Already home
-          } else if (index == 0 && _showingAboutScreen) {
-            // If clicking Home while in About Us, open About Us or Home
+      child: PopScope(
+        canPop: isHomePage,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (_selectedProject != null) {
+            setState(() => _selectedProject = null);
+          } else if (_showingAboutScreen || _currentIndex != 0) {
             _navigateToTab(0);
-          } else {
-            _navigateToTab(index);
           }
         },
+        child: _selectedProject != null
+            ? ProjectDetailsScreen(
+                project: _selectedProject!,
+                onBack: () => setState(() => _selectedProject = null),
+                onGetQuote: () => _navigateToTab(2),
+                onContact: () => _navigateToTab(4),
+              )
+            : Scaffold(
+                appBar: CustomHeader(
+                  title: headerTitle,
+                  showBackButton: showHeaderBack,
+                  onBackTap: () => _navigateToTab(0),
+                ),
+                body: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: _buildBody(),
+                ),
+                bottomNavigationBar: isHomePage
+                    ? CustomBottomNav(
+                        currentIndex: _currentIndex,
+                        onTap: (index) {
+                          _navigateToTab(index);
+                        },
+                      )
+                    : null,
+              ),
       ),
     );
   }

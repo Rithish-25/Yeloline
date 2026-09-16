@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
@@ -134,143 +135,150 @@ class _CustomHeaderState extends State<CustomHeader> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.darkCharcoal,
-      child: SafeArea(
-        bottom: false,
-        child: Container(
-          height: kToolbarHeight + 8,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          decoration: const BoxDecoration(
-            color: AppColors.darkCharcoal,
-            border: Border(
-              bottom: BorderSide(
-                color: Color(0xFF1E293B),
-                width: 1,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Container(
+        color: AppColors.darkCharcoal,
+        child: SafeArea(
+          bottom: false,
+          child: Container(
+            height: kToolbarHeight + 8,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            decoration: const BoxDecoration(
+              color: AppColors.darkCharcoal,
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0xFF1E293B),
+                  width: 1,
+                ),
               ),
             ),
-          ),
-          child: Row(
-            children: [
-              if (widget.showBackButton) ...[
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: Material(
-                    color: const Color(0xFF1E293B),
-                    shape: CircleBorder(
-                      side: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.25),
-                        width: 1.2,
-                      ),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 3,
-                    shadowColor: Colors.black38,
-                    child: InkWell(
-                      onTap: widget.onBackTap ?? () => Navigator.maybePop(context),
-                      child: const SizedBox(
-                        width: 38,
-                        height: 38,
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 5.0),
-                            child: Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-              if (widget.title != null && widget.title!.isNotEmpty) ...[
-                Text(
-                  widget.title!,
-                  style: GoogleFonts.urbanist(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              ] else ...[
-                // Brand Header Logo
-                Image.asset(
-                  AppAssets.logo,
-                  height: 38,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.construction_rounded, color: AppColors.primaryYellow, size: 28),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Yeloline',
-                          style: GoogleFonts.urbanist(
-                            color: AppColors.primaryYellow,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 20,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-              const Spacer(),
-              // Notification Bell with Conditional Yellow Glowing Badge
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => _showNotificationModal(context),
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
+            child: Row(
+              children: [
+                if (widget.showBackButton) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Material(
                       color: const Color(0xFF1E293B),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white12, width: 1),
-                    ),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        const Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.white,
-                          size: 22,
+                      shape: CircleBorder(
+                        side: BorderSide(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          width: 1.2,
                         ),
-                        if (_hasUnreadNotification)
-                          Positioned(
-                            top: -1,
-                            right: -1,
-                            child: Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryYellow,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppColors.darkCharcoal, width: 1.5),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: AppColors.primaryYellow,
-                                    blurRadius: 5,
-                                    spreadRadius: 1,
-                                  ),
-                                ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 3,
+                      shadowColor: Colors.black38,
+                      child: InkWell(
+                        onTap: widget.onBackTap ?? () => Navigator.maybePop(context),
+                        child: const SizedBox(
+                          width: 38,
+                          height: 38,
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                              child: Icon(
+                                Icons.arrow_back_ios_rounded,
+                                color: Colors.white,
+                                size: 16,
                               ),
                             ),
                           ),
-                      ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                if (widget.title != null && widget.title!.isNotEmpty) ...[
+                  Text(
+                    widget.title!,
+                    style: GoogleFonts.urbanist(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                ] else ...[
+                  // Brand Header Logo
+                  Image.asset(
+                    AppAssets.logo,
+                    height: 38,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.construction_rounded, color: AppColors.primaryYellow, size: 28),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Yeloline',
+                            style: GoogleFonts.urbanist(
+                              color: AppColors.primaryYellow,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+                const Spacer(),
+                // Notification Bell with Conditional Yellow Glowing Badge
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _showNotificationModal(context),
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E293B),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white12, width: 1),
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Icon(
+                            Icons.notifications_outlined,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                          if (_hasUnreadNotification)
+                            Positioned(
+                              top: -1,
+                              right: -1,
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryYellow,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.darkCharcoal, width: 1.5),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: AppColors.primaryYellow,
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
