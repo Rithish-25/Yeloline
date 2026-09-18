@@ -18,8 +18,8 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
   String _enteredBy = 'Owner';
   DateTime _purchaseDate = DateTime.now();
 
-  final _totalAmountController = TextEditingController(text: '120000');
-  final _paidAmountController = TextEditingController(text: '70000');
+  final _totalAmountController = TextEditingController();
+  final _paidAmountController = TextEditingController();
 
   double get _totalPurchase => double.tryParse(_totalAmountController.text.replaceAll(',', '')) ?? 0.0;
   double get _amountPaid => double.tryParse(_paidAmountController.text.replaceAll(',', '')) ?? 0.0;
@@ -71,17 +71,17 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
             children: [
               Text(
                 'Inventory & Supply',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
               ),
               SizedBox(height: 2),
               Text(
                 'Material Purchase Entry',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               SizedBox(height: 2),
               Text(
                 'Record material purchase in a few taps',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -172,7 +172,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                               const SizedBox(width: 10),
                               Text(
                                 '${_purchaseDate.day} ${_getMonthName(_purchaseDate.month)} ${_purchaseDate.year}',
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
                               ),
                             ],
                           ),
@@ -188,7 +188,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                   TextFormField(
                     controller: _totalAmountController,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
                     decoration: _inputDecoration('Enter total amount', Icons.currency_rupee_rounded),
                     validator: (v) => v == null || v.trim().isEmpty ? 'Please enter total purchase amount' : null,
                   ),
@@ -199,7 +199,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                   TextFormField(
                     controller: _paidAmountController,
                     keyboardType: TextInputType.number,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Colors.green.shade800),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.green.shade800),
                     decoration: _inputDecoration('Enter amount paid', Icons.account_balance_wallet_rounded),
                     validator: (v) => v == null || v.trim().isEmpty ? 'Please enter amount paid' : null,
                   ),
@@ -219,7 +219,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                       children: [
                         const Text(
                           'PURCHASE SUMMARY',
-                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: AppColors.darkCharcoal, letterSpacing: 0.8),
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.8),
                         ),
                         const SizedBox(height: 12),
                         Row(
@@ -252,7 +252,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                         Expanded(
                           child: Text(
                             'Credit Balance is auto-calculated. You can reduce this balance later using Payment section.',
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
                           ),
                         ),
                       ],
@@ -289,7 +289,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                         children: [
                           Icon(Icons.save_rounded, size: 20),
                           SizedBox(width: 8),
-                          Text('Save Material Purchase', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                          Text('Save Material Purchase', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ),
@@ -310,7 +310,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
       ),
     );
   }
@@ -333,7 +333,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
           value: value,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkCharcoal),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
           onChanged: onChanged,
           items: items.map((item) {
             return DropdownMenuItem<String>(
@@ -356,11 +356,11 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
     return Expanded(
       child: Column(
         children: [
-          Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: AppColors.textSecondary)),
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: valueColor),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: valueColor),
           ),
         ],
       ),
@@ -370,8 +370,13 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
   InputDecoration _inputDecoration(String hint, IconData icon) {
     return InputDecoration(
       hintText: hint,
-      prefixIcon: Icon(icon, color: AppColors.darkCharcoal, size: 18),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      hintStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.textMuted,
+      ),
+      prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primaryYellow, width: 1.5)),

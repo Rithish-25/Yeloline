@@ -30,6 +30,7 @@ class ProjectDetailsScreen extends StatelessWidget {
         appBar: CustomHeader(
           title: 'Project Details',
           showBackButton: true,
+          showLogoutButton: false,
           onBackTap: onBack,
         ),
         body: CustomScrollView(
@@ -243,7 +244,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
-                      height: 220,
+                      height: 320,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
@@ -253,7 +254,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                             onTap: () => _openFullImageViewer(context, project.galleryImages, index),
                             child: Container(
                               margin: const EdgeInsets.only(right: 14),
-                              width: 280,
+                              width: 350,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(color: AppColors.borderLight, width: 1.5),
@@ -408,7 +409,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Get Similar Quote',
-                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -426,7 +427,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Contact Us',
-                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.white),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

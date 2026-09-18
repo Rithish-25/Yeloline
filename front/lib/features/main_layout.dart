@@ -24,6 +24,7 @@ class _MainLayoutState extends State<MainLayout> {
   Project? _selectedProject;
   bool _showingAboutScreen = false;
   String _projectsCategory = 'ALL';
+  final GlobalKey<GetQuoteScreenState> _quoteScreenKey = GlobalKey<GetQuoteScreenState>();
 
   void _navigateToTab(int index, [String? category]) {
     setState(() {
@@ -46,10 +47,29 @@ class _MainLayoutState extends State<MainLayout> {
     });
   }
 
+  void _handleBackNavigation() {
+    if (_selectedProject != null) {
+      setState(() => _selectedProject = null);
+    } else if (_showingAboutScreen) {
+      _navigateToTab(0);
+    } else if (_currentIndex == 2 && (_quoteScreenKey.currentState?.canGoBack() ?? false)) {
+      _quoteScreenKey.currentState!.goBack();
+    } else if (_currentIndex != 0) {
+      _navigateToTab(0);
+    } else {
+      _showExitConfirmationDialog(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Bottom navigation bar is ONLY visible on the Home page
+    // Logout button is ONLY visible on the Home page
     final bool isHomePage = _currentIndex == 0 && !_showingAboutScreen && _selectedProject == null;
+
+    // Bottom navigation bar is visible on Home, Projects, Get Quote Step 1 ONLY, Renovation, and Contact
+    final bool showBottomNav = !_showingAboutScreen &&
+        _selectedProject == null &&
+        (_currentIndex != 2 || (_quoteScreenKey.currentState?.currentStep ?? 0) == 0);
 
     String? headerTitle;
     bool showHeaderBack = !isHomePage;
@@ -87,18 +107,12 @@ class _MainLayoutState extends State<MainLayout> {
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
-          if (_selectedProject != null) {
-            setState(() => _selectedProject = null);
-          } else if (_showingAboutScreen || _currentIndex != 0) {
-            _navigateToTab(0);
-          } else {
-            _showExitConfirmationDialog(context);
-          }
+          _handleBackNavigation();
         },
         child: _selectedProject != null
             ? ProjectDetailsScreen(
                 project: _selectedProject!,
-                onBack: () => setState(() => _selectedProject = null),
+                onBack: _handleBackNavigation,
                 onGetQuote: () => _navigateToTab(2),
                 onContact: () => _navigateToTab(4),
               )
@@ -106,13 +120,14 @@ class _MainLayoutState extends State<MainLayout> {
                 appBar: CustomHeader(
                   title: headerTitle,
                   showBackButton: showHeaderBack,
-                  onBackTap: () => _navigateToTab(0),
+                  showLogoutButton: isHomePage,
+                  onBackTap: _handleBackNavigation,
                 ),
                 body: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
                   child: _buildBody(),
                 ),
-                bottomNavigationBar: isHomePage
+                bottomNavigationBar: showBottomNav
                     ? CustomBottomNav(
                         currentIndex: _currentIndex,
                         onTap: (index) {
@@ -254,8 +269,10 @@ class _MainLayoutState extends State<MainLayout> {
         );
       case 2:
         return GetQuoteScreen(
+          key: _quoteScreenKey,
           onGoHome: () => _navigateToTab(0),
           onGoProjects: () => _navigateToTab(1),
+          onStepChanged: (_) => setState(() {}),
         );
       case 3:
         return const RenovationScreen();

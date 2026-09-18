@@ -20,14 +20,14 @@ class QuoteData {
   String additionalNotes;
 
   QuoteData({
-    this.structure = 'RCC Frame Structure (M25 Grade)',
-    this.cement = 'UltraTech PPC (Premium)',
-    this.steel = 'TATA Tiscon 550D (High Strength)',
-    this.bricks = 'Red Bricks (Premium)',
-    this.flooring = 'Vitrified Tiles (Premium)',
-    this.doors = 'Teak Wood Doors (Premium)',
-    this.windows = 'Aluminium Windows (Powder Coated)',
-    this.elevation = 'Modern Elevation',
+    this.structure = '',
+    this.cement = '',
+    this.steel = '',
+    this.bricks = '',
+    this.flooring = '',
+    this.doors = '',
+    this.windows = '',
+    this.elevation = '',
     this.clientName = '',
     this.mobileNumber = '',
     this.whatsAppNumber = '',

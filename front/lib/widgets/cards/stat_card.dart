@@ -58,7 +58,7 @@ class StatCard extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: isCompact ? 16 : 20,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
               color: isDark ? Colors.white : AppColors.textPrimary,
               letterSpacing: -0.5,
             ),
@@ -69,7 +69,7 @@ class StatCard extends StatelessWidget {
             subtitle,
             style: TextStyle(
               fontSize: isCompact ? 11 : 12,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
               color: isDark ? AppColors.primaryYellow : AppColors.darkCharcoal,
             ),
             textAlign: TextAlign.center,
@@ -80,6 +80,7 @@ class StatCard extends StatelessWidget {
               description!,
               style: TextStyle(
                 fontSize: isCompact ? 10 : 11,
+                fontWeight: FontWeight.w400,
                 color: isDark ? AppColors.textMuted : AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,

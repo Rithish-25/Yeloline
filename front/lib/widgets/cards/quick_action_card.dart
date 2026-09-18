@@ -99,16 +99,18 @@ class _QuickActionCardState extends State<QuickActionCard> {
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-                letterSpacing: -0.2,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600, // Semi Bold
+                  color: AppColors.textPrimary,
+                  letterSpacing: -0.2,
+                ),
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
             if (widget.subtitle != null && widget.subtitle!.isNotEmpty) ...[
               const SizedBox(height: 4),
@@ -116,7 +118,7 @@ class _QuickActionCardState extends State<QuickActionCard> {
                 widget.subtitle!,
                 style: const TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400, // Regular Text
                   color: AppColors.textSecondary,
                   height: 1.3,
                 ),

@@ -16,9 +16,9 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
   String _paymentMode = 'Cash';
   DateTime _paymentDate = DateTime.now();
 
-  final _amountController = TextEditingController(text: '200000');
-  final _refNoController = TextEditingController(text: 'UTR32456567890');
-  final _notesController = TextEditingController(text: 'Part payment received');
+  final _amountController = TextEditingController();
+  final _refNoController = TextEditingController();
+  final _notesController = TextEditingController();
 
   static const double _projectValue = 3850000;
   static const double _totalReceivedBefore = 1950000;
@@ -73,17 +73,17 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
             children: [
               Text(
                 'Client Collections',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
               ),
               SizedBox(height: 2),
               Text(
                 'Payment Received',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               SizedBox(height: 2),
               Text(
                 'Record client payments and update receivables',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -154,7 +154,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                               const SizedBox(width: 10),
                               Text(
                                 '${_paymentDate.day} ${_getMonthName(_paymentDate.month)} ${_paymentDate.year}',
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
                               ),
                             ],
                           ),
@@ -170,7 +170,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                   TextFormField(
                     controller: _amountController,
                     keyboardType: TextInputType.number,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.green.shade800),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.green.shade800),
                     decoration: _inputDecoration('Enter amount received', Icons.currency_rupee_rounded),
                     validator: (v) => v == null || v.trim().isEmpty ? 'Please enter amount' : null,
                   ),
@@ -193,7 +193,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                   _buildLabel('Reference Number'),
                   TextFormField(
                     controller: _refNoController,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
                     decoration: _inputDecoration('e.g. UTR32456567890 / Cheque No', Icons.pin_rounded),
                   ),
                   const SizedBox(height: 16),
@@ -202,9 +202,8 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                   _buildLabel('Notes'),
                   TextFormField(
                     controller: _notesController,
-                    maxLines: 2,
-                    style: const TextStyle(fontSize: 13, color: AppColors.textPrimary),
-                    decoration: _inputDecoration('Part payment received', Icons.note_alt_rounded),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
+                    decoration: _inputDecoration('Enter note', Icons.note_alt_rounded),
                   ),
 
                   const SizedBox(height: 20),
@@ -239,13 +238,13 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                                 const SizedBox(width: 8),
                                 const Text(
                                   'FINANCIAL SUMMARY',
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: 0.5),
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.5),
                                 ),
                               ],
                             ),
                             const Row(
                               children: [
-                                Text('View Details', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.darkYellow)),
+                                Text('View Details', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.darkYellow)),
                                 Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.darkYellow),
                               ],
                             ),
@@ -254,9 +253,9 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                         const Divider(height: 20),
                         _buildFinancialRow('Project Value', '₹${_formatNumber(_projectValue)}'),
                         _buildFinancialRow('Total Received Before', '₹${_formatNumber(_totalReceivedBefore)}'),
-                        _buildFinancialRow('Current Payment', '₹${_formatNumber(_currentPayment)}', valueColor: Colors.green.shade700, isBold: true),
-                        _buildFinancialRow('Updated Total Received', '₹${_formatNumber(_updatedTotalReceived)}', isBold: true),
-                        _buildFinancialRow('Remaining Receivable', '₹${_formatNumber(_remainingReceivable)}', valueColor: Colors.red.shade700, isBold: true),
+                        _buildFinancialRow('Current Payment', '₹${_formatNumber(_currentPayment)}', valueColor: Colors.green.shade700),
+                        _buildFinancialRow('Updated Total Received', '₹${_formatNumber(_updatedTotalReceived)}'),
+                        _buildFinancialRow('Remaining Receivable', '₹${_formatNumber(_remainingReceivable)}', valueColor: Colors.red.shade700),
                       ],
                     ),
                   ),
@@ -280,7 +279,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                         children: [
                           Icon(Icons.assignment_turned_in_rounded, size: 20),
                           SizedBox(width: 8),
-                          Text('Save Payment', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                          Text('Save Payment', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ),
@@ -301,7 +300,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
       ),
     );
   }
@@ -324,7 +323,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
           value: value,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkCharcoal),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
           onChanged: onChanged,
           items: items.map((item) {
             return DropdownMenuItem<String>(
@@ -363,7 +362,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
               label,
               style: TextStyle(
                 fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected ? Colors.white : AppColors.textSecondary,
               ),
             ),
@@ -373,18 +372,25 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
     );
   }
 
-  Widget _buildFinancialRow(String label, String value, {Color? valueColor, bool isBold = false}) {
+  Widget _buildFinancialRow(String label, String value, {Color? valueColor}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 12, fontWeight: isBold ? FontWeight.w700 : FontWeight.w500, color: AppColors.textPrimary)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+              color: AppColors.textSecondary,
+            ),
+          ),
           Text(
             value,
             style: TextStyle(
-              fontSize: 13,
-              fontWeight: isBold ? FontWeight.w900 : FontWeight.w700,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
               color: valueColor ?? AppColors.textPrimary,
             ),
           ),
@@ -396,8 +402,13 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
   InputDecoration _inputDecoration(String hint, IconData icon) {
     return InputDecoration(
       hintText: hint,
-      prefixIcon: Icon(icon, color: AppColors.darkCharcoal, size: 18),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      hintStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.textMuted,
+      ),
+      prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primaryYellow, width: 1.5)),

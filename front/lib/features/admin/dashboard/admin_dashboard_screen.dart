@@ -28,7 +28,7 @@ class AdminDashboardScreen extends StatelessWidget {
                     'Financial Overview',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w500,
                       color: Colors.grey.shade600,
                       letterSpacing: 0.5,
                     ),
@@ -38,7 +38,7 @@ class AdminDashboardScreen extends StatelessWidget {
                     'Company Dashboard',
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                       letterSpacing: -0.5,
                     ),
@@ -60,7 +60,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       'Live Sites (3)',
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w600,
                         color: AppColors.darkCharcoal,
                       ),
                     ),
@@ -123,7 +123,7 @@ class AdminDashboardScreen extends StatelessWidget {
             'Quick Operations',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
           ),
@@ -173,7 +173,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 'Recent Entries',
                 style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
                 ),
               ),
@@ -181,7 +181,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 onPressed: () => onNavigateTab(1),
                 child: const Text(
                   'View Sites',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.darkYellow),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.darkYellow),
                 ),
               ),
             ],
@@ -249,17 +249,20 @@ class AdminDashboardScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textSecondary,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600, // Title: Semi Bold
+                      color: AppColors.textPrimary,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 4),
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
@@ -270,20 +273,24 @@ class AdminDashboardScreen extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            amount,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: color,
-              letterSpacing: -0.5,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              amount,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400, // Amount: Regular Text
+                color: color,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
           Text(
             subtitle,
             style: const TextStyle(
               fontSize: 10,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w400,
               color: AppColors.textSecondary,
             ),
           ),
@@ -331,7 +338,7 @@ class AdminDashboardScreen extends StatelessWidget {
               title,
               style: const TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
               ),
             ),
@@ -385,11 +392,11 @@ class AdminDashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   type,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                 ),
                 Text(
                   '$site • $detail',
-                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -403,13 +410,13 @@ class AdminDashboardScreen extends StatelessWidget {
                 amount,
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.bold,
                   color: isIncome ? Colors.green.shade800 : Colors.red.shade800,
                 ),
               ),
               Text(
                 date,
-                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
               ),
             ],
           ),

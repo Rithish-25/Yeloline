@@ -125,7 +125,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           label,
           style: TextStyle(
             fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             color: isSelected ? AppColors.primaryYellow : AppColors.textPrimary,
           ),
         ),
@@ -200,7 +200,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -223,8 +223,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         child: Text(
                           project.title,
                           style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
                           ),
                         ),
@@ -240,7 +240,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         project.location,
                         style: const TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.textSecondary,
                         ),
                       ),
@@ -277,7 +277,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         children: [
                           Text(
                             'View Project Details',
-                            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                           ),
                           SizedBox(width: 6),
                           Icon(Icons.arrow_forward_rounded, size: 16, color: AppColors.primaryYellow),
@@ -304,7 +304,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           label,
           style: const TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w400,
             color: AppColors.textPrimary,
           ),
         ),

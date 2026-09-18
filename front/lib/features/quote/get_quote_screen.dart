@@ -6,21 +6,41 @@ import '../../models/quote_model.dart';
 class GetQuoteScreen extends StatefulWidget {
   final VoidCallback onGoHome;
   final VoidCallback onGoProjects;
+  final ValueChanged<int>? onStepChanged;
 
   const GetQuoteScreen({
     super.key,
     required this.onGoHome,
     required this.onGoProjects,
+    this.onStepChanged,
   });
 
   @override
-  State<GetQuoteScreen> createState() => _GetQuoteScreenState();
+  State<GetQuoteScreen> createState() => GetQuoteScreenState();
 }
 
-class _GetQuoteScreenState extends State<GetQuoteScreen> {
+class GetQuoteScreenState extends State<GetQuoteScreen> {
   int _currentStep = 0; // 0: Select, 1: Review, 2: Details, 3: Thank You
   final QuoteData _quoteData = QuoteData();
   final _formKey = GlobalKey<FormState>();
+
+  int get currentStep => _currentStep;
+
+  bool canGoBack() => _currentStep > 0;
+
+  void _setStep(int newStep) {
+    setState(() {
+      _currentStep = newStep;
+    });
+    widget.onStepChanged?.call(newStep);
+  }
+
+  void goBack() {
+    if (_currentStep > 0) {
+      final nextStep = _currentStep == 3 ? 0 : _currentStep - 1;
+      _setStep(nextStep);
+    }
+  }
 
 
 
@@ -69,7 +89,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () => setState(() => _currentStep = 2),
+            onPressed: () => _setStep(2),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryYellow,
               foregroundColor: AppColors.darkCharcoal,
@@ -87,7 +107,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                   'Continue to Get Quote',
                   style: TextStyle(
                     fontSize: 16.5,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,
                   ),
                 ),
@@ -111,9 +131,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
       return InkWell(
         onTap: (index < _currentStep)
             ? () {
-                setState(() {
-                  _currentStep = index;
-                });
+                _setStep(index);
               }
             : null,
         borderRadius: BorderRadius.circular(8),
@@ -322,7 +340,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
           'Step 1 of 3 – Select Specifications',
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
             letterSpacing: -0.3,
           ),
@@ -332,7 +350,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
           'Choose premium materials for an accurate estimate',
           style: TextStyle(
             fontSize: 12.5,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: AppColors.textSecondary,
           ),
         ),
@@ -352,8 +370,8 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 Text(
                   category,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600, // Semi-Bold
                     color: AppColors.textPrimary,
                   ),
                 ),
@@ -438,7 +456,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                                           title,
                                           style: TextStyle(
                                             fontSize: 12,
-                                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                                             color: AppColors.textPrimary,
                                           ),
                                           maxLines: 1,
@@ -448,7 +466,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                                           sub,
                                           style: const TextStyle(
                                             fontSize: 10.5,
-                                            fontWeight: FontWeight.w600,
+                                            fontWeight: FontWeight.w400,
                                             color: AppColors.textSecondary,
                                           ),
                                           maxLines: 1,
@@ -524,7 +542,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
             ),
             const SizedBox(width: 12),
             ElevatedButton(
-              onPressed: () => setState(() => _currentStep = 1),
+              onPressed: () => _setStep(1),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryYellow,
                 foregroundColor: AppColors.darkCharcoal,
@@ -537,7 +555,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 children: [
                   Text(
                     'Continue',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(width: 6),
                   Icon(Icons.arrow_forward_rounded, size: 16),
@@ -599,14 +617,18 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
                       ),
                       Text(
-                        item['val'] as String,
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        (item['val'] as String).isEmpty ? 'Not Selected' : (item['val'] as String),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: (item['val'] as String).isEmpty ? AppColors.darkYellow : AppColors.textSecondary,
+                          fontWeight: (item['val'] as String).isEmpty ? FontWeight.w500 : FontWeight.w400,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 TextButton(
-                  onPressed: () => setState(() => _currentStep = 0),
+                  onPressed: () => _setStep(0),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1011,7 +1033,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
             child: ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  setState(() => _currentStep = 3);
+                  _setStep(3);
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -1024,7 +1046,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 children: [
                   Icon(Icons.near_me_rounded, size: 18),
                   SizedBox(width: 8),
-                  Text('Submit Quote Request', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                  Text('Submit Quote Request', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -1037,18 +1059,27 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
   }
 
   Widget _buildDarkSpecTag(String label, String value) {
+    final displayVal = value.isEmpty ? 'Not Selected' : value;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.check_circle_rounded, color: AppColors.primaryYellow, size: 12),
+        Icon(
+          value.isEmpty ? Icons.circle_outlined : Icons.check_circle_rounded,
+          color: value.isEmpty ? Colors.white38 : AppColors.primaryYellow,
+          size: 12,
+        ),
         const SizedBox(width: 4),
         Text(
           '$label: ',
           style: const TextStyle(color: Colors.white54, fontSize: 11),
         ),
         Text(
-          value,
-          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+          displayVal,
+          style: TextStyle(
+            color: value.isEmpty ? Colors.white60 : Colors.white,
+            fontSize: 11,
+            fontWeight: value.isEmpty ? FontWeight.w400 : FontWeight.w700,
+          ),
         ),
       ],
     );
@@ -1201,7 +1232,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
               child: ElevatedButton.icon(
                 onPressed: widget.onGoHome,
                 icon: const Icon(Icons.home_rounded, size: 18),
-                label: const Text('Back to Home', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
+                label: const Text('Back to Home', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryYellow,
                   foregroundColor: AppColors.darkCharcoal,
@@ -1215,7 +1246,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
               child: OutlinedButton.icon(
                 onPressed: widget.onGoProjects,
                 icon: const Icon(Icons.apartment_rounded, size: 18),
-                label: const Text('View Projects', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.darkCharcoal)),
+                label: const Text('View Projects', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.darkCharcoal)),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   side: const BorderSide(color: AppColors.darkCharcoal, width: 1.5),

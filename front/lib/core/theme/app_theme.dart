@@ -102,7 +102,7 @@ class AppTheme {
           ),
           textStyle: GoogleFonts.outfit(
             fontSize: 15,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.3,
           ),
         ),
@@ -117,7 +117,7 @@ class AppTheme {
           ),
           textStyle: GoogleFonts.outfit(
             fontSize: 14,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

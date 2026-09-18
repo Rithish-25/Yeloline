@@ -69,7 +69,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                   'Services Offered',
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
                     letterSpacing: -0.3,
                   ),
@@ -84,7 +84,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                     crossAxisCount: 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 0.88,
+                    childAspectRatio: 1.05,
                   ),
                   itemCount: _services.length,
                   itemBuilder: (context, index) {
@@ -103,19 +103,19 @@ class _RenovationScreenState extends State<RenovationScreen> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                         decoration: BoxDecoration(
                           color: AppColors.cardWhite,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: AppColors.borderLight,
                             width: 1,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
@@ -123,36 +123,38 @@ class _RenovationScreenState extends State<RenovationScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: 50,
-                              height: 50,
+                              width: 36,
+                              height: 36,
                               decoration: BoxDecoration(
                                 color: AppColors.primaryYellow,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.primaryYellow.withValues(alpha: 0.35),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
+                                    color: AppColors.primaryYellow.withValues(alpha: 0.3),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
                                   ),
                                 ],
                               ),
                               child: Icon(
                                 icon,
                                 color: AppColors.darkCharcoal,
-                                size: 24,
+                                size: 18,
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              name,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
+                            const SizedBox(height: 6),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                name,
+                                style: const TextStyle(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.textPrimary,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
                               ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -195,7 +197,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                               'Book Your Renovation Van',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                               ),
                             ),
@@ -253,7 +255,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                               value: loc,
                               child: Text(
                                 loc,
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             );
@@ -277,7 +279,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                               value: serv,
                               child: Text(
                                 serv,
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             );
@@ -310,7 +312,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                                 icon: const Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.darkYellow),
                                 label: Text(
                                   '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textPrimary),
+                                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColors.textPrimary),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -332,7 +334,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                               value: slot,
                               child: Text(
                                 slot,
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             );
@@ -369,7 +371,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                               foregroundColor: AppColors.darkCharcoal,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
-                            child: const Text('Book Appointment', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                            child: const Text('Book Appointment', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                           ),
                         ),
                       ],
@@ -419,7 +421,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
               style: TextStyle(
                 color: AppColors.primaryYellow,
                 fontSize: 10,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 1.2,
               ),
             ),
@@ -428,14 +430,14 @@ class _RenovationScreenState extends State<RenovationScreen> {
               'Renovation Made Easy',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 4),
             Text(
               'Our Renovation Van brings expertise to your doorstep. Book a visit and let our specialists handle the rest.',
-              style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.3),
+              style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400, height: 1.3),
             ),
           ],
         ),
@@ -467,12 +469,12 @@ class _RenovationScreenState extends State<RenovationScreen> {
               const SizedBox(height: 16),
               const Text(
                 'Appointment Request Sent!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
                 'Our Renovation Van technician will reach your site at $_selectedLocation on ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}.',
-                style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
@@ -480,7 +482,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Great, Got it!'),
+                  child: const Text('Great, Got it!', style: TextStyle(fontWeight: FontWeight.w600)),
                 ),
               ),
             ],

@@ -51,7 +51,7 @@ class _ContactScreenState extends State<ContactScreen> {
             'Get in Touch',
             style: TextStyle(
               fontSize: 26,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
               letterSpacing: -0.5,
             ),
@@ -59,7 +59,7 @@ class _ContactScreenState extends State<ContactScreen> {
           const SizedBox(height: 4),
           const Text(
             'We are here to discuss your upcoming construction project.',
-            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 20),
 
@@ -123,12 +123,12 @@ class _ContactScreenState extends State<ContactScreen> {
                     children: [
                       Text(
                         'Head Office Location',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                       ),
                       SizedBox(height: 2),
                       Text(
                         'YeloLine Tower, Perundurai Road, Erode, Tamil Nadu 638011',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.3),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textSecondary, height: 1.3),
                       ),
                     ],
                   ),
@@ -154,15 +154,17 @@ class _ContactScreenState extends State<ContactScreen> {
                 children: [
                   const Text(
                     'Send Us a Message',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _nameController,
+                    style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                     decoration: InputDecoration(
                       labelText: 'Your Name *',
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w500),
                       hintText: 'Enter full name',
-                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13),
+                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13, fontWeight: FontWeight.w400),
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                     ),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Please enter your name' : null,
@@ -170,10 +172,12 @@ class _ContactScreenState extends State<ContactScreen> {
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _contactController,
+                    style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                     decoration: InputDecoration(
                       labelText: 'Phone / Email *',
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w500),
                       hintText: 'e.g. 9876543210 or name@example.com',
-                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13),
+                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13, fontWeight: FontWeight.w400),
                       prefixIcon: const Icon(Icons.email_outlined),
                     ),
                     validator: (v) {
@@ -189,11 +193,13 @@ class _ContactScreenState extends State<ContactScreen> {
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _messageController,
+                    style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                     maxLines: 3,
                     decoration: InputDecoration(
                       labelText: 'Your Message *',
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w500),
                       hintText: 'Type your message or project requirements...',
-                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13),
+                      hintStyle: TextStyle(color: AppColors.textMuted.withValues(alpha: 0.55), fontSize: 13, fontWeight: FontWeight.w400),
                       alignLabelWithHint: true,
                     ),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Please enter your message' : null,
@@ -209,7 +215,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text('Send Message', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                      child: const Text('Send Message', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -259,9 +265,17 @@ class _ContactScreenState extends State<ContactScreen> {
               child: customIcon ?? Icon(icon!, color: AppColors.darkCharcoal, size: 22),
             ),
             const SizedBox(height: 12),
-            Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+            ),
             const SizedBox(height: 2),
-            Text(subtitle, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(subtitle, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.textSecondary)),
+            ),
           ],
         ),
       ),

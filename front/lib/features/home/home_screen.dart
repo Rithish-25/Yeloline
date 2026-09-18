@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                               'Explore Services & Details',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                                 letterSpacing: -0.3,
                               ),
@@ -159,7 +159,7 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(
                         color: AppColors.darkCharcoal,
                         fontSize: 10,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 1.0,
                       ),
                     ),
@@ -171,8 +171,8 @@ class HomeScreen extends StatelessWidget {
                         TextSpan(
                           text: 'Building trust.\n',
                           style: TextStyle(
-                            fontSize: 27,
-                            fontWeight: FontWeight.w900,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white,
                             height: 1.15,
                             letterSpacing: -0.5,
@@ -181,8 +181,8 @@ class HomeScreen extends StatelessWidget {
                         TextSpan(
                           text: 'Delivering quality homes.',
                           style: TextStyle(
-                            fontSize: 27,
-                            fontWeight: FontWeight.w900,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
                             color: AppColors.primaryYellow,
                             height: 1.15,
                             letterSpacing: -0.5,
@@ -196,7 +196,7 @@ class HomeScreen extends StatelessWidget {
                     'From dream to key, we build with integrity and precision.',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                       color: Colors.white,
                     ),
                   ),
@@ -280,7 +280,7 @@ class HomeScreen extends StatelessWidget {
                 style: TextStyle(
                   color: AppColors.primaryYellow,
                   fontSize: 11,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 1.0,
                 ),
               ),
@@ -316,6 +316,10 @@ class HomeScreen extends StatelessWidget {
           Row(
             children: const [
               Expanded(
+                child: SizedBox.shrink(),
+              ),
+              Expanded(
+                flex: 2,
                 child: StatCard(
                   icon: Icons.location_on_rounded,
                   title: 'Erode',
@@ -325,7 +329,6 @@ class HomeScreen extends StatelessWidget {
                   isCompact: true,
                 ),
               ),
-              SizedBox(width: 8),
               Expanded(
                 child: SizedBox.shrink(),
               ),
@@ -360,8 +363,8 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   'Planning your Dream Home?',
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.darkCharcoal,
                     letterSpacing: -0.3,
                   ),
@@ -370,8 +373,8 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   'Get an instant material & rate estimate in 3 simple steps.',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
                     color: AppColors.darkCharcoal,
                   ),
                 ),
@@ -394,7 +397,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   'Get Quote',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                 ),
                 SizedBox(width: 4),
                 Icon(Icons.arrow_forward_rounded, size: 16, color: AppColors.primaryYellow),
@@ -436,14 +439,14 @@ class HomeScreen extends StatelessWidget {
               Text(
                 'Connect via $type',
                 style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Our construction experts are ready to assist you.',
-                style: const TextStyle(color: AppColors.textSecondary),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -456,8 +459,8 @@ class HomeScreen extends StatelessWidget {
                 child: Text(
                   number,
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -474,7 +477,7 @@ class HomeScreen extends StatelessWidget {
                       UrlHelper.openWhatsApp(number);
                     }
                   },
-                  child: Text('Start $type Now'),
+                  child: Text('Start $type Now', style: const TextStyle(fontWeight: FontWeight.w600)),
                 ),
               ),
             ],
@@ -512,7 +515,7 @@ class HomeScreen extends StatelessWidget {
                     'Ongoing Projects',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                       letterSpacing: -0.3,
                     ),
@@ -530,7 +533,7 @@ class HomeScreen extends StatelessWidget {
                         'View All ',
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w600,
                           color: AppColors.darkYellow,
                         ),
                       ),

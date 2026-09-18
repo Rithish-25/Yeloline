@@ -117,7 +117,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         'YELOLINE',
                         style: TextStyle(
                           fontSize: 26,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.bold,
                           color: AppColors.darkCharcoal,
                           letterSpacing: 2.0,
                         ),
@@ -141,7 +141,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         'ADMIN PORTAL LOGIN',
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w600,
                           color: AppColors.darkYellow,
                           letterSpacing: 1.5,
                         ),
@@ -174,8 +174,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           const Text(
                             'Sign In',
                             style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary,
                               letterSpacing: -0.3,
                             ),
@@ -201,7 +201,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                       _errorMessage!,
                                       style: TextStyle(
                                         fontSize: 12,
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.w500,
                                         color: Colors.red.shade800,
                                       ),
                                     ),
@@ -217,7 +217,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             'Mobile Number *',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w500,
                               color: AppColors.textPrimary,
                             ),
                           ),
@@ -229,10 +229,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               FilteringTextInputFormatter.digitsOnly,
                               LengthLimitingTextInputFormatter(10),
                             ],
-                            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w400),
                             decoration: InputDecoration(
                               hintText: 'Enter 10-digit mobile number',
-                              hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                              hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13, fontWeight: FontWeight.w400),
                               prefixIcon: const Icon(Icons.phone_android_rounded, color: AppColors.darkCharcoal, size: 20),
                               filled: true,
                               fillColor: const Color(0xFFF8FAFC),
@@ -279,7 +279,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             'Password *',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w500,
                               color: AppColors.textPrimary,
                             ),
                           ),
@@ -287,10 +287,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           TextFormField(
                             controller: _passwordController,
                             obscureText: !_isPasswordVisible,
-                            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w400),
                             decoration: InputDecoration(
                               hintText: 'Enter admin password',
-                              hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                              hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13, fontWeight: FontWeight.w400),
                               prefixIcon: const Icon(Icons.lock_outline_rounded, color: AppColors.darkCharcoal, size: 20),
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -362,8 +362,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                         Text(
                                           'Login to Admin Panel',
                                           style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w900,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
                                             letterSpacing: -0.2,
                                           ),
                                         ),
@@ -393,7 +393,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                     'Skip to User App',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w800,
+                                      fontWeight: FontWeight.w500,
                                       color: AppColors.darkCharcoal,
                                     ),
                                   ),

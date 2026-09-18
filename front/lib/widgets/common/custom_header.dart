@@ -9,6 +9,7 @@ import '../../features/admin/login/admin_login_screen.dart';
 class CustomHeader extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
   final bool showBackButton;
+  final bool showLogoutButton;
   final VoidCallback? onBackTap;
   final VoidCallback? onNotificationTap;
   final bool hasNotification;
@@ -17,6 +18,7 @@ class CustomHeader extends StatefulWidget implements PreferredSizeWidget {
     super.key,
     this.title,
     this.showBackButton = false,
+    this.showLogoutButton = true,
     this.onBackTap,
     this.onNotificationTap,
     this.hasNotification = true,
@@ -70,7 +72,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                       SizedBox(width: 8),
                       Text(
                         'Notifications',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                       ),
                     ],
                   ),
@@ -123,9 +125,9 @@ class _CustomHeaderState extends State<CustomHeader> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textPrimary)),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColors.textPrimary)),
                 const SizedBox(height: 2),
-                Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                Text(subtitle, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.textSecondary)),
               ],
             ),
           ),
@@ -164,34 +166,15 @@ class _CustomHeaderState extends State<CustomHeader> {
                 if (widget.showBackButton) ...[
                   Padding(
                     padding: const EdgeInsets.only(right: 10.0),
-                    child: Material(
-                      color: const Color(0xFF1E293B),
-                      shape: CircleBorder(
-                        side: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.25),
-                          width: 1.2,
-                        ),
+                    child: IconButton(
+                      onPressed: widget.onBackTap ?? () => Navigator.maybePop(context),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 20,
                       ),
-                      clipBehavior: Clip.antiAlias,
-                      elevation: 3,
-                      shadowColor: Colors.black38,
-                      child: InkWell(
-                        onTap: widget.onBackTap ?? () => Navigator.maybePop(context),
-                        child: const SizedBox(
-                          width: 38,
-                          height: 38,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 5.0),
-                              child: Icon(
-                                Icons.arrow_back_ios_rounded,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
                   ),
                 ],
@@ -201,7 +184,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                     style: GoogleFonts.urbanist(
                       color: Colors.white,
                       fontSize: 20,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.bold,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -221,7 +204,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                             'Yeloline',
                             style: GoogleFonts.urbanist(
                               color: AppColors.primaryYellow,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.bold,
                               fontSize: 20,
                               letterSpacing: 0.5,
                             ),
@@ -279,9 +262,10 @@ class _CustomHeaderState extends State<CustomHeader> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                // Logout Button
-                Material(
+                if (widget.showLogoutButton) ...[
+                  const SizedBox(width: 8),
+                  // Logout Button
+                  Material(
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () async {
@@ -299,13 +283,13 @@ class _CustomHeaderState extends State<CustomHeader> {
                                 SizedBox(width: 10),
                                 Text(
                                   'Confirm Logout',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                                 ),
                               ],
                             ),
                             content: const Text(
                               'Are you sure you want to log out?',
-                              style: TextStyle(fontSize: 14, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                              style: TextStyle(fontSize: 14, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                             ),
                             actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             actions: [
@@ -317,7 +301,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 ),
-                                child: const Text('No', style: TextStyle(fontWeight: FontWeight.w700)),
+                                child: const Text('No', style: TextStyle(fontWeight: FontWeight.w600)),
                               ),
                               ElevatedButton(
                                 onPressed: () => Navigator.of(context).pop(true),
@@ -328,7 +312,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
                                 ),
-                                child: const Text('Yes', style: TextStyle(fontWeight: FontWeight.w900)),
+                                child: const Text('Yes', style: TextStyle(fontWeight: FontWeight.w600)),
                               ),
                             ],
                           ),
@@ -360,6 +344,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                     ),
                   ),
                 ),
+                ],
               ],
             ),
           ),

@@ -18,9 +18,9 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
   String _enteredBy = 'Owner';
   DateTime _selectedDate = DateTime.now();
 
-  final _amountController = TextEditingController(text: '25,000');
-  final _vendorController = TextEditingController(text: 'Shree Ganesh Bricks');
-  final _noteController = TextEditingController(text: 'Brickwork labour payment for Block A - 1st Floor');
+  final _amountController = TextEditingController();
+  final _vendorController = TextEditingController();
+  final _noteController = TextEditingController();
 
   final List<String> _siteList = [
     'Skyline Residency, Ahmedabad',
@@ -78,17 +78,17 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
             children: [
               Text(
                 'Expense Entry',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
               ),
               SizedBox(height: 2),
               Text(
                 'Add Expense',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               SizedBox(height: 2),
               Text(
                 'Quickly record labour & other expenses',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -219,8 +219,7 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
                   _buildLabel('Description or Note'),
                   TextFormField(
                     controller: _noteController,
-                    maxLines: 2,
-                    style: const TextStyle(fontSize: 13, color: AppColors.textPrimary),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     decoration: _inputDecoration('Enter note', Icons.note_alt_rounded),
                   ),
                   const SizedBox(height: 16),
@@ -277,7 +276,7 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
                         children: [
                           Icon(Icons.add_circle_outline_rounded, size: 20),
                           SizedBox(width: 8),
-                          Text('Add Expense', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+                          Text('Add Expense', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ),
@@ -373,8 +372,13 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
   InputDecoration _inputDecoration(String hint, IconData icon) {
     return InputDecoration(
       hintText: hint,
-      prefixIcon: Icon(icon, color: AppColors.darkCharcoal, size: 18),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      hintStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.textMuted,
+      ),
+      prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 18),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primaryYellow, width: 1.5)),

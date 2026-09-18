@@ -35,7 +35,7 @@ class AdminSitesScreen extends StatefulWidget {
 class _AdminSitesScreenState extends State<AdminSitesScreen> {
   String _selectedSite = 'Thindal Residence';
   bool _expandAll = false;
-  final Set<int> _expandedIndices = {0}; // Expand first item by default
+  final Set<int> _expandedIndices = {}; // All closed by default
 
   final List<String> _siteList = [
     'Thindal Residence',
@@ -175,7 +175,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                     'Site Financial Overview',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w500,
                       color: AppColors.textSecondary,
                       letterSpacing: 0.5,
                     ),
@@ -198,7 +198,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                       child: DropdownButton<String>(
                         value: _selectedSite,
                         icon: const Icon(Icons.arrow_drop_down_rounded, color: AppColors.darkCharcoal, size: 24),
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                         onChanged: (val) {
                           if (val != null) setState(() => _selectedSite = val);
                         },
@@ -214,8 +214,8 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
               const Text(
                 'Site Details & Budgets',
                 style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
                   letterSpacing: -0.5,
                 ),
@@ -278,7 +278,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                 _selectedSite,
                                 style: const TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w600, // Image 1: Medium Bold
                                   color: AppColors.textPrimary,
                                   letterSpacing: -0.3,
                                 ),
@@ -306,7 +306,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                       'Ongoing',
                                       style: TextStyle(
                                         fontSize: 11,
-                                        fontWeight: FontWeight.w800,
+                                        fontWeight: FontWeight.w600,
                                         color: Colors.green.shade800,
                                       ),
                                     ),
@@ -323,7 +323,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                               Expanded(
                                 child: Text(
                                   'Mr. Rajkumar Thindal',
-                                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w700),
+                                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -337,7 +337,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                               Expanded(
                                 child: Text(
                                   'Erode, Tamil Nadu • YLC-2024-17',
-                                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -368,12 +368,12 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                         children: [
                           Text(
                             '62%',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.darkCharcoal, height: 1.0),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.darkCharcoal, height: 1.0),
                           ),
                           SizedBox(height: 2),
                           Text(
                             'On Track',
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: Colors.green),
+                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: Colors.green),
                           ),
                         ],
                       ),
@@ -386,10 +386,10 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                   child: Divider(height: 1, color: AppColors.borderLight),
                 ),
 
-                // Financial Overview Metrics Grid (Full Width, Spacious Cards)
+                // Financial Overview Metrics Grid (Image 2: Heading Semi Bold, Amount Medium Bold)
                 Column(
                   children: [
-                    // Row 1: Quoted, Additional, Revised
+                    // Row 1: Quoted & Additional
                     Row(
                       children: [
                         Expanded(
@@ -399,7 +399,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                             bgColor: const Color(0xFFF8FAFC),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: _buildMetricTile(
                             label: 'Additional Work',
@@ -407,7 +407,12 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                             bgColor: const Color(0xFFF8FAFC),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // Row 2: Revised & Received
+                    Row(
+                      children: [
                         Expanded(
                           child: _buildMetricTile(
                             label: 'Revised Budget',
@@ -417,12 +422,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                             borderColor: AppColors.primaryYellow.withValues(alpha: 0.5),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // Row 2: Received, Spent, Receivable
-                    Row(
-                      children: [
+                        const SizedBox(width: 10),
                         Expanded(
                           child: _buildMetricTile(
                             label: 'Total Received',
@@ -431,7 +431,12 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                             bgColor: Colors.blue.shade50.withValues(alpha: 0.5),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // Row 3: Spent & Receivable
+                    Row(
+                      children: [
                         Expanded(
                           child: _buildMetricTile(
                             label: 'Total Spent',
@@ -440,7 +445,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                             bgColor: const Color(0xFFF8FAFC),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: _buildMetricTile(
                             label: 'Total Receivable',
@@ -456,7 +461,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
 
                 const SizedBox(height: 16),
 
-                // Available Project Balance Banner
+                // Available Project Balance Banner (Image 3: Subtitle as regular text)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   decoration: BoxDecoration(
@@ -486,14 +491,14 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                 children: [
                                   Text(
                                     'Available Project Balance',
-                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   SizedBox(height: 2),
                                   Text(
                                     'Unspent cash in hand',
-                                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w400), // Image 3: Regular text
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -519,7 +524,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                         ),
                         child: const Text(
                           '₹72,500',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Colors.white),
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
                         ),
                       ),
                     ],
@@ -534,35 +539,42 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
           // 3. Department-wise Budget Allocation Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Department-wise Budget Allocation',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
-                  letterSpacing: -0.3,
+              const Expanded(
+                child: Text(
+                  'Department-wise Budget Allocation',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               InkWell(
                 onTap: _toggleExpandAll,
                 borderRadius: BorderRadius.circular(8),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         _expandAll ? 'Collapse All' : 'Expand All',
                         style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
                           color: AppColors.darkYellow,
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 2),
                       Icon(
                         _expandAll ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                        size: 20,
+                        size: 18,
                         color: AppColors.darkYellow,
                       ),
                     ],
@@ -629,8 +641,8 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                           Text(
                                             item.title,
                                             style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w900,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
                                               color: AppColors.textPrimary,
                                             ),
                                           ),
@@ -651,7 +663,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: AppColors.textSecondary,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
                                     ],
@@ -663,14 +675,14 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                   children: [
                                     const Text(
                                       'Remaining',
-                                      style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w700),
+                                      style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       item.remaining,
                                       style: TextStyle(
                                         fontSize: 15,
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w400, // Image 4: Regular text
                                         color: item.statusColor,
                                       ),
                                     ),
@@ -705,7 +717,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
                                   'Spent: ${item.spent}',
                                   style: const TextStyle(
                                     fontSize: 11,
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w400,
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
@@ -775,7 +787,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
     Color? borderColor,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(14),
@@ -786,9 +798,8 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w700),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600), // Image 2: Heading semi bold
+            maxLines: 2,
           ),
           const SizedBox(height: 4),
           FittedBox(
@@ -797,8 +808,8 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
             child: Text(
               value,
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w900,
+                fontSize: 16,
+                fontWeight: FontWeight.w600, // Image 2: Amount medium bold
                 color: valueColor ?? AppColors.textPrimary,
               ),
             ),
@@ -815,7 +826,7 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
     Color? valueColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -831,20 +842,21 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w700),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w400),
+                  maxLines: 2,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: valueColor ?? AppColors.textPrimary,
+                const SizedBox(height: 3),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: valueColor ?? AppColors.textPrimary,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

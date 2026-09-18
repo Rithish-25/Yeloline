@@ -38,7 +38,7 @@ class AboutScreen extends StatelessWidget {
                               text: 'Building Trust. ',
                               style: TextStyle(
                                 fontSize: 24,
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                                 letterSpacing: -0.4,
                               ),
@@ -47,7 +47,7 @@ class AboutScreen extends StatelessWidget {
                               text: 'Delivering Excellence.',
                               style: TextStyle(
                                 fontSize: 24,
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.bold,
                                 color: AppColors.primaryYellow,
                                 letterSpacing: -0.4,
                               ),
@@ -60,7 +60,7 @@ class AboutScreen extends StatelessWidget {
                         'At YeloLine Construction, we turn your dreams into timeless spaces. With a commitment to quality, transparency, and timely delivery, we have built a legacy of trust with hundreds of happy families.',
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.textSecondary,
                           height: 1.5,
                         ),
@@ -130,7 +130,7 @@ class AboutScreen extends StatelessWidget {
                     SizedBox(width: 8),
                     Text(
                       'Contact Us Today',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     SizedBox(width: 6),
                     Icon(Icons.arrow_forward_rounded, size: 18),
@@ -177,7 +177,7 @@ class AboutScreen extends StatelessWidget {
               style: TextStyle(
                 color: AppColors.primaryYellow,
                 fontSize: 12,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 1.2,
               ),
             ),
@@ -187,7 +187,7 @@ class AboutScreen extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -268,7 +268,7 @@ class AboutScreen extends StatelessWidget {
                 'Founder & Leadership',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
                   letterSpacing: -0.3,
                 ),
@@ -344,7 +344,7 @@ class AboutScreen extends StatelessWidget {
                   name,
                   style: const TextStyle(
                     fontSize: 17,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
                     letterSpacing: -0.2,
                   ),
@@ -354,7 +354,7 @@ class AboutScreen extends StatelessWidget {
                   role,
                   style: const TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.darkYellow,
                   ),
                 ),
@@ -363,7 +363,7 @@ class AboutScreen extends StatelessWidget {
                   experience,
                   style: const TextStyle(
                     fontSize: 11.5,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                     color: AppColors.textSecondary,
                     height: 1.35,
                   ),
@@ -404,7 +404,7 @@ class AboutScreen extends StatelessWidget {
             'Official Registrations & Certifications',
             style: TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
             ),
           ),
@@ -438,7 +438,7 @@ class AboutScreen extends StatelessWidget {
                             c['title'] as String,
                             style: const TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w600,
                               color: AppColors.textPrimary,
                             ),
                           ),
@@ -447,7 +447,7 @@ class AboutScreen extends StatelessWidget {
                             c['sub'] as String,
                             style: const TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w400,
                               color: AppColors.textSecondary,
                             ),
                           ),
