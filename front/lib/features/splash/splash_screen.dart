@@ -2,6 +2,9 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/utils/auth_service.dart';
+import '../admin/admin_main_layout.dart';
+import '../admin/login/admin_login_screen.dart';
 import '../main_layout.dart';
 
 /// Pre-computed logo geometry & path metrics to avoid on-frame allocations & computeMetrics() overhead.
@@ -113,11 +116,26 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
-  void _navigateToMain() {
+  Future<void> _navigateToMain() async {
     if (!mounted) return;
+
+    final isAdminLoggedIn = await AuthService.isAdminLoggedIn();
+    final isUserSkipped = await AuthService.isUserSkipped();
+
+    if (!mounted) return;
+
+    Widget targetScreen;
+    if (isAdminLoggedIn) {
+      targetScreen = const AdminMainLayout();
+    } else if (isUserSkipped) {
+      targetScreen = const MainLayout();
+    } else {
+      targetScreen = const AdminLoginScreen();
+    }
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const MainLayout(),
+        pageBuilder: (context, animation, secondaryAnimation) => targetScreen,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
