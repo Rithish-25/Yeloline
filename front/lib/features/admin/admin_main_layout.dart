@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/utils/auth_service.dart';
 import 'dashboard/admin_dashboard_screen.dart';
@@ -111,15 +112,105 @@ class _AdminMainLayoutState extends State<AdminMainLayout> {
     );
   }
 
+  Future<bool> _showExitConfirmationDialog(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryYellow.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.logout_rounded,
+                  color: AppColors.darkYellow,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Exit App?',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.darkCharcoal,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Are you sure you want to exit Yeloline Construction?',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.darkCharcoal,
+                        side: const BorderSide(color: AppColors.borderLight, width: 1.5),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text('No', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryYellow,
+                        foregroundColor: AppColors.darkCharcoal,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text('Yes', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    return result ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: _currentIndex == 0,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop && _currentIndex != 0) {
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (_currentIndex != 0) {
           setState(() {
             _currentIndex = 0;
           });
+        } else {
+          final shouldExit = await _showExitConfirmationDialog(context);
+          if (shouldExit) {
+            SystemNavigator.pop();
+          }
         }
       },
       child: Scaffold(
@@ -173,62 +264,15 @@ class _AdminMainLayoutState extends State<AdminMainLayout> {
                 tooltip: 'Logout Admin',
                 icon: const Icon(Icons.logout_rounded, color: Colors.white70, size: 20),
                 onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => PopScope(
-                      canPop: false,
-                      child: AlertDialog(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        backgroundColor: Colors.white,
-                        title: const Row(
-                          children: [
-                            Icon(Icons.logout_rounded, color: AppColors.darkYellow, size: 24),
-                            SizedBox(width: 10),
-                            Text(
-                              'Confirm Logout',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-                            ),
-                          ],
-                        ),
-                        content: const Text(
-                          'Are you sure you want to log out?',
-                          style: TextStyle(fontSize: 14, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
-                        ),
-                        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        actions: [
-                          OutlinedButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.textPrimary,
-                              side: const BorderSide(color: AppColors.borderLight, width: 1.5),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            ),
-                            child: const Text('No', style: TextStyle(fontWeight: FontWeight.w500)),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryYellow,
-                              foregroundColor: AppColors.darkCharcoal,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                            ),
-                            child: const Text('Yes', style: TextStyle(fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-
+                  final confirm = await _showExitConfirmationDialog(context);
                   if (confirm == true) {
                     if (!context.mounted) return;
                     final nav = Navigator.of(context);
-                    await AuthService.logoutAdmin();
+                    await AuthService.clearAllSession();
                     nav.pushReplacement(
-                      MaterialPageRoute(builder: (context) => const AdminLoginScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const AdminLoginScreen(),
+                      ),
                     );
                   }
                 },

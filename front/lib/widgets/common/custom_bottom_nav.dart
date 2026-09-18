@@ -13,49 +13,67 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const navBarHeight = 68.0;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.darkCharcoal,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFF1E293B),
-            width: 1,
-          ),
-        ),
-      ),
+      color: AppColors.darkCharcoal,
       child: SafeArea(
         top: false,
-        child: Container(
-          height: 68,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: SizedBox(
+          height: navBarHeight,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topCenter,
             children: [
-              _buildNavItem(
-                index: 0,
-                icon: Icons.home_rounded,
-                activeIcon: Icons.home_rounded,
-                label: 'Home',
+              // Background Notched Bar
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _NotchedNavPainter(
+                    backgroundColor: AppColors.darkCharcoal,
+                    borderColor: const Color(0xFF1E293B),
+                  ),
+                ),
               ),
-              _buildNavItem(
-                index: 1,
-                icon: Icons.apartment_outlined,
-                activeIcon: Icons.apartment_rounded,
-                label: 'Projects',
+
+              // Side Navigation Items Row
+              Positioned.fill(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(
+                      index: 0,
+                      icon: Icons.home_outlined,
+                      activeIcon: Icons.home_rounded,
+                      label: 'Home',
+                    ),
+                    _buildNavItem(
+                      index: 1,
+                      icon: Icons.apartment_outlined,
+                      activeIcon: Icons.apartment_rounded,
+                      label: 'Projects',
+                    ),
+                    // Center Gap for Quote Floating Button
+                    const SizedBox(width: 68),
+                    _buildNavItem(
+                      index: 3,
+                      icon: Icons.local_shipping_outlined,
+                      activeIcon: Icons.local_shipping_rounded,
+                      label: 'Renovation',
+                    ),
+                    _buildNavItem(
+                      index: 4,
+                      icon: Icons.phone_in_talk_outlined,
+                      activeIcon: Icons.phone_in_talk_rounded,
+                      label: 'Contact',
+                    ),
+                  ],
+                ),
               ),
-              // Center Featured "Get Quote" Button
-              _buildCenterQuoteButton(),
-              _buildNavItem(
-                index: 3,
-                icon: Icons.local_shipping_outlined,
-                activeIcon: Icons.local_shipping_rounded,
-                label: 'Renovation',
-              ),
-              _buildNavItem(
-                index: 4,
-                icon: Icons.phone_in_talk_outlined,
-                activeIcon: Icons.phone_in_talk_rounded,
-                label: 'Contact',
+
+              // Center Floating "Get Quote" Button
+              Positioned(
+                top: -18,
+                child: _buildCenterQuoteButton(),
               ),
             ],
           ),
@@ -75,42 +93,22 @@ class CustomBottomNav extends StatelessWidget {
     return Expanded(
       child: InkWell(
         onTap: () => onTap(index),
-        splashColor: AppColors.primaryYellow.withValues(alpha: 0.2),
+        splashColor: AppColors.primaryYellow.withValues(alpha: 0.15),
         highlightColor: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 42,
-              height: 42,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: isSelected ? AppColors.yellowGradient : null,
-                color: isSelected ? null : Colors.transparent,
-                shape: BoxShape.circle,
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.primaryYellow.withValues(alpha: 0.4),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ]
-                    : null,
-              ),
-              child: Icon(
-                isSelected ? activeIcon : icon,
-                color: isSelected ? AppColors.darkCharcoal : Colors.white70,
-                size: 22,
-              ),
+            Icon(
+              isSelected ? activeIcon : icon,
+              color: isSelected ? AppColors.primaryYellow : Colors.white70,
+              size: 22,
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                fontSize: 10.5,
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
                 color: isSelected ? AppColors.primaryYellow : Colors.white70,
               ),
             ),
@@ -123,50 +121,98 @@ class CustomBottomNav extends StatelessWidget {
   Widget _buildCenterQuoteButton() {
     final isSelected = currentIndex == 2;
 
-    return Expanded(
-      child: InkWell(
-        onTap: () => onTap(2),
-        splashColor: AppColors.primaryYellow.withValues(alpha: 0.1),
-        highlightColor: Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                gradient: isSelected ? AppColors.yellowGradient : null,
-                color: isSelected ? null : Colors.transparent,
-                shape: BoxShape.circle,
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: AppColors.primaryYellow.withValues(alpha: 0.4),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ]
-                    : null,
-              ),
-              child: Icon(
-                isSelected ? Icons.assignment_rounded : Icons.assignment_outlined,
-                color: isSelected ? AppColors.darkCharcoal : Colors.white70,
-                size: 22,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'Get Quote',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                color: isSelected ? AppColors.primaryYellow : Colors.white70,
-              ),
+    return GestureDetector(
+      onTap: () => onTap(2),
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: 52,
+        height: 52,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? AppColors.primaryYellow.withValues(alpha: 0.6)
+                  : Colors.black.withValues(alpha: 0.35),
+              blurRadius: isSelected ? 14 : 8,
+              spreadRadius: isSelected ? 2 : 0,
+              offset: const Offset(0, 3),
             ),
           ],
+        ),
+        padding: const EdgeInsets.all(3.5),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: AppColors.yellowGradient,
+          ),
+          child: Icon(
+            isSelected ? Icons.assignment_rounded : Icons.assignment_outlined,
+            color: AppColors.darkCharcoal,
+            size: 25,
+          ),
         ),
       ),
     );
   }
+}
+
+class _NotchedNavPainter extends CustomPainter {
+  final Color backgroundColor;
+  final Color borderColor;
+
+  _NotchedNavPainter({
+    required this.backgroundColor,
+    required this.borderColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    final path = Path();
+    final cx = size.width / 2;
+    const notchRadius = 34.0;
+    const barTop = 0.0;
+
+    // Start top left
+    path.moveTo(0, barTop);
+
+    // Line to left of center notch
+    path.lineTo(cx - notchRadius - 8, barTop);
+
+    // Smooth cutout curve into notch
+    path.cubicTo(
+      cx - notchRadius + 2, barTop,
+      cx - notchRadius + 5, barTop + notchRadius * 0.75,
+      cx, barTop + notchRadius * 0.78,
+    );
+    path.cubicTo(
+      cx + notchRadius - 5, barTop + notchRadius * 0.78,
+      cx + notchRadius - 2, barTop,
+      cx + notchRadius + 8, barTop,
+    );
+
+    // Line to top right corner
+    path.lineTo(size.width, barTop);
+
+    // Down to bottom right, bottom left, and close
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
