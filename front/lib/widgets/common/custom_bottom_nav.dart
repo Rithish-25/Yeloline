@@ -72,7 +72,7 @@ class CustomBottomNav extends StatelessWidget {
 
               // Center Floating "Get Quote" Button
               Positioned(
-                top: -18,
+                top: -14,
                 child: _buildCenterQuoteButton(),
               ),
             ],
@@ -124,35 +124,49 @@ class CustomBottomNav extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(2),
       behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 52,
-        height: 52,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: isSelected
-                  ? AppColors.primaryYellow.withValues(alpha: 0.6)
-                  : Colors.black.withValues(alpha: 0.35),
-              blurRadius: isSelected ? 14 : 8,
-              spreadRadius: isSelected ? 2 : 0,
-              offset: const Offset(0, 3),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: isSelected
+                      ? AppColors.primaryYellow.withValues(alpha: 0.6)
+                      : Colors.black.withValues(alpha: 0.35),
+                  blurRadius: isSelected ? 12 : 6,
+                  spreadRadius: isSelected ? 2 : 0,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
-          ],
-        ),
-        padding: const EdgeInsets.all(3.5),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: AppColors.yellowGradient,
+            padding: const EdgeInsets.all(3),
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: AppColors.yellowGradient,
+              ),
+              child: Icon(
+                isSelected ? Icons.assignment_rounded : Icons.assignment_outlined,
+                color: AppColors.darkCharcoal,
+                size: 22,
+              ),
+            ),
           ),
-          child: Icon(
-            isSelected ? Icons.assignment_rounded : Icons.assignment_outlined,
-            color: AppColors.darkCharcoal,
-            size: 25,
+          const SizedBox(height: 2),
+          Text(
+            'Get Quote',
+            style: TextStyle(
+              fontSize: 10.5,
+              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+              color: isSelected ? AppColors.primaryYellow : Colors.white70,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

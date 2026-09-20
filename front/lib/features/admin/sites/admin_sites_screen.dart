@@ -774,6 +774,115 @@ class _AdminSitesScreenState extends State<AdminSitesScreen> {
           ),
 
           const SizedBox(height: 24),
+
+          // 4. Site Purchase Data Section
+          const Text(
+            'Site Purchase data',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          Row(
+            children: [
+              Expanded(
+                child: _buildSitePurchaseCard(
+                  title: 'Total Purchase',
+                  amount: '₹1,20,000',
+                  icon: Icons.shopping_bag_rounded,
+                  color: AppColors.darkCharcoal,
+                  bgColor: AppColors.lightYellowBg,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSitePurchaseCard(
+                  title: 'Total Paid',
+                  amount: '₹85,000',
+                  icon: Icons.check_circle_rounded,
+                  color: Colors.green.shade800,
+                  bgColor: Colors.green.shade50,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSitePurchaseCard(
+                  title: 'Total Credit',
+                  amount: '₹35,000',
+                  icon: Icons.credit_score_rounded,
+                  color: Colors.red.shade800,
+                  bgColor: Colors.red.shade50,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSitePurchaseCard({
+    required String title,
+    required String amount,
+    required IconData icon,
+    required Color color,
+    required Color bgColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.borderLight),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 15, color: color),
+          ),
+          const SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 10.5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              amount,
+              style: TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+          ),
         ],
       ),
     );

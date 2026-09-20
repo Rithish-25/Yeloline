@@ -15,7 +15,7 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
   String _department = 'Masonry';
   String _supplierName = 'Shree Ganesh Bricks';
   String _product = 'Red Bricks';
-  String _enteredBy = 'Owner';
+  String? _enteredBy;
   DateTime _purchaseDate = DateTime.now();
 
   final _totalAmountController = TextEditingController();
@@ -265,9 +265,10 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
                   _buildLabel('Entered By'),
                   _buildDropdown(
                     value: _enteredBy,
-                    items: ['Owner', 'Admin', 'Purchase Manager'],
+                    hintText: 'Select Name',
+                    items: const ['Suriya Prakash', 'Bala'],
                     icon: Icons.person_rounded,
-                    onChanged: (val) => setState(() => _enteredBy = val!),
+                    onChanged: (val) => setState(() => _enteredBy = val),
                   ),
 
                   const SizedBox(height: 24),
@@ -316,9 +317,10 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
   }
 
   Widget _buildDropdown({
-    required String value,
+    String? value,
     required List<String> items,
     required IconData icon,
+    String? hintText,
     required ValueChanged<String?> onChanged,
   }) {
     return Container(
@@ -331,6 +333,18 @@ class _AdminPurchaseScreenState extends State<AdminPurchaseScreen> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
+          hint: hintText != null
+              ? Row(
+                  children: [
+                    Icon(icon, size: 18, color: AppColors.textSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      hintText,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.textMuted),
+                    ),
+                  ],
+                )
+              : null,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkCharcoal),
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),

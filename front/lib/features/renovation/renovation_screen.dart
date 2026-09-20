@@ -28,8 +28,6 @@ class _RenovationScreenState extends State<RenovationScreen> {
   final List<String> _serviceOptions = [
     'Plumbing & Electrical',
     'Masonry & Structural Repair',
-    'Carpentry & Woodwork',
-    'Interior Painting',
     'General Home Maintenance',
   ];
 
@@ -43,8 +41,6 @@ class _RenovationScreenState extends State<RenovationScreen> {
     {'name': 'Plumbing', 'icon': Icons.plumbing_rounded},
     {'name': 'Electrical', 'icon': Icons.lightbulb_outline_rounded},
     {'name': 'Masonry', 'icon': Icons.grid_view_rounded},
-    {'name': 'Carpentry', 'icon': Icons.carpenter_rounded},
-    {'name': 'Painting', 'icon': Icons.format_paint_rounded},
     {'name': 'General Maintenance', 'icon': Icons.build_rounded},
   ];
 
@@ -76,15 +72,15 @@ class _RenovationScreenState extends State<RenovationScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Services Horizontal Grid (3 per row)
+                // Services Grid (2x2 grid for 4 services)
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.05,
+                    childAspectRatio: 2.3,
                   ),
                   itemCount: _services.length,
                   itemBuilder: (context, index) {
@@ -103,7 +99,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: AppColors.cardWhite,
                           borderRadius: BorderRadius.circular(14),
@@ -119,8 +115,7 @@ class _RenovationScreenState extends State<RenovationScreen> {
                             ),
                           ],
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Row(
                           children: [
                             Container(
                               width: 36,
@@ -142,18 +137,17 @@ class _RenovationScreenState extends State<RenovationScreen> {
                                 size: 18,
                               ),
                             ),
-                            const SizedBox(height: 6),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
+                            const SizedBox(width: 10),
+                            Expanded(
                               child: Text(
                                 name,
                                 style: const TextStyle(
-                                  fontSize: 11.5,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
                                 ),
-                                textAlign: TextAlign.center,
                                 maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],

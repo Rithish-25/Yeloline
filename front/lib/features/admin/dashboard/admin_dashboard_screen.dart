@@ -165,12 +165,12 @@ class AdminDashboardScreen extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // Recent Activity Log
+          // Overall Purchase Data Section
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Recent Entries',
+                'Overall Purchase data',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -178,9 +178,9 @@ class AdminDashboardScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => onNavigateTab(1),
+                onPressed: () => onNavigateTab(3),
                 child: const Text(
-                  'View Sites',
+                  'View Purchase',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.darkYellow),
                 ),
               ),
@@ -188,32 +188,102 @@ class AdminDashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          _buildRecentEntryItem(
-            type: 'Payment Received',
-            site: 'Skyline Residency',
-            detail: 'Rahul Patel (Part payment)',
-            amount: '+ ₹2,00,000',
-            date: '15 May 2024',
-            isIncome: true,
-          ),
-          _buildRecentEntryItem(
-            type: 'Material Purchase',
-            site: 'Skyline Residency',
-            detail: 'Shree Ganesh Bricks (Red Bricks)',
-            amount: '- ₹1,20,000',
-            date: '15 May 2024',
-            isIncome: false,
-          ),
-          _buildRecentEntryItem(
-            type: 'Labour Expense',
-            site: 'Thindal Residence',
-            detail: 'Masonry Labour Block A',
-            amount: '- ₹25,000',
-            date: '14 May 2024',
-            isIncome: false,
+          Row(
+            children: [
+              Expanded(
+                child: _buildPurchaseStatCard(
+                  title: 'Total Purchase',
+                  amount: '₹12,45,000',
+                  icon: Icons.shopping_bag_rounded,
+                  color: AppColors.darkCharcoal,
+                  bgColor: AppColors.lightYellowBg,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildPurchaseStatCard(
+                  title: 'Total Paid',
+                  amount: '₹8,90,000',
+                  icon: Icons.check_circle_rounded,
+                  color: Colors.green.shade800,
+                  bgColor: Colors.green.shade50,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildPurchaseStatCard(
+                  title: 'Total Credit',
+                  amount: '₹3,55,000',
+                  icon: Icons.credit_score_rounded,
+                  color: Colors.red.shade800,
+                  bgColor: Colors.red.shade50,
+                ),
+              ),
+            ],
           ),
 
           const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPurchaseStatCard({
+    required String title,
+    required String amount,
+    required IconData icon,
+    required Color color,
+    required Color bgColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.borderLight),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 15, color: color),
+          ),
+          const SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 10.5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              amount,
+              style: TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -256,7 +326,7 @@ class AdminDashboardScreen extends StatelessWidget {
                     title,
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w600, // Title: Semi Bold
+                      fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
@@ -280,7 +350,7 @@ class AdminDashboardScreen extends StatelessWidget {
               amount,
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w400, // Amount: Regular Text
+                fontWeight: FontWeight.w400,
                 color: color,
                 letterSpacing: -0.5,
               ),
@@ -344,83 +414,6 @@ class AdminDashboardScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildRecentEntryItem({
-    required String type,
-    required String site,
-    required String detail,
-    required String amount,
-    required String date,
-    required bool isIncome,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.borderLight),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: isIncome ? Colors.green.shade50 : Colors.red.shade50,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
-              color: isIncome ? Colors.green.shade800 : Colors.red.shade800,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  type,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                ),
-                Text(
-                  '$site • $detail',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: isIncome ? Colors.green.shade800 : Colors.red.shade800,
-                ),
-              ),
-              Text(
-                date,
-                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

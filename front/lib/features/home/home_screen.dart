@@ -276,7 +276,7 @@ class HomeScreen extends StatelessWidget {
               Icon(Icons.verified_rounded, color: AppColors.primaryYellow, size: 18),
               SizedBox(width: 8),
               Text(
-                'WHY YELOLINE?',
+                'PHILOSOPHY OF YELOLINE',
                 style: TextStyle(
                   color: AppColors.primaryYellow,
                   fontSize: 11,
@@ -488,8 +488,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildFeaturedProjectsSection(BuildContext context) {
-    final ongoingProjects = Project.sampleProjects
-        .where((p) => p.category == 'Ongoing')
+    final completedProjects = Project.sampleProjects
+        .where((p) => p.category == 'Completed')
         .toList();
 
     return Column(
@@ -512,7 +512,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'Ongoing Projects',
+                    'Completed Projects',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -523,7 +523,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               InkWell(
-                onTap: () => onNavigateTab(1, 'Ongoing'),
+                onTap: () => onNavigateTab(1, 'Completed'),
                 borderRadius: BorderRadius.circular(8),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
@@ -546,8 +546,8 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        _AutoScrollOngoingProjectsList(
-          projects: ongoingProjects,
+        _AutoScrollProjectsList(
+          projects: completedProjects,
           onSelectProject: onSelectProject,
           onNavigateTab: onNavigateTab,
         ),
@@ -556,22 +556,22 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _AutoScrollOngoingProjectsList extends StatefulWidget {
+class _AutoScrollProjectsList extends StatefulWidget {
   final List<Project> projects;
   final Function(Project project)? onSelectProject;
   final Function(int index, [String? category]) onNavigateTab;
 
-  const _AutoScrollOngoingProjectsList({
+  const _AutoScrollProjectsList({
     required this.projects,
     required this.onSelectProject,
     required this.onNavigateTab,
   });
 
   @override
-  State<_AutoScrollOngoingProjectsList> createState() => _AutoScrollOngoingProjectsListState();
+  State<_AutoScrollProjectsList> createState() => _AutoScrollProjectsListState();
 }
 
-class _AutoScrollOngoingProjectsListState extends State<_AutoScrollOngoingProjectsList> {
+class _AutoScrollProjectsListState extends State<_AutoScrollProjectsList> {
   late final ScrollController _scrollController;
   Timer? _timer;
   int _currentIndex = 0;
@@ -619,12 +619,14 @@ class _AutoScrollOngoingProjectsListState extends State<_AutoScrollOngoingProjec
         itemCount: widget.projects.length,
         itemBuilder: (context, index) {
           final project = widget.projects[index];
+          final isCompleted = project.category == 'Completed';
+
           return GestureDetector(
             onTap: () {
               if (widget.onSelectProject != null) {
                 widget.onSelectProject!(project);
               } else {
-                widget.onNavigateTab(1);
+                widget.onNavigateTab(1, 'Completed');
               }
             },
             child: Container(
@@ -679,17 +681,21 @@ class _AutoScrollOngoingProjectsListState extends State<_AutoScrollOngoingProjec
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: AppColors.warningOrange,
+                            color: isCompleted ? AppColors.successGreen : AppColors.warningOrange,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.access_time_rounded, size: 11, color: Colors.white),
-                              SizedBox(width: 4),
+                              Icon(
+                                isCompleted ? Icons.check_circle_rounded : Icons.access_time_rounded,
+                                size: 11,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: 4),
                               Text(
-                                'Ongoing',
-                                style: TextStyle(
+                                isCompleted ? 'Completed' : 'Ongoing',
+                                style: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.white,
@@ -740,3 +746,4 @@ class _AutoScrollOngoingProjectsListState extends State<_AutoScrollOngoingProjec
     );
   }
 }
+

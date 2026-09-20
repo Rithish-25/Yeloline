@@ -27,6 +27,18 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
   double get _updatedTotalReceived => _totalReceivedBefore + _currentPayment;
   double get _remainingReceivable => (_projectValue - _updatedTotalReceived).clamp(0.0, double.infinity);
 
+  String get _refHint {
+    switch (_paymentMode) {
+      case 'GPay / UPI':
+        return 'Enter UPI Transaction ID / Ref No.';
+      case 'Bank':
+        return 'Enter UTR / Cheque No.';
+      case 'Cash':
+      default:
+        return 'Enter Receipt / Voucher No.';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -194,7 +206,7 @@ class _AdminPaymentScreenState extends State<AdminPaymentScreen> {
                   TextFormField(
                     controller: _refNoController,
                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
-                    decoration: _inputDecoration('e.g. UTR32456567890 / Cheque No', Icons.pin_rounded),
+                    decoration: _inputDecoration(_refHint, Icons.pin_rounded),
                   ),
                   const SizedBox(height: 16),
 

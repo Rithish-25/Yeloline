@@ -15,11 +15,12 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
   String _selectedCategory = 'Masonry';
   String _expenseType = 'Labour';
   String _paymentMode = 'Cash';
-  String _enteredBy = 'Owner';
+  String? _enteredBy;
+  String? _selectedLabour;
+  String? _selectedSupplier;
   DateTime _selectedDate = DateTime.now();
 
   final _amountController = TextEditingController();
-  final _vendorController = TextEditingController();
   final _noteController = TextEditingController();
 
   final List<String> _siteList = [
@@ -38,10 +39,33 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
     'Painting',
   ];
 
+  final List<String> _labourList = [
+    'Ramesh (Mason Master)',
+    'Suresh (Helper)',
+    'Kumar (Electrician)',
+    'Murugan (Plumber)',
+    'Venkatesh (Carpenter)',
+    'Selvam (Painter)',
+    'Prakash (Bar Bender)',
+    'Karthik (Tile Fixer)',
+    'Anbu (Welder)',
+    'Manikandan (Centering Worker)',
+  ];
+
+  final List<String> _supplierList = [
+    'Shree Ganesh Bricks',
+    'Ultratech Cement Supplies',
+    'Tata Tiscon Steel',
+    'Kajaria Tiles Center',
+    'Asian Paints World',
+    'L&T Electrical Depot',
+    'Supreme Pipes & Fittings',
+    'Jaguar Hardware Store',
+  ];
+
   @override
   void dispose() {
     _amountController.dispose();
-    _vendorController.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -181,6 +205,31 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
                   ),
                   const SizedBox(height: 16),
 
+                  // Dynamic Searchable Dropdown for Labour or Supplier Name
+                  if (_expenseType == 'Labour') ...[
+                    _buildLabel('Labour'),
+                    _buildSearchableDropdown(
+                      title: 'Select Labour',
+                      value: _selectedLabour,
+                      hintText: 'Select Labour',
+                      items: _labourList,
+                      icon: Icons.person_search_rounded,
+                      onChanged: (val) => setState(() => _selectedLabour = val),
+                    ),
+                    const SizedBox(height: 16),
+                  ] else if (_expenseType == 'Other Expense') ...[
+                    _buildLabel('Supplier Name'),
+                    _buildSearchableDropdown(
+                      title: 'Select Supplier Name',
+                      value: _selectedSupplier,
+                      hintText: 'Select Supplier Name',
+                      items: _supplierList,
+                      icon: Icons.store_rounded,
+                      onChanged: (val) => setState(() => _selectedSupplier = val),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
                   // Payment Mode (Cash, GPay / UPI, Bank Toggle)
                   _buildLabel('Payment Mode'),
                   Row(
@@ -205,16 +254,6 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Vendor or Person Name
-                  _buildLabel('Vendor or Person Name'),
-                  TextFormField(
-                    controller: _vendorController,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
-                    decoration: _inputDecoration('Enter vendor or person name', Icons.person_rounded),
-                    validator: (v) => v == null || v.trim().isEmpty ? 'Please enter vendor name' : null,
-                  ),
-                  const SizedBox(height: 16),
-
                   // Description or Note
                   _buildLabel('Description or Note'),
                   TextFormField(
@@ -228,9 +267,10 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
                   _buildLabel('Entered By'),
                   _buildDropdown<String>(
                     value: _enteredBy,
-                    items: ['Owner', 'Admin', 'Site Supervisor'],
+                    hintText: 'Select Name',
+                    items: const ['Suriya Prakash', 'Bala'],
                     icon: Icons.badge_rounded,
-                    onChanged: (val) => setState(() => _enteredBy = val!),
+                    onChanged: (val) => setState(() => _enteredBy = val),
                   ),
 
                   const SizedBox(height: 20),
@@ -303,9 +343,10 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
   }
 
   Widget _buildDropdown<T>({
-    required T value,
+    T? value,
     required List<T> items,
     required IconData icon,
+    String? hintText,
     required ValueChanged<T?> onChanged,
   }) {
     return Container(
@@ -318,6 +359,18 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
           value: value,
+          hint: hintText != null
+              ? Row(
+                  children: [
+                    Icon(icon, size: 18, color: AppColors.textSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      hintText,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.textMuted),
+                    ),
+                  ],
+                )
+              : null,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkCharcoal),
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
@@ -388,5 +441,225 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
   String _getMonthName(int month) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[month - 1];
+  }
+
+  Widget _buildSearchableDropdown({
+    required String title,
+    required String? value,
+    required String hintText,
+    required List<String> items,
+    required IconData icon,
+    required ValueChanged<String> onChanged,
+  }) {
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (ctx) {
+            return _SearchablePickerSheet(
+              title: title,
+              items: items,
+              selectedValue: value,
+              icon: icon,
+              onSelect: onChanged,
+            );
+          },
+        );
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.cardWhite,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.borderLight),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 18, color: AppColors.darkCharcoal),
+                const SizedBox(width: 10),
+                Text(
+                  value ?? hintText,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: value != null ? FontWeight.w700 : FontWeight.w400,
+                    color: value != null ? AppColors.textPrimary : AppColors.textMuted,
+                  ),
+                ),
+              ],
+            ),
+            const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.darkCharcoal),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchablePickerSheet extends StatefulWidget {
+  final String title;
+  final List<String> items;
+  final String? selectedValue;
+  final IconData icon;
+  final ValueChanged<String> onSelect;
+
+  const _SearchablePickerSheet({
+    required this.title,
+    required this.items,
+    required this.selectedValue,
+    required this.icon,
+    required this.onSelect,
+  });
+
+  @override
+  State<_SearchablePickerSheet> createState() => _SearchablePickerSheetState();
+}
+
+class _SearchablePickerSheetState extends State<_SearchablePickerSheet> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredItems = widget.items
+        .where((item) => item.toLowerCase().contains(_query.toLowerCase()))
+        .toList();
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.65,
+      decoration: const BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: EdgeInsets.only(
+        top: 12,
+        left: 16,
+        right: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Drag handle
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Title & Close Button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+
+          // Search Box
+          TextField(
+            controller: _searchController,
+            autofocus: false,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+            decoration: InputDecoration(
+              hintText: 'Search ${widget.title.replaceAll('Select ', '')}...',
+              hintStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: AppColors.textMuted),
+              prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textSecondary, size: 20),
+              suffixIcon: _query.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear_rounded, size: 18, color: AppColors.textSecondary),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _query = '');
+                      },
+                    )
+                  : null,
+              filled: true,
+              fillColor: AppColors.lightYellowBg.withValues(alpha: 0.4),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.borderLight)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primaryYellow, width: 1.5)),
+            ),
+            onChanged: (val) => setState(() => _query = val),
+          ),
+
+          const SizedBox(height: 12),
+
+          // List Items
+          Expanded(
+            child: filteredItems.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No matching options found',
+                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: filteredItems.length,
+                    separatorBuilder: (context, index) => const Divider(height: 1, color: AppColors.borderLight),
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
+                      final isSelected = item == widget.selectedValue;
+
+                      return ListTile(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        tileColor: isSelected ? AppColors.lightYellowBg : null,
+                        leading: Icon(
+                          widget.icon,
+                          size: 20,
+                          color: isSelected ? AppColors.darkCharcoal : AppColors.textSecondary,
+                        ),
+                        title: Text(
+                          item,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                            color: isSelected ? AppColors.darkCharcoal : AppColors.textPrimary,
+                          ),
+                        ),
+                        trailing: isSelected
+                            ? const Icon(Icons.check_circle_rounded, color: AppColors.darkCharcoal, size: 20)
+                            : null,
+                        onTap: () {
+                          widget.onSelect(item);
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 }

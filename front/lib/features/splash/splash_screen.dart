@@ -72,12 +72,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   late Animation<double> _subtitleAnimation;
   late Animation<double> _exitFadeAnimation;
 
+  bool _hasNavigated = false;
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 3800),
+      duration: const Duration(milliseconds: 2200),
     );
 
     // Eased cubic curves for buttery smooth 60-120 FPS transitions
@@ -102,12 +104,25 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
+      if (status == AnimationStatus.completed && !_hasNavigated) {
         _navigateToMain();
       }
     });
 
     _controller.forward();
+    _checkInitialAuth();
+  }
+
+  Future<void> _checkInitialAuth() async {
+    final isAdminLoggedIn = await AuthService.isAdminLoggedIn();
+    final isUserSkipped = await AuthService.isUserSkipped();
+    final isUserLoggedIn = await AuthService.isUserLoggedIn();
+
+    if ((isAdminLoggedIn || isUserSkipped || isUserLoggedIn) && !_hasNavigated) {
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (!mounted || _hasNavigated) return;
+      _navigateToMain();
+    }
   }
 
   @override
@@ -117,17 +132,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   Future<void> _navigateToMain() async {
-    if (!mounted) return;
+    if (!mounted || _hasNavigated) return;
+    _hasNavigated = true;
 
     final isAdminLoggedIn = await AuthService.isAdminLoggedIn();
     final isUserSkipped = await AuthService.isUserSkipped();
+    final isUserLoggedIn = await AuthService.isUserLoggedIn();
 
     if (!mounted) return;
 
     Widget targetScreen;
     if (isAdminLoggedIn) {
       targetScreen = const AdminMainLayout();
-    } else if (isUserSkipped) {
+    } else if (isUserSkipped || isUserLoggedIn) {
       targetScreen = const MainLayout();
     } else {
       targetScreen = const AdminLoginScreen();
@@ -139,7 +156,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
-        transitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 300),
       ),
     );
   }

@@ -23,6 +23,7 @@ class AdminMainLayout extends StatefulWidget {
 
 class _AdminMainLayoutState extends State<AdminMainLayout> {
   late int _currentIndex;
+  bool _hasNotification = true;
 
   @override
   void initState() {
@@ -261,6 +262,29 @@ class _AdminMainLayoutState extends State<AdminMainLayout> {
           actions: [
             if (_currentIndex == 0) ...[
               IconButton(
+                tooltip: 'Notifications',
+                icon: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
+                    if (_hasNotification)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: AppColors.primaryYellow,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                onPressed: () => _showNotificationsSheet(context),
+              ),
+              IconButton(
                 tooltip: 'Logout Admin',
                 icon: const Icon(Icons.logout_rounded, color: Colors.white70, size: 20),
                 onPressed: () async {
@@ -327,6 +351,128 @@ class _AdminMainLayoutState extends State<AdminMainLayout> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showNotificationsSheet(BuildContext context) {
+    setState(() {
+      _hasNotification = false; // Mark notifications as read so badge dot stops glowing
+    });
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: AppColors.cardWhite,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.notifications_active_rounded, color: AppColors.darkYellow, size: 22),
+                    SizedBox(width: 8),
+                    Text(
+                      'Notifications',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _buildNotificationTile(
+              icon: Icons.shopping_cart_rounded,
+              iconBg: AppColors.lightYellowBg,
+              iconColor: AppColors.darkYellow,
+              title: 'New Material Purchase Request',
+              subtitle: 'Ultratech Cement 53 Grade - Skyline Residency',
+              time: '10 mins ago',
+            ),
+            const SizedBox(height: 8),
+            _buildNotificationTile(
+              icon: Icons.payments_rounded,
+              iconBg: Colors.green.shade50,
+              iconColor: Colors.green.shade700,
+              title: 'Payment Received',
+              subtitle: '₹2,15,000 collected from Rahul Patel',
+              time: '1 hour ago',
+            ),
+            const SizedBox(height: 8),
+            _buildNotificationTile(
+              icon: Icons.groups_rounded,
+              iconBg: Colors.blue.shade50,
+              iconColor: Colors.blue.shade700,
+              title: 'Labour Expense Updated',
+              subtitle: 'Masonry department daily payout logged',
+              time: '3 hours ago',
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationTile({
+    required IconData icon,
+    required Color iconBg,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required String time,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                const SizedBox(height: 2),
+                Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(time, style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+        ],
       ),
     );
   }
