@@ -187,18 +187,20 @@ export default function LeadManagementModule() {
           >
             <Plus size={16} /> New Quote Lead
           </button>
-          <button
-            className="btn-secondary"
-            onClick={() => setIsImportModalOpen(true)}
-          >
-            <Upload size={16} /> Import CSV
-          </button>
-          <button
-            className="btn-secondary"
-            onClick={() => setIsExportModalOpen(true)}
-          >
-            <Download size={16} /> Export CSV
-          </button>
+          <div className="csv-action-group">
+            <button
+              className="btn-secondary"
+              onClick={() => setIsImportModalOpen(true)}
+            >
+              <Upload size={16} /> Import CSV
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => setIsExportModalOpen(true)}
+            >
+              <Download size={16} /> Export CSV
+            </button>
+          </div>
         </div>
       </div>
 

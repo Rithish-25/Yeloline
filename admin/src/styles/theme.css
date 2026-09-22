@@ -202,22 +202,40 @@ select option,
 }
 
 .header-action-group {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  max-width: 100% !important;
-  padding-bottom: 4px !important;
-  -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.header-action-group::-webkit-scrollbar {
-  height: 4px;
+.csv-action-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.header-action-group::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
-  border-radius: 4px;
+
+@media (max-width: 640px) {
+  .header-action-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .header-action-group > .btn-primary,
+  .header-action-group > button:first-child {
+    width: 100% !important;
+  }
+
+  .csv-action-group {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .csv-action-group > button {
+    width: 100% !important;
+  }
 }
 
 

@@ -140,18 +140,20 @@ export default function ClientPaymentsModule() {
           <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
             <Plus size={16} /> Record New Payment
           </button>
-          <button
-            className="btn-secondary"
-            onClick={() => setIsImportModalOpen(true)}
-          >
-            <Upload size={16} /> Import CSV
-          </button>
-          <button
-            className="btn-secondary"
-            onClick={() => setIsExportModalOpen(true)}
-          >
-            <Download size={16} /> Export CSV
-          </button>
+          <div className="csv-action-group">
+            <button
+              className="btn-secondary"
+              onClick={() => setIsImportModalOpen(true)}
+            >
+              <Upload size={16} /> Import CSV
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => setIsExportModalOpen(true)}
+            >
+              <Download size={16} /> Export CSV
+            </button>
+          </div>
         </div>
       </div>
 
