@@ -9,10 +9,15 @@ import SiteExpensesModule from './modules/expenses/SiteExpensesModule';
 import MaterialPurchaseModule from './modules/purchases/MaterialPurchaseModule';
 import ClientPaymentsModule from './modules/payments/ClientPaymentsModule';
 import AppointmentsModule from './modules/appointments/AppointmentsModule';
+import SplashLoader from './components/common/SplashLoader/SplashLoader';
 import './App.css';
 
 function MainRouter() {
-  const { isAuthenticated, activeTab } = useApp();
+  const { isAuthenticated, activeTab, isSplashLoading, handleSplashComplete } = useApp();
+
+  if (isSplashLoading) {
+    return <SplashLoader onComplete={handleSplashComplete} />;
+  }
 
   if (!isAuthenticated) {
     return <Login />;

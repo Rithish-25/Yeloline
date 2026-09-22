@@ -21,6 +21,15 @@ export const AppProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [theme] = useState('light'); // Website default light theme
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(window.innerWidth < 1024);
+  const [isSplashLoading, setIsSplashLoading] = useState(true);
+
+  const triggerSplashLoader = () => {
+    setIsSplashLoading(true);
+  };
+
+  const handleSplashComplete = () => {
+    setIsSplashLoading(false);
+  };
 
   const setActiveTab = (tab) => {
     setActiveTabState(tab);
@@ -48,8 +57,11 @@ export const AppProvider = ({ children }) => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
         setIsSidebarCollapsed(true);
+      } else {
+        setIsSidebarCollapsed(false);
       }
     };
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -290,6 +302,9 @@ export const AppProvider = ({ children }) => {
         logout,
         activeTab,
         setActiveTab,
+        isSplashLoading,
+        triggerSplashLoader,
+        handleSplashComplete,
         searchQuery,
         setSearchQuery,
         theme,

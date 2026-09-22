@@ -183,4 +183,41 @@ select option,
   background-color: #CBD5E1;
 }
 
+/* Global Single-Line Button & Header Action Alignment */
+.btn-primary,
+.btn-secondary,
+.btn-cancel,
+.header-action-group button,
+.leads-header-row button {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 38px !important;
+  padding: 0 16px !important;
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.header-action-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  max-width: 100% !important;
+  padding-bottom: 4px !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.header-action-group::-webkit-scrollbar {
+  height: 4px;
+}
+.header-action-group::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
 

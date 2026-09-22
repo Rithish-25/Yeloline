@@ -92,24 +92,11 @@ export default function DashboardModule() {
           <h1 className="dashboard-title">Dashboard & Financial Analytics</h1>
           <p className="dashboard-subtitle">Real-time site metrics, quote leads, and financial summary overview</p>
         </div>
-        <button
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '9px 16px',
-            backgroundColor: 'var(--primary-yellow)',
-            color: 'var(--dark-charcoal)',
-            border: 'none',
-            borderRadius: 'var(--radius-sm)',
-            fontWeight: '700',
-            fontSize: '0.88rem',
-            cursor: 'pointer'
-          }}
-          onClick={() => setIsExportModalOpen(true)}
-        >
-          <Download size={16} /> Export Financial CSV
-        </button>
+        <div className="header-action-group">
+          <button className="btn-primary" onClick={() => setIsExportModalOpen(true)}>
+            <Download size={16} /> Export Financial CSV
+          </button>
+        </div>
       </div>
 
       {/* Metric Cards Grid */}

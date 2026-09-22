@@ -136,18 +136,18 @@ export default function ClientPaymentsModule() {
           <h1 className="dashboard-title">Client Payment & Milestone Tracking</h1>
           <p className="dashboard-subtitle">Record construction milestone payments and issue official PDF payment receipts</p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="header-action-group">
           <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
             <Plus size={16} /> Record New Payment
           </button>
           <button
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 16px', background: 'var(--light-card)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: '600' }}
+            className="btn-secondary"
             onClick={() => setIsImportModalOpen(true)}
           >
             <Upload size={16} /> Import CSV
           </button>
           <button
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 16px', background: 'var(--light-card)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: '600' }}
+            className="btn-secondary"
             onClick={() => setIsExportModalOpen(true)}
           >
             <Download size={16} /> Export CSV

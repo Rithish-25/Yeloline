@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, LogOut, CheckCheck } from 'lucide-react';
+import { Bell, LogOut, CheckCheck, Menu, X } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import './Header.css';
 
@@ -7,7 +7,11 @@ export default function Header() {
   const {
     notifications,
     markAllNotificationsRead,
-    logout
+    logout,
+    triggerSplashLoader,
+    setActiveTab,
+    isSidebarCollapsed,
+    toggleSidebar
   } = useApp();
 
   const [showNotifPopover, setShowNotifPopover] = useState(false);
@@ -16,7 +20,16 @@ export default function Header() {
   return (
     <header className="top-header">
       <div className="header-left">
+        <button
+          className="sidebar-toggle-btn"
+          onClick={toggleSidebar}
+          title={isSidebarCollapsed ? "Open Sidebar Menu" : "Collapse Sidebar Menu"}
+        >
+          {isSidebarCollapsed ? <Menu size={20} /> : <X size={20} />}
+        </button>
+
         <div className="brand-title-area">
+          <img src="/loader.jpeg" alt="Yeloline Logo" className="header-brand-logo" />
           <span className="brand-badge">YELOLINE</span>
           <span className="brand-text">Admin Panel</span>
         </div>

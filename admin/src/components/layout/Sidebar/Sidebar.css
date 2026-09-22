@@ -1,4 +1,3 @@
-/* Unique CSS for Sidebar component */
 .left-sidebar {
   width: 290px;
   flex-shrink: 0;
@@ -9,14 +8,10 @@
   height: calc(100vh - 70px);
   position: sticky;
   top: 70px;
-  transition: width 0.25s ease, transform 0.25s ease, left 0.25s ease;
+  transition: transform 0.25s ease, left 0.25s ease;
   z-index: 99;
   overscroll-behavior: contain;
   touch-action: pan-y;
-}
-
-.left-sidebar.collapsed {
-  width: 72px;
 }
 
 .sidebar-nav-container {
@@ -122,6 +117,14 @@
   justify-content: center;
 }
 
+@media (min-width: 1025px) {
+  .left-sidebar,
+  .left-sidebar.collapsed {
+    width: 290px !important;
+    transform: none !important;
+  }
+}
+
 /* Mobile & Tablet Drawer Behavior */
 @media (max-width: 1024px) {
   .left-sidebar {
@@ -133,6 +136,7 @@
     width: 280px;
     box-shadow: var(--shadow-lg);
     transform: translateX(0);
+    z-index: 1000;
   }
 
   .left-sidebar.collapsed {

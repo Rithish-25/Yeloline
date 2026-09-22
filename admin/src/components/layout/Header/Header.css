@@ -20,13 +20,13 @@
 }
 
 .sidebar-toggle-btn {
+  display: none;
   background: transparent;
   border: 1px solid var(--light-border);
   color: var(--text-secondary);
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -43,6 +43,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.header-brand-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .brand-badge {
@@ -226,6 +234,12 @@
   }
   .top-header {
     padding: 0 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar-toggle-btn {
+    display: flex;
   }
 }
 

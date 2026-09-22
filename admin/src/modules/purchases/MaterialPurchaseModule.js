@@ -138,18 +138,18 @@ export default function MaterialPurchaseModule() {
           <h1 className="dashboard-title">Material Purchase Orders</h1>
           <p className="dashboard-subtitle">Record and track construction material orders, vendor invoices & delivery status</p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="header-action-group">
           <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
             <Plus size={16} /> Create Purchase Order
           </button>
           <button
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 16px', background: 'var(--light-card)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: '600' }}
+            className="btn-secondary"
             onClick={() => setIsImportModalOpen(true)}
           >
             <Upload size={16} /> Import CSV
           </button>
           <button
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '9px 16px', background: 'var(--light-card)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: '600' }}
+            className="btn-secondary"
             onClick={() => setIsExportModalOpen(true)}
           >
             <Download size={16} /> Export CSV
