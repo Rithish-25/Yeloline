@@ -52,6 +52,20 @@ export const AppProvider = ({ children }) => {
   };
   const [notifications, setNotifications] = useState([]);
 
+  // Synchronize authentication & active tab state across multiple browser tabs
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'yeloline_admin_auth') {
+        setIsAuthenticated(e.newValue === 'true');
+      }
+      if (e.key === 'yeloline_admin_tab' && e.newValue) {
+        setActiveTabState(e.newValue);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   // Handle responsive sidebar collapse on resize
   useEffect(() => {
     const handleResize = () => {
