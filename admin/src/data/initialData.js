@@ -1,0 +1,308 @@
+// Initial Seed Data for Yeloline Admin Web Application
+
+export const initialEnquiries = [
+  {
+    enquiry_id: "ENQ-2026-001",
+    client_name: "Ramesh Sundaram",
+    client_phone: "+91 98421 88321",
+    client_email: "ramesh.s@gmail.com",
+    site_location: "Perundurai Road, Erode",
+    structure_type: "Villa",
+    builtup_area_sqft: 3200,
+    cement_brand: "UltraTech Super Premium",
+    estimated_rate_per_sqft: "₹2,250",
+    total_estimated_cost: 7200000,
+    enquiry_date: "2026-09-18",
+    lead_stage: "Estimate Shared"
+  },
+  {
+    enquiry_id: "ENQ-2026-002",
+    client_name: "Priya Venkatesh",
+    client_phone: "+91 97892 11045",
+    client_email: "priya.v@outlook.com",
+    site_location: "Thindal, Erode",
+    structure_type: "Residential House",
+    builtup_area_sqft: 2400,
+    cement_brand: "Ramco Supergrade",
+    estimated_rate_per_sqft: "₹1,950",
+    total_estimated_cost: 4680000,
+    enquiry_date: "2026-09-19",
+    lead_stage: "Site Visit Scheduled"
+  },
+  {
+    enquiry_id: "ENQ-2026-003",
+    client_name: "Karthik Subramanian",
+    client_phone: "+91 94432 99812",
+    client_email: "karthik.s@techcorp.io",
+    site_location: "Collectorate Area, Erode",
+    structure_type: "Commercial Building",
+    builtup_area_sqft: 5500,
+    cement_brand: "JSW Concreel HD",
+    estimated_rate_per_sqft: "₹2,600",
+    total_estimated_cost: 14300000,
+    enquiry_date: "2026-09-15",
+    lead_stage: "Converted"
+  },
+  {
+    enquiry_id: "ENQ-2026-004",
+    client_name: "Anand & Lakshmi Krishnan",
+    client_phone: "+91 98940 54321",
+    client_email: "lakshmi.k@yahoo.in",
+    site_location: "Bhavani Main Rd, Erode",
+    structure_type: "Renovation & Remodeling",
+    builtup_area_sqft: 1800,
+    cement_brand: "Dalmia DSP",
+    estimated_rate_per_sqft: "₹1,400",
+    total_estimated_cost: 2520000,
+    enquiry_date: "2026-09-20",
+    lead_stage: "New Enquiry"
+  },
+  {
+    enquiry_id: "ENQ-2026-005",
+    client_name: "Dr. Vijaykumar M.",
+    client_phone: "+91 98430 77112",
+    client_email: "dr.vijay@medicare.org",
+    site_location: "Sathy Road, Erode",
+    structure_type: "Villa",
+    builtup_area_sqft: 4100,
+    cement_brand: "UltraTech Super Premium",
+    estimated_rate_per_sqft: "₹2,400",
+    total_estimated_cost: 9840000,
+    enquiry_date: "2026-09-12",
+    lead_stage: "Contacted"
+  }
+];
+
+export const initialProjects = [
+  {
+    project_id: "PRJ-101",
+    title: "Modern Minimalist Villa - Perundurai",
+    category: "Villa",
+    client_name: "Mr. Ramesh Sundaram",
+    location: "Perundurai, Erode",
+    area_sqft: 3400,
+    duration_months: 10,
+    completion_date: "2026-08-15",
+    total_cost: 7800000,
+    description: "Contemporary 4BHK architectural villa featuring floor-to-ceiling glass, teakwood joinery, automated lighting, and private courtyard garden.",
+    featured: true,
+    cover_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    gallery_images: [
+      { id: "img-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80", tag: "Elevation" },
+      { id: "img-2", url: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80", tag: "Living Room" },
+      { id: "img-3", url: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=800&q=80", tag: "Kitchen" }
+    ]
+  },
+  {
+    project_id: "PRJ-102",
+    title: "Grand Emerald Commercial Hub",
+    category: "Commercial",
+    client_name: "Subramanian Builders",
+    location: "Collectorate Area, Erode",
+    area_sqft: 12500,
+    duration_months: 14,
+    completion_date: "2026-06-30",
+    total_cost: 32000000,
+    description: "5-Storey commercial complex with RCC framed structure, structural glazing, basement parking, high-speed elevator wells, and seismic grade steel reinforcements.",
+    featured: true,
+    cover_image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+    gallery_images: [
+      { id: "img-4", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80", tag: "Elevation" },
+      { id: "img-5", url: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80", tag: "Interior" }
+    ]
+  },
+  {
+    project_id: "PRJ-103",
+    title: "Heritage Home Renovation & Modernization",
+    category: "Renovation",
+    client_name: "Mrs. Revathi Raman",
+    location: "Modakurichi, Erode",
+    area_sqft: 2100,
+    duration_months: 4,
+    completion_date: "2026-09-01",
+    total_cost: 2900000,
+    description: "Complete structural strengthening, waterproofing, modular kitchen replacement, modern Italian marble flooring, and exterior weather-coat repainting.",
+    featured: false,
+    cover_image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+    gallery_images: [
+      { id: "img-6", url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80", tag: "Living Room" },
+      { id: "img-7", url: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80", tag: "Kitchen" }
+    ]
+  }
+];
+
+export const initialExpenses = [
+  {
+    expense_id: "EXP-801",
+    site_name: "Modern Minimalist Villa - Perundurai",
+    category: "Labor Wages",
+    amount: 85000,
+    date: "2026-09-18",
+    payment_mode: "Bank Transfer",
+    notes: "Weekly mason & helper labor payout for 2nd floor brickwork",
+    receipt_attachment: "receipt_wages_sep18.pdf"
+  },
+  {
+    expense_id: "EXP-802",
+    site_name: "Grand Emerald Commercial Hub",
+    category: "Equipment Rental",
+    amount: 42000,
+    date: "2026-09-17",
+    payment_mode: "UPI",
+    notes: "Concrete pump truck & 30m boom arm hire for slab casting",
+    receipt_attachment: "rent_pump_sep17.jpg"
+  },
+  {
+    expense_id: "EXP-803",
+    site_name: "Heritage Home Renovation",
+    category: "Subcontractor",
+    amount: 68000,
+    date: "2026-09-15",
+    payment_mode: "Cheque",
+    notes: "Electrical wiring phase 1 advance payment to SmartLine Systems",
+    receipt_attachment: "subcon_elec_sep15.pdf"
+  },
+  {
+    expense_id: "EXP-804",
+    site_name: "Modern Minimalist Villa - Perundurai",
+    category: "Utilities",
+    amount: 14500,
+    date: "2026-09-12",
+    payment_mode: "UPI",
+    notes: "Temporary site electricity connection bill & diesel for backup generator",
+    receipt_attachment: "tneb_bill_sep12.jpg"
+  }
+];
+
+export const initialPurchases = [
+  {
+    purchase_id: "PO-301",
+    vendor_name: "UltraTech Cement Depot Erode",
+    material_category: "Cement",
+    quantity: 450,
+    unit: "Bags",
+    unit_price: 410,
+    total_amount: 184500,
+    invoice_number: "INV-UTC-9921",
+    order_date: "2026-09-18",
+    delivery_status: "Delivered",
+    payment_status: "Paid"
+  },
+  {
+    purchase_id: "PO-302",
+    vendor_name: "Sri Balaji TMT Steel Traders",
+    material_category: "Steel / TMT Bars",
+    quantity: 12,
+    unit: "Tons",
+    unit_price: 64000,
+    total_amount: 768000,
+    invoice_number: "INV-SBT-4410",
+    order_date: "2026-09-16",
+    delivery_status: "In Transit",
+    payment_status: "Partially Paid"
+  },
+  {
+    purchase_id: "PO-303",
+    vendor_name: "Kaveri Red Bricks Yard",
+    material_category: "Bricks & Blocks",
+    quantity: 15000,
+    unit: "Units",
+    unit_price: 11,
+    total_amount: 165000,
+    invoice_number: "INV-KRB-108",
+    order_date: "2026-09-19",
+    delivery_status: "Ordered",
+    payment_status: "Unpaid"
+  },
+  {
+    purchase_id: "PO-304",
+    vendor_name: "Kajaria Ceramics Gallery",
+    material_category: "Tiles & Flooring",
+    quantity: 2800,
+    unit: "Sq. Ft.",
+    unit_price: 85,
+    total_amount: 238000,
+    invoice_number: "INV-KAJ-771",
+    order_date: "2026-09-14",
+    delivery_status: "Delivered",
+    payment_status: "Paid"
+  }
+];
+
+export const initialPayments = [
+  {
+    payment_id: "PAY-701",
+    client_name: "Ramesh Sundaram",
+    project_name: "Modern Minimalist Villa - Perundurai",
+    amount_received: 1500000,
+    payment_date: "2026-09-10",
+    construction_milestone: "Plinth Beam Stage",
+    payment_method: "Bank Transfer (NEFT/RTGS)",
+    transaction_reference: "HDFC9823104921",
+    payment_receipt: "receipt_pay701.pdf"
+  },
+  {
+    payment_id: "PAY-702",
+    client_name: "Karthik Subramanian",
+    project_name: "Grand Emerald Commercial Hub",
+    amount_received: 5000000,
+    payment_date: "2026-09-14",
+    construction_milestone: "Slab Casting",
+    payment_method: "Bank Transfer (NEFT/RTGS)",
+    transaction_reference: "ICIC0029310488",
+    payment_receipt: "receipt_pay702.pdf"
+  },
+  {
+    payment_id: "PAY-703",
+    client_name: "Mrs. Revathi Raman",
+    project_name: "Heritage Home Renovation",
+    amount_received: 1000000,
+    payment_date: "2026-09-02",
+    construction_milestone: "Booking / Advance",
+    payment_method: "UPI",
+    transaction_reference: "UPI/62901928301/GPay",
+    payment_receipt: "receipt_pay703.pdf"
+  }
+];
+
+export const initialAppointments = [
+  {
+    appointment_id: "APT-501",
+    customer_name: "Gokulakrishnan M.",
+    customer_phone: "+91 98427 12900",
+    site_location: "Sampath Nagar, Erode",
+    appointment_date: "2026-09-22",
+    renovation_services: ["Kitchen Remodeling", "Bathroom Upgrade"],
+    status: "Technician Assigned",
+    technician_name: "Selvam (Senior Inspector)"
+  },
+  {
+    appointment_id: "APT-502",
+    customer_name: "Deepa Natesan",
+    customer_phone: "+91 97910 88211",
+    site_location: "Solar Pirivu, Erode",
+    appointment_date: "2026-09-23",
+    renovation_services: ["Painting & Waterproofing", "Roofing & Structure"],
+    status: "Scheduled",
+    technician_name: "Unassigned"
+  },
+  {
+    appointment_id: "APT-503",
+    customer_name: "Saravanan P.",
+    customer_phone: "+91 94421 55009",
+    site_location: "Chithode, Erode",
+    appointment_date: "2026-09-20",
+    renovation_services: ["Full Home Renovation"],
+    status: "Completed",
+    technician_name: "Murugan (Van Tech Lead)"
+  }
+];
+
+export const monthlyFinancialOverview = [
+  { month: "Apr", revenue: 4200000, expenses: 1800000, purchases: 1200000 },
+  { month: "May", revenue: 5800000, expenses: 2100000, purchases: 1900000 },
+  { month: "Jun", revenue: 7500000, expenses: 2900000, purchases: 2400000 },
+  { month: "Jul", revenue: 6200000, expenses: 2400000, purchases: 2100000 },
+  { month: "Aug", revenue: 8900000, expenses: 3100000, purchases: 3200000 },
+  { month: "Sep", revenue: 7500000, expenses: 209500, purchases: 1355500 }
+];
