@@ -60,7 +60,6 @@ export default function Header() {
           <div className="user-avatar">AD</div>
           <div className="user-info">
             <span className="user-name">Admin Executive</span>
-            <span className="user-role">Yeloline HQ</span>
           </div>
           <button
             onClick={logout}

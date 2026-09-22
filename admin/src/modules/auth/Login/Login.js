@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, Building, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import './Login.css';
 
@@ -35,12 +35,6 @@ export default function Login() {
     } else {
       setErrorMsg('Invalid credentials! Please use email: admin@yeloline.com & pass: admin@123');
     }
-  };
-
-  const handleFillDemo = () => {
-    setEmail('admin@yeloline.com');
-    setPassword('admin@123');
-    setErrorMsg('');
   };
 
   return (
@@ -137,20 +131,6 @@ export default function Login() {
             )}
           </button>
         </form>
-
-        <div className="demo-credentials-box">
-          <div>
-            <strong>Demo Credentials:</strong>
-            <div style={{ fontSize: '0.74rem', color: '#64748B' }}>admin@yeloline.com / admin@123</div>
-          </div>
-          <button type="button" className="demo-fill-btn" onClick={handleFillDemo} disabled={isLoggingIn}>
-            Fill Credentials
-          </button>
-        </div>
-
-        <div style={{ textAlign: 'center', fontSize: '0.74rem', color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-          <Building size={14} /> Yeloline Construction & Renovation HQ
-        </div>
       </div>
     </div>
   );

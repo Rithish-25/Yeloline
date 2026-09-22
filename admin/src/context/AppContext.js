@@ -41,11 +41,7 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem('yeloline_admin_tab');
     setIsAuthenticated(false);
   };
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: "New Quote Enquiry received from Anand & Lakshmi", time: "10m ago", read: false },
-    { id: 2, text: "Material Order PO-302 is in transit", time: "1h ago", read: false },
-    { id: 3, text: "Renovation Van Appointment APT-501 scheduled for Sep 22", time: "3h ago", read: true }
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   // Handle responsive sidebar collapse on resize
   useEffect(() => {
