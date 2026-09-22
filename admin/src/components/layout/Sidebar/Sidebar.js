@@ -20,7 +20,7 @@ export default function Sidebar() {
     toggleSidebar
   } = useApp();
 
-  const menuItems = [
+  const managementItems = [
     {
       id: 'dashboard',
       label: 'Dashboard & Analytics',
@@ -37,6 +37,14 @@ export default function Sidebar() {
       icon: Building2
     },
     {
+      id: 'renovation_appointments',
+      label: 'Renovation Van Bookings',
+      icon: Truck
+    }
+  ];
+
+  const adminCoreItems = [
+    {
       id: 'site_expenses',
       label: 'Site Expense Tracker',
       icon: Receipt
@@ -50,11 +58,6 @@ export default function Sidebar() {
       id: 'client_payments',
       label: 'Client Milestone Payments',
       icon: CreditCard
-    },
-    {
-      id: 'renovation_appointments',
-      label: 'Renovation Van Bookings',
-      icon: Truck
     }
   ];
 
@@ -103,30 +106,36 @@ export default function Sidebar() {
     }
   };
 
+  const renderNavItem = (item) => {
+    const IconComponent = item.icon;
+    const isActive = activeTab === item.id;
+    return (
+      <button
+        key={item.id}
+        className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
+        onClick={() => handleNavClick(item.id)}
+        title={item.label}
+      >
+        <div className="sidebar-nav-icon">
+          <IconComponent size={20} />
+        </div>
+        {!isSidebarCollapsed && (
+          <span className="sidebar-nav-label">{item.label}</span>
+        )}
+      </button>
+    );
+  };
+
   return (
     <aside ref={sidebarRef} className={`left-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-nav-container">
         {!isSidebarCollapsed && <div className="sidebar-section-label">Management Core</div>}
-        
-        {menuItems.map(item => {
-          const IconComponent = item.icon;
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => handleNavClick(item.id)}
-              title={item.label}
-            >
-              <div className="sidebar-nav-icon">
-                <IconComponent size={20} />
-              </div>
-              {!isSidebarCollapsed && (
-                <span className="sidebar-nav-label">{item.label}</span>
-              )}
-            </button>
-          );
-        })}
+        {managementItems.map(renderNavItem)}
+
+        <div className="sidebar-divider" />
+
+        {!isSidebarCollapsed && <div className="sidebar-section-label">Admin Core</div>}
+        {adminCoreItems.map(renderNavItem)}
       </div>
 
       <div className="sidebar-footer">

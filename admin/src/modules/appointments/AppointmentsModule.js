@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, Truck, Phone, Calendar, UserCheck, CheckCircle2, Filter } from 'lucide-react';
+import { Plus, Download, Upload, Truck, Phone, Calendar, CheckCircle2, Filter, Eye, MapPin, Wrench, Clock, FileText } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import Modal from '../../components/common/Modal/Modal';
@@ -17,23 +17,23 @@ const SERVICES_LIST = [
   "Roofing & Structure"
 ];
 
-const TECHNICIANS = [
-  "Selvam (Senior Inspector)",
-  "Murugan (Van Tech Lead)",
-  "Kannan (Electrical Specialist)",
-  "Senthil (Plumbing Expert)"
+const TIME_SLOTS = [
+  "Morning (9:00 AM - 12:00 PM)",
+  "Afternoon (2:00 PM - 5:00 PM)",
+  "Evening (5:00 PM - 7:00 PM)"
 ];
 
-const STATUS_OPTIONS = ["Scheduled", "Technician Assigned", "Completed", "Cancelled"];
+const STATUS_OPTIONS = ["Scheduled", "Confirmed", "Completed", "Cancelled"];
 
 const APPOINTMENT_COLUMNS_SPEC = [
   { key: "appointment_id", label: "Appointment ID", type: "String", required: true, example: "APT-501" },
   { key: "customer_name", label: "Customer Full Name", type: "String", required: true, example: "Gokulakrishnan M." },
   { key: "customer_phone", label: "Customer Phone", type: "String", required: true, example: "+91 98427 12900" },
-  { key: "site_location", label: "Site Location", type: "String", required: true, example: "Sampath Nagar, Erode" },
+  { key: "site_location", label: "Location", type: "String", required: true, example: "Sampath Nagar, Erode" },
   { key: "appointment_date", label: "Visit Date", type: "Date", required: true, example: "2026-09-22" },
-  { key: "status", label: "Booking Status", type: "String", required: true, example: "Technician Assigned" },
-  { key: "technician_name", label: "Assigned Lead Tech", type: "String", required: true, example: "Selvam (Senior Inspector)" }
+  { key: "preferred_time_slot", label: "Preferred Time Slot", type: "String", required: true, example: "Morning (9:00 AM - 12:00 PM)" },
+  { key: "status", label: "Booking Status", type: "String", required: true, example: "Scheduled" },
+  { key: "additional_notes", label: "Additional Notes", type: "String", required: false, example: "Laser scan demo requested" }
 ];
 
 const SAMPLE_APPOINTMENT_ROW = {
@@ -42,25 +42,27 @@ const SAMPLE_APPOINTMENT_ROW = {
   customer_phone: "+91 98427 12900",
   site_location: "Sampath Nagar, Erode",
   appointment_date: "2026-09-22",
-  status: "Technician Assigned",
-  technician_name: "Selvam (Senior Inspector)"
+  preferred_time_slot: "Morning (9:00 AM - 12:00 PM)",
+  status: "Scheduled",
+  additional_notes: "Modular kitchen sample demo requested"
 };
 
 export default function AppointmentsModule() {
-  const { appointments, addAppointment, updateAppointmentStatus, assignTechnician, importAppointments, exportToCSV } = useApp();
+  const { appointments, addAppointment, updateAppointmentStatus, importAppointments, exportToCSV } = useApp();
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [assignModalAppointment, setAssignModalAppointment] = useState(null);
-  const [selectedTech, setSelectedTech] = useState(TECHNICIANS[0]);
+  const [viewingDetailAppointment, setViewingDetailAppointment] = useState(null);
 
   const [formData, setFormData] = useState({
     customer_name: 'Ganesh Kumar',
     customer_phone: '+91 98422 10982',
     site_location: 'Perundurai, Erode',
     appointment_date: new Date().toISOString().split('T')[0],
-    renovation_services: ["Kitchen Remodeling"]
+    preferred_time_slot: 'Morning (9:00 AM - 12:00 PM)',
+    renovation_services: ["Kitchen Remodeling"],
+    additional_notes: ''
   });
 
   const filteredAppointments = selectedStatusFilter === 'ALL'
@@ -71,6 +73,15 @@ export default function AppointmentsModule() {
     e.preventDefault();
     addAppointment(formData);
     setIsModalOpen(false);
+    setFormData({
+      customer_name: '',
+      customer_phone: '',
+      site_location: '',
+      appointment_date: new Date().toISOString().split('T')[0],
+      preferred_time_slot: 'Morning (9:00 AM - 12:00 PM)',
+      renovation_services: ["Kitchen Remodeling"],
+      additional_notes: ''
+    });
   };
 
   const toggleServiceChoice = (srv) => {
@@ -91,7 +102,7 @@ export default function AppointmentsModule() {
       key: "appointment_id",
       render: (r) => <span style={{ fontWeight: '700', color: 'var(--accent-yellow-dark)' }}>{r.appointment_id}</span>
     },
-    { header: "Customer Name", key: "customer_name", render: (r) => <strong>{r.customer_name}</strong> },
+    { header: "Client Name", key: "customer_name", render: (r) => <strong>{r.customer_name}</strong> },
     {
       header: "Phone",
       key: "customer_phone",
@@ -104,10 +115,21 @@ export default function AppointmentsModule() {
         </a>
       )
     },
-    { header: "Site Location", key: "site_location" },
-    { header: "Date", key: "appointment_date" },
+    { header: "Location", key: "site_location" },
     {
-      header: "Services Requested",
+      header: "Preferred Time Slot",
+      key: "appointment_date",
+      render: (r) => (
+        <div>
+          <div style={{ fontWeight: '600' }}>{r.appointment_date}</div>
+          {r.preferred_time_slot && (
+            <div style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>{r.preferred_time_slot}</div>
+          )}
+        </div>
+      )
+    },
+    {
+      header: "Service Required",
       key: "renovation_services",
       render: (r) => (
         <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
@@ -118,32 +140,18 @@ export default function AppointmentsModule() {
       )
     },
     {
-      header: "Assigned Tech",
-      key: "technician_name",
+      header: "Actions",
+      key: "actions",
       render: (r) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span>{r.technician_name || 'Unassigned'}</span>
+        <div style={{ display: 'flex', gap: '6px' }}>
           <button
-            style={{ background: 'var(--primary-yellow-light)', border: 'none', color: 'var(--accent-yellow-dark)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.72rem', fontWeight: '700' }}
-            onClick={() => setAssignModalAppointment(r)}
+            style={{ background: 'var(--info-bg)', border: 'none', color: 'var(--info-blue)', padding: '5px 8px', borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => setViewingDetailAppointment(r)}
+            title="View Full Appointment Details"
           >
-            Assign
+            <Eye size={14} />
           </button>
         </div>
-      )
-    },
-    {
-      header: "Status",
-      key: "status",
-      render: (r) => (
-        <select
-          className="filter-select"
-          style={{ padding: '2px 6px', fontSize: '0.78rem' }}
-          value={r.status}
-          onChange={(e) => updateAppointmentStatus(r.appointment_id, e.target.value)}
-        >
-          {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
-        </select>
       )
     }
   ];
@@ -199,9 +207,9 @@ export default function AppointmentsModule() {
           highlight
         />
         <MetricCard
-          title="Technician Assigned"
-          value={appointments.filter(a => a.technician_name && a.technician_name !== 'Unassigned').length}
-          icon={UserCheck}
+          title="Scheduled Visits"
+          value={appointments.filter(a => a.status === 'Scheduled' || a.status === 'Confirmed').length}
+          icon={Clock}
         />
         <MetricCard
           title="Completed Site Visits"
@@ -232,8 +240,9 @@ export default function AppointmentsModule() {
       <DataTable
         columns={columns}
         data={filteredAppointments}
-        searchPlaceholder="Search customer, location, tech..."
+        searchPlaceholder="Search customer, location..."
         pageSize={8}
+        onRowClick={(row) => setViewingDetailAppointment(row)}
       />
 
       {/* Create Appointment Modal */}
@@ -244,7 +253,7 @@ export default function AppointmentsModule() {
       >
         <form onSubmit={handleSubmit} className="form-grid">
           <div className="form-group">
-            <label className="form-label">Customer Name *</label>
+            <label className="form-label">Client Name *</label>
             <input
               type="text"
               required
@@ -255,7 +264,7 @@ export default function AppointmentsModule() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Customer Phone *</label>
+            <label className="form-label">Phone Number *</label>
             <input
               type="text"
               required
@@ -266,7 +275,7 @@ export default function AppointmentsModule() {
           </div>
 
           <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-            <label className="form-label">Site Address / Location *</label>
+            <label className="form-label">Location *</label>
             <input
               type="text"
               required
@@ -278,7 +287,7 @@ export default function AppointmentsModule() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Appointment Date</label>
+            <label className="form-label">Appointment Date *</label>
             <input
               type="date"
               className="form-input"
@@ -287,8 +296,19 @@ export default function AppointmentsModule() {
             />
           </div>
 
+          <div className="form-group">
+            <label className="form-label">Preferred Time Slot *</label>
+            <select
+              className="form-input"
+              value={formData.preferred_time_slot}
+              onChange={(e) => setFormData({ ...formData, preferred_time_slot: e.target.value })}
+            >
+              {TIME_SLOTS.map(ts => <option key={ts} value={ts}>{ts}</option>)}
+            </select>
+          </div>
+
           <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-            <label className="form-label">Renovation Services Needed</label>
+            <label className="form-label">Service Required</label>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '4px' }}>
               {SERVICES_LIST.map(srv => {
                 const active = formData.renovation_services.includes(srv);
@@ -315,6 +335,18 @@ export default function AppointmentsModule() {
             </div>
           </div>
 
+          <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+            <label className="form-label">Additional Notes</label>
+            <textarea
+              className="form-input"
+              rows={3}
+              placeholder="e.g., Client wants bath tile sample demo, site laser scan required..."
+              value={formData.additional_notes}
+              onChange={(e) => setFormData({ ...formData, additional_notes: e.target.value })}
+              style={{ resize: 'vertical' }}
+            />
+          </div>
+
           <div style={{ gridColumn: '1 / -1', marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
             <button type="button" className="btn-secondary" onClick={() => setIsModalOpen(false)}>
               Cancel
@@ -326,36 +358,99 @@ export default function AppointmentsModule() {
         </form>
       </Modal>
 
-      {/* Assign Technician Modal */}
-      {assignModalAppointment && (
+      {/* Appointment Detail Modal */}
+      {viewingDetailAppointment && (
         <Modal
-          isOpen={!!assignModalAppointment}
-          onClose={() => setAssignModalAppointment(null)}
-          title={`Assign Technician to ${assignModalAppointment.appointment_id}`}
+          isOpen={!!viewingDetailAppointment}
+          onClose={() => setViewingDetailAppointment(null)}
+          title={`Renovation Appointment Details - ${viewingDetailAppointment.appointment_id}`}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div>
-              <strong>Customer:</strong> {assignModalAppointment.customer_name} ({assignModalAppointment.site_location})
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Header info card */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-md)' }}>
+              <div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)' }}>{viewingDetailAppointment.customer_name}</h2>
+                <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <MapPin size={14} /> {viewingDetailAppointment.site_location}
+                </div>
+              </div>
+              <span className={`status-badge ${viewingDetailAppointment.status === 'Completed' ? 'badge-active' : viewingDetailAppointment.status === 'Cancelled' ? 'badge-cancelled' : 'badge-pending'}`}>
+                {viewingDetailAppointment.status}
+              </span>
             </div>
-            <div className="form-group">
-              <label className="form-label">Select Van Technician</label>
-              <select
-                className="form-input"
-                value={selectedTech}
-                onChange={(e) => setSelectedTech(e.target.value)}
-              >
-                {TECHNICIANS.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
+
+            {/* Info Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Phone Number</div>
+                <a
+                  href={`tel:${viewingDetailAppointment.customer_phone}`}
+                  style={{ fontWeight: '700', fontSize: '0.92rem', display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--accent-yellow-dark)', textDecoration: 'none' }}
+                >
+                  <Phone size={14} /> {viewingDetailAppointment.customer_phone}
+                </a>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Appointment Date</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Calendar size={14} /> {viewingDetailAppointment.appointment_date}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Preferred Time Slot</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-yellow-dark)' }}>
+                  <Clock size={14} /> {viewingDetailAppointment.preferred_time_slot || 'Morning (9:00 AM - 12:00 PM)'}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Appointment ID</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', color: 'var(--accent-yellow-dark)' }}>
+                  {viewingDetailAppointment.appointment_id}
+                </div>
+              </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '1rem' }}>
+
+            {/* Service Required Card */}
+            <div style={{ padding: '1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-md)' }}>
+              <div className="form-label" style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Wrench size={14} /> Service Required
+              </div>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {(viewingDetailAppointment.renovation_services || []).length > 0 ? (
+                  viewingDetailAppointment.renovation_services.map((srv, idx) => (
+                    <span key={idx} className="service-tag" style={{ fontSize: '0.85rem', padding: '4px 10px' }}>
+                      {srv}
+                    </span>
+                  ))
+                ) : (
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>General Van Site Inspection</span>
+                )}
+              </div>
+            </div>
+
+            {/* Additional Notes Card */}
+            {viewingDetailAppointment.additional_notes && (
+              <div style={{ padding: '1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-md)' }}>
+                <div className="form-label" style={{ marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <FileText size={14} /> Additional Notes
+                </div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: '1.5' }}>
+                  {viewingDetailAppointment.additional_notes}
+                </p>
+              </div>
+            )}
+
+            {/* Modal Actions */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '0.5rem' }}>
               <button
-                className="btn-primary"
-                onClick={() => {
-                  assignTechnician(assignModalAppointment.appointment_id, selectedTech);
-                  setAssignModalAppointment(null);
-                }}
+                type="button"
+                className="btn-secondary"
+                onClick={() => setViewingDetailAppointment(null)}
               >
-                Confirm Technician Assignment
+                Close
               </button>
             </div>
           </div>

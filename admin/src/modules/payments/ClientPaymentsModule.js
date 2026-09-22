@@ -198,6 +198,7 @@ export default function ClientPaymentsModule() {
         data={filteredPayments}
         searchPlaceholder="Search client, project, transaction ref..."
         pageSize={8}
+        onRowClick={(row) => setReceiptPreviewPayment(row)}
       />
 
       {/* Create Payment Modal */}

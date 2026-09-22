@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Star, MapPin, Clock, Edit3, Trash2, Layers, Filter } from 'lucide-react';
+import { Plus, Star, MapPin, Clock, Edit3, Trash2, Layers, Filter, CheckSquare, Square } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Modal from '../../components/common/Modal/Modal';
 import MultiImageUploader from '../../components/common/MultiImageUploader/MultiImageUploader';
@@ -8,54 +8,114 @@ import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import './PortfolioProjectModule.css';
 
 const CATEGORIES = ["Residential", "Commercial", "Villa", "Renovation"];
+const STATUSES = ["Completed", "Ongoing"];
 
 export default function PortfolioProjectModule() {
-  const { projects, addProject, editProject, deleteProject, toggleFeaturedProject } = useApp();
+  const {
+    projects,
+    addProject,
+    editProject,
+    deleteProject,
+    toggleFeaturedProject,
+    masterHighlights,
+    addMasterHighlight
+  } = useApp();
+
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+
+  // Custom new highlight inline state
+  const [isAddingNewHighlight, setIsAddingNewHighlight] = useState(false);
+  const [newHighlightText, setNewHighlightText] = useState('');
 
   // Form State
   const [formData, setFormData] = useState({
     title: '',
     category: 'Villa',
+    status: 'Completed',
     client_name: '',
     location: '',
     area_sqft: 3000,
     duration_months: 8,
-    completion_date: '2026-10-01',
     description: '',
+    highlights: ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"],
     cover_image: '',
     gallery_images: [],
     featured: false
   });
 
-  const filteredProjects = selectedCategory === 'ALL'
-    ? projects
-    : projects.filter(p => p.category === selectedCategory);
+  const filteredProjects = projects.filter(p => {
+    const matchesCategory = selectedCategory === 'ALL' || p.category === selectedCategory;
+    const matchesStatus = selectedStatus === 'ALL' || (p.status || 'Completed') === selectedStatus;
+    return matchesCategory && matchesStatus;
+  });
 
   const openCreateModal = () => {
     setEditingProject(null);
     setFormData({
       title: '',
       category: 'Villa',
+      status: 'Completed',
       client_name: '',
       location: '',
       area_sqft: 3000,
       duration_months: 8,
-      completion_date: '2026-10-01',
       description: '',
+      highlights: ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"],
       cover_image: '',
       gallery_images: [],
       featured: false
     });
+    setIsAddingNewHighlight(false);
+    setNewHighlightText('');
     setIsModalOpen(true);
   };
 
   const openEditModal = (proj) => {
     setEditingProject(proj);
-    setFormData({ ...proj });
+    setFormData({
+      ...proj,
+      status: proj.status || 'Completed',
+      highlights: proj.highlights || ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"]
+    });
+    setIsAddingNewHighlight(false);
+    setNewHighlightText('');
     setIsModalOpen(true);
+  };
+
+  const toggleHighlight = (item) => {
+    const currentList = formData.highlights || [];
+    if (currentList.includes(item)) {
+      setFormData({
+        ...formData,
+        highlights: currentList.filter(h => h !== item)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        highlights: [...currentList, item]
+      });
+    }
+  };
+
+  const handleCreateNewHighlightSubmit = (e) => {
+    e.preventDefault();
+    if (!newHighlightText || !newHighlightText.trim()) return;
+    const trimmed = newHighlightText.trim();
+    addMasterHighlight(trimmed);
+    
+    // Auto check for current form
+    const currentList = formData.highlights || [];
+    if (!currentList.includes(trimmed)) {
+      setFormData(prev => ({
+        ...prev,
+        highlights: [...currentList, trimmed]
+      }));
+    }
+    setNewHighlightText('');
+    setIsAddingNewHighlight(false);
   };
 
   const handleSubmit = (e) => {
@@ -80,11 +140,11 @@ export default function PortfolioProjectModule() {
         </button>
       </div>
 
-      {/* Category Filter Tabs */}
+      {/* Category & Status Filter Bar */}
       <div className="leads-filter-bar">
         <CustomSelect
           icon={Filter}
-          label="Category:"
+          label="CATEGORY:"
           value={selectedCategory}
           onChange={(val) => setSelectedCategory(val)}
           options={[
@@ -93,6 +153,21 @@ export default function PortfolioProjectModule() {
               value: c,
               label: c,
               badge: projects.filter(p => p.category === c).length
+            }))
+          ]}
+        />
+
+        <CustomSelect
+          icon={Filter}
+          label="STATUS:"
+          value={selectedStatus}
+          onChange={(val) => setSelectedStatus(val)}
+          options={[
+            { value: "ALL", label: `All Statuses (${projects.length})`, badge: projects.length },
+            ...STATUSES.map(s => ({
+              value: s,
+              label: s,
+              badge: projects.filter(p => (p.status || 'Completed') === s).length
             }))
           ]}
         />
@@ -109,7 +184,12 @@ export default function PortfolioProjectModule() {
                   <Star size={12} fill="var(--dark-charcoal)" /> Featured on App
                 </div>
               )}
-              <div className="project-category-badge">{proj.category}</div>
+              <div className="project-card-badges-row">
+                <span className="project-badge-pill category-pill">{proj.category}</span>
+                <span className={`project-badge-pill ${proj.status === 'Ongoing' ? 'status-ongoing' : 'status-completed'}`}>
+                  {proj.status || 'Completed'}
+                </span>
+              </div>
             </div>
 
             <div className="project-card-body">
@@ -123,8 +203,25 @@ export default function PortfolioProjectModule() {
 
               <p className="project-description">{proj.description}</p>
 
+              {/* Architectural Highlights Display (Cards with Stars) */}
+              {(proj.highlights && proj.highlights.length > 0) && (
+                <div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '6px' }}>
+                    Key Architectural Highlights:
+                  </div>
+                  <div className="project-highlights-grid">
+                    {proj.highlights.map((hl, idx) => (
+                      <div key={idx} className="highlight-card-item">
+                        <Star size={16} className="highlight-card-star" />
+                        <span className="highlight-card-text">{hl}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div>
-                <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', marginBottom: '4px', marginTop: '4px' }}>
                   Gallery Photos ({proj.gallery_images?.length || 0}):
                 </div>
                 <div className="project-gallery-thumbs">
@@ -214,6 +311,17 @@ export default function PortfolioProjectModule() {
           </div>
 
           <div className="form-group">
+            <label className="form-label">Project Status</label>
+            <select
+              className="form-input"
+              value={formData.status || 'Completed'}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+            >
+              {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+
+          <div className="form-group">
             <label className="form-label">Client Name</label>
             <input
               type="text"
@@ -254,18 +362,8 @@ export default function PortfolioProjectModule() {
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Completion Date</label>
-            <input
-              type="date"
-              className="form-input"
-              value={formData.completion_date}
-              onChange={(e) => setFormData({ ...formData, completion_date: e.target.value })}
-            />
-          </div>
-
           <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-            <label className="form-label">Description & Architectural Highlights</label>
+            <label className="form-label">Description & Overview</label>
             <textarea
               className="form-input"
               rows={3}
@@ -273,6 +371,88 @@ export default function PortfolioProjectModule() {
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
+          </div>
+
+          {/* Section: Architectural Highlights Checkbox Selector + Add Button */}
+          <div className="project-highlights-section">
+            <div className="highlights-header-row">
+              <div style={{ fontWeight: '800', fontSize: '0.92rem', color: 'var(--accent-yellow-dark)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Star size={16} fill="#f59e0b" color="#f59e0b" /> Select Key Architectural Highlights
+              </div>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ padding: '4px 10px', fontSize: '0.78rem', gap: '4px' }}
+                onClick={() => setIsAddingNewHighlight(!isAddingNewHighlight)}
+              >
+                <Plus size={14} /> Add New Highlight
+              </button>
+            </div>
+
+            {/* Inline Add New Highlight Input Bar */}
+            {isAddingNewHighlight && (
+              <div style={{ display: 'flex', gap: '8px', background: 'var(--light-card)', padding: '8px', borderRadius: '8px', border: '1px solid var(--primary-yellow)' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  style={{ flex: 1, padding: '4px 10px', fontSize: '0.84rem' }}
+                  placeholder="Type new highlight (e.g., Italian Marble Flooring)..."
+                  value={newHighlightText}
+                  onChange={(e) => setNewHighlightText(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCreateNewHighlightSubmit(e)}
+                />
+                <button
+                  type="button"
+                  className="btn-primary"
+                  style={{ padding: '4px 12px', fontSize: '0.78rem' }}
+                  onClick={handleCreateNewHighlightSubmit}
+                >
+                  Add to All Pages
+                </button>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                  onClick={() => setIsAddingNewHighlight(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
+            {/* Checkbox List for Admin Selection */}
+            <div className="highlight-checkboxes-grid">
+              {masterHighlights.map((hl) => {
+                const isChecked = (formData.highlights || []).includes(hl);
+                return (
+                  <label key={hl} className="highlight-checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleHighlight(hl)}
+                    />
+                    <span>⭐ {hl}</span>
+                  </label>
+                );
+              })}
+            </div>
+
+            {/* Live Preview of Selected Highlights Cards */}
+            {(formData.highlights && formData.highlights.length > 0) && (
+              <div style={{ marginTop: '4px' }}>
+                <div style={{ fontSize: '0.76rem', fontWeight: '700', color: 'var(--text-muted)', marginBottom: '6px' }}>
+                  Live Card Preview ({formData.highlights.length} Selected):
+                </div>
+                <div className="project-highlights-grid">
+                  {formData.highlights.map((hl, idx) => (
+                    <div key={idx} className="highlight-card-item">
+                      <Star size={16} className="highlight-card-star" />
+                      <span className="highlight-card-text">{hl}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Cover Image Drag & Drop Uploader */}

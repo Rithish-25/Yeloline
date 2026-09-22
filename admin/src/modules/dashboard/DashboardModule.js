@@ -6,7 +6,11 @@ import {
   Receipt,
   ShoppingCart,
   Calendar,
-  Download
+  Download,
+  Eye,
+  MapPin,
+  Phone,
+  Mail
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -22,6 +26,7 @@ import { useApp } from '../../context/AppContext';
 import MetricCard from '../../components/common/MetricCard/MetricCard';
 import DataTable from '../../components/common/DataTable/DataTable';
 import StatusBadge from '../../components/common/StatusBadge/StatusBadge';
+import Modal from '../../components/common/Modal/Modal';
 import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './DashboardModule.css';
 
@@ -69,6 +74,7 @@ export default function DashboardModule() {
   } = useApp();
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [viewingDetailEnquiry, setViewingDetailEnquiry] = useState(null);
 
   // Calculations
   const totalRevenue = payments.reduce((acc, p) => acc + Number(p.amount_received || 0), 0);
@@ -82,7 +88,22 @@ export default function DashboardModule() {
     { header: "Structure", key: "structure_type", render: (r) => <span style={{ whiteSpace: 'nowrap' }}>{r.structure_type}</span> },
     { header: "Est. Rate", key: "estimated_rate_per_sqft", render: (r) => <span style={{ whiteSpace: 'nowrap' }}>{r.estimated_rate_per_sqft}</span> },
     { header: "Date", key: "enquiry_date", render: (r) => <span style={{ whiteSpace: 'nowrap' }}>{r.enquiry_date}</span> },
-    { header: "Status", key: "lead_stage", render: (r) => <StatusBadge status={r.lead_stage} /> }
+    { header: "Status", key: "lead_stage", render: (r) => <StatusBadge status={r.lead_stage} /> },
+    {
+      header: "Actions",
+      key: "actions",
+      render: (r) => (
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button
+            style={{ background: 'var(--info-bg)', border: 'none', color: 'var(--info-blue)', padding: '5px 8px', borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => setViewingDetailEnquiry(r)}
+            title="View Full Specification Details"
+          >
+            <Eye size={14} />
+          </button>
+        </div>
+      )
+    }
   ];
 
   return (
@@ -251,8 +272,95 @@ export default function DashboardModule() {
           columns={quoteColumns}
           data={enquiries.slice(0, 5)}
           pageSize={5}
+          onRowClick={(row) => setViewingDetailEnquiry(row)}
         />
       </div>
+
+      {/* Enquiry Detail Modal */}
+      {viewingDetailEnquiry && (
+        <Modal
+          isOpen={!!viewingDetailEnquiry}
+          onClose={() => setViewingDetailEnquiry(null)}
+          title={`Enquiry Full Details Specification - ${viewingDetailEnquiry.enquiry_id}`}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Header profile info */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-md)' }}>
+              <div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)' }}>{viewingDetailEnquiry.client_name}</h2>
+                <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <MapPin size={14} /> {viewingDetailEnquiry.site_location}
+                </div>
+              </div>
+              <StatusBadge status={viewingDetailEnquiry.lead_stage} />
+            </div>
+
+            {/* Comprehensive Info Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Phone Number</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Phone size={14} /> {viewingDetailEnquiry.client_phone}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Email Address</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Mail size={14} /> {viewingDetailEnquiry.client_email || 'Not Provided'}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Structure Type</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Building2 size={14} /> {viewingDetailEnquiry.structure_type || 'Villa / Residential'}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Built-Up Area</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  {viewingDetailEnquiry.builtup_area_sqft} sq. ft.
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Cement Brand Spec</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', color: 'var(--accent-yellow-dark)' }}>
+                  {viewingDetailEnquiry.cement_brand || 'UltraTech Cement'}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Est. Rate / Sq. Ft.</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  {viewingDetailEnquiry.estimated_rate_per_sqft || '₹2,200'}
+                </div>
+              </div>
+            </div>
+
+            {/* Total Estimated Cost Banner */}
+            <div style={{ padding: '1rem 1.25rem', background: 'linear-gradient(135deg, rgba(250, 204, 21, 0.15), rgba(234, 179, 8, 0.08))', border: '1px solid rgba(250, 204, 21, 0.3)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontWeight: '700', color: 'var(--dark-charcoal)' }}>Total Project Budget Estimate:</span>
+              <span style={{ fontSize: '1.3rem', fontWeight: '900', color: 'var(--accent-yellow-dark)' }}>
+                ₹{Number(viewingDetailEnquiry.total_estimated_cost).toLocaleString('en-IN')}
+              </span>
+            </div>
+
+            {/* Action buttons */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '0.5rem' }}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setViewingDetailEnquiry(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* CSV Export Modal */}
       <CSVExportModal

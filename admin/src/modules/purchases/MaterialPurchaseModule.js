@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, ShoppingBag, Truck, CheckCircle2, Filter } from 'lucide-react';
+import { Plus, Download, Upload, ShoppingBag, Truck, CheckCircle2, Filter, Eye } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import StatusBadge from '../../components/common/StatusBadge/StatusBadge';
@@ -59,6 +59,7 @@ export default function MaterialPurchaseModule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [viewingDetailPurchase, setViewingDetailPurchase] = useState(null);
 
   const [formData, setFormData] = useState({
     vendor_name: '',
@@ -128,6 +129,21 @@ export default function MaterialPurchaseModule() {
       header: "Payment Status",
       key: "payment_status",
       render: (r) => <StatusBadge status={r.payment_status} />
+    },
+    {
+      header: "Actions",
+      key: "actions",
+      render: (r) => (
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button
+            style={{ background: 'var(--info-bg)', border: 'none', color: 'var(--info-blue)', padding: '5px 8px', borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => setViewingDetailPurchase(r)}
+            title="View Full Purchase Order Details"
+          >
+            <Eye size={14} />
+          </button>
+        </div>
+      )
     }
   ];
 
@@ -206,6 +222,7 @@ export default function MaterialPurchaseModule() {
         data={filteredPurchases}
         searchPlaceholder="Search vendor name, invoice #, material..."
         pageSize={8}
+        onRowClick={(row) => setViewingDetailPurchase(row)}
       />
 
       {/* Create Purchase Order Modal */}
@@ -310,6 +327,70 @@ export default function MaterialPurchaseModule() {
           </div>
         </form>
       </Modal>
+
+      {/* Purchase Detail Modal */}
+      {viewingDetailPurchase && (
+        <Modal
+          isOpen={!!viewingDetailPurchase}
+          onClose={() => setViewingDetailPurchase(null)}
+          title={`Material Purchase Order Details - ${viewingDetailPurchase.purchase_id}`}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-md)' }}>
+              <div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)' }}>{viewingDetailPurchase.vendor_name}</h2>
+                <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                  Invoice: <strong>{viewingDetailPurchase.invoice_number || 'N/A'}</strong>
+                </div>
+              </div>
+              <StatusBadge status={viewingDetailPurchase.payment_status} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Item Category</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', color: 'var(--accent-yellow-dark)' }}>
+                  {viewingDetailPurchase.item_category}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Quantity</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  {viewingDetailPurchase.quantity} {viewingDetailPurchase.unit}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Unit Price</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  ₹{Number(viewingDetailPurchase.unit_price).toLocaleString('en-IN')}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Delivery Status</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  {viewingDetailPurchase.delivery_status}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem 1.25rem', background: 'linear-gradient(135deg, rgba(250, 204, 21, 0.15), rgba(234, 179, 8, 0.08))', border: '1px solid rgba(250, 204, 21, 0.3)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontWeight: '700', color: 'var(--dark-charcoal)' }}>Total Purchase Amount:</span>
+              <span style={{ fontSize: '1.3rem', fontWeight: '900', color: 'var(--accent-yellow-dark)' }}>
+                ₹{Number(viewingDetailPurchase.total_amount).toLocaleString('en-IN')}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+              <button type="button" className="btn-secondary" onClick={() => setViewingDetailPurchase(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* CSV Import Modal */}
       <CSVImportModal

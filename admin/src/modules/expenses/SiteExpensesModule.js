@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, Trash2, Paperclip, DollarSign, Filter } from 'lucide-react';
+import { Plus, Download, Upload, Trash2, Paperclip, DollarSign, Filter, Eye } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import Modal from '../../components/common/Modal/Modal';
@@ -48,6 +48,7 @@ export default function SiteExpensesModule() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [viewingDetailExpense, setViewingDetailExpense] = useState(null);
 
   const [formData, setFormData] = useState({
     site_name: '',
@@ -116,13 +117,22 @@ export default function SiteExpensesModule() {
       header: "Actions",
       key: "actions",
       render: (r) => (
-        <button
-          style={{ background: 'var(--danger-bg)', border: 'none', color: 'var(--danger-red)', padding: '5px 8px', borderRadius: '4px', cursor: 'pointer' }}
-          onClick={() => deleteExpense(r.expense_id)}
-          title="Delete Entry"
-        >
-          <Trash2 size={14} />
-        </button>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button
+            style={{ background: 'var(--info-bg)', border: 'none', color: 'var(--info-blue)', padding: '5px 8px', borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => setViewingDetailExpense(r)}
+            title="View Full Expense Details"
+          >
+            <Eye size={14} />
+          </button>
+          <button
+            style={{ background: 'var(--danger-bg)', border: 'none', color: 'var(--danger-red)', padding: '5px 8px', borderRadius: '4px', cursor: 'pointer' }}
+            onClick={() => deleteExpense(r.expense_id)}
+            title="Delete Entry"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
       )
     }
   ];
@@ -191,6 +201,7 @@ export default function SiteExpensesModule() {
         data={filteredExpenses}
         searchPlaceholder="Search site name, category, receipt..."
         pageSize={8}
+        onRowClick={(row) => setViewingDetailExpense(row)}
       />
 
       {/* Create Expense Modal */}
@@ -286,6 +297,74 @@ export default function SiteExpensesModule() {
           </div>
         </form>
       </Modal>
+
+      {/* Expense Detail Modal */}
+      {viewingDetailExpense && (
+        <Modal
+          isOpen={!!viewingDetailExpense}
+          onClose={() => setViewingDetailExpense(null)}
+          title={`Site Expense Details - ${viewingDetailExpense.expense_id}`}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-md)' }}>
+              <div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)' }}>{viewingDetailExpense.site_name}</h2>
+                <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                  Category: <strong style={{ color: 'var(--accent-yellow-dark)' }}>{viewingDetailExpense.category}</strong>
+                </div>
+              </div>
+              <span style={{ fontSize: '1.2rem', fontWeight: '900', color: 'var(--danger-red)' }}>
+                ₹{Number(viewingDetailExpense.amount).toLocaleString('en-IN')}
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Payment Mode</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  {viewingDetailExpense.payment_mode}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Payment Date</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem' }}>
+                  {viewingDetailExpense.date}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Receipt Attachment</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', color: viewingDetailExpense.receipt_attachment ? 'var(--info-blue)' : 'var(--text-muted)' }}>
+                  {viewingDetailExpense.receipt_attachment || 'No Receipt Attached'}
+                </div>
+              </div>
+
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Expense ID</div>
+                <div style={{ fontWeight: '700', fontSize: '0.92rem', color: 'var(--accent-yellow-dark)' }}>
+                  {viewingDetailExpense.expense_id}
+                </div>
+              </div>
+            </div>
+
+            {viewingDetailExpense.notes && (
+              <div style={{ padding: '0.85rem 1rem', background: 'var(--light-background)', border: '1px solid var(--light-border)', borderRadius: 'var(--radius-sm)' }}>
+                <div className="form-label" style={{ marginBottom: '4px' }}>Notes & Purpose</div>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: '1.5' }}>
+                  {viewingDetailExpense.notes}
+                </p>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+              <button type="button" className="btn-secondary" onClick={() => setViewingDetailExpense(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* CSV Import Modal */}
       <CSVImportModal

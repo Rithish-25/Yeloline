@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import './DataTable.css';
 
-export default function DataTable({ columns, data, searchPlaceholder, actions, pageSize = 8 }) {
+export default function DataTable({ columns, data, searchPlaceholder, actions, pageSize = 8, onRowClick }) {
   const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -57,7 +57,14 @@ export default function DataTable({ columns, data, searchPlaceholder, actions, p
           <tbody>
             {paginatedData.length > 0 ? (
               paginatedData.map((row, rowIndex) => (
-                <tr key={row.id || row.enquiry_id || row.project_id || row.expense_id || row.purchase_id || row.payment_id || row.appointment_id || rowIndex}>
+                <tr
+                  key={row.id || row.enquiry_id || row.project_id || row.expense_id || row.purchase_id || row.payment_id || row.appointment_id || rowIndex}
+                  onClick={(e) => {
+                    if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || e.target.closest('select')) return;
+                    if (onRowClick) onRowClick(row);
+                  }}
+                  style={onRowClick ? { cursor: 'pointer' } : {}}
+                >
                   {columns.map((col, colIndex) => (
                     <td key={col.key || colIndex}>
                       {col.render ? col.render(row, rowIndex) : row[col.key]}

@@ -6,6 +6,7 @@ import {
   initialPurchases,
   initialPayments,
   initialAppointments,
+  initialMasterHighlights,
   monthlyFinancialOverview
 } from '../data/initialData';
 
@@ -83,10 +84,20 @@ export const AppProvider = ({ children }) => {
   // Module Data States
   const [enquiries, setEnquiries] = useState(initialEnquiries);
   const [projects, setProjects] = useState(initialProjects);
+  const [masterHighlights, setMasterHighlights] = useState(initialMasterHighlights);
   const [expenses, setExpenses] = useState(initialExpenses);
   const [purchases, setPurchases] = useState(initialPurchases);
   const [payments, setPayments] = useState(initialPayments);
   const [appointments, setAppointments] = useState(initialAppointments);
+
+  const addMasterHighlight = (newHighlight) => {
+    if (!newHighlight || !newHighlight.trim()) return;
+    const trimmed = newHighlight.trim();
+    if (!masterHighlights.includes(trimmed)) {
+      setMasterHighlights(prev => [...prev, trimmed]);
+      addNotification(`Added new architectural highlight option: "${trimmed}"`);
+    }
+  };
 
   // Apply theme to document root attribute
   useEffect(() => {
@@ -337,6 +348,8 @@ export const AppProvider = ({ children }) => {
         editProject,
         deleteProject,
         toggleFeaturedProject,
+        masterHighlights,
+        addMasterHighlight,
         expenses,
         addExpense,
         deleteExpense,

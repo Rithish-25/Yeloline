@@ -39,6 +39,15 @@
   pointer-events: none;
 }
 
+.sidebar-divider {
+  margin: 16px 12px 10px;
+  height: 2px;
+  background: linear-gradient(90deg, #FACC15 0%, #EAB308 30%, #475569 100%);
+  border-radius: 99px;
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
+  opacity: 0.95;
+}
+
 .sidebar-nav-item {
   display: flex;
   align-items: center;
