@@ -12,14 +12,24 @@ import {
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('yeloline_admin_auth') === 'true';
+  });
+  const [activeTab, setActiveTabState] = useState(() => {
+    return localStorage.getItem('yeloline_admin_tab') || 'dashboard';
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [theme] = useState('light'); // Website default light theme
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(window.innerWidth < 1024);
 
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    localStorage.setItem('yeloline_admin_tab', tab);
+  };
+
   const login = (email, password) => {
     if (email === 'admin@yeloline.com' && password === 'admin@123') {
+      localStorage.setItem('yeloline_admin_auth', 'true');
       setIsAuthenticated(true);
       return true;
     }
@@ -27,6 +37,8 @@ export const AppProvider = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.removeItem('yeloline_admin_auth');
+    localStorage.removeItem('yeloline_admin_tab');
     setIsAuthenticated(false);
   };
   const [notifications, setNotifications] = useState([
