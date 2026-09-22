@@ -7,7 +7,9 @@ import {
   ShoppingCart,
   CreditCard,
   Truck,
-  Building
+  Building,
+  UserCheck,
+  Sliders
 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import './Sidebar.css';
@@ -40,6 +42,11 @@ export default function Sidebar() {
       id: 'renovation_appointments',
       label: 'Renovation Van Bookings',
       icon: Truck
+    },
+    {
+      id: 'user_master',
+      label: 'User Master',
+      icon: UserCheck
     }
   ];
 
@@ -58,6 +65,11 @@ export default function Sidebar() {
       id: 'client_payments',
       label: 'Client Milestone Payments',
       icon: CreditCard
+    },
+    {
+      id: 'admin_master',
+      label: 'Admin Master',
+      icon: Sliders
     }
   ];
 
@@ -134,7 +146,7 @@ export default function Sidebar() {
 
         <div className="sidebar-divider" />
 
-        {!isSidebarCollapsed && <div className="sidebar-section-label">Admin Core</div>}
+        {!isSidebarCollapsed && <div className="sidebar-section-label">ADMIN MASTER</div>}
         {adminCoreItems.map(renderNavItem)}
       </div>
 
