@@ -1,4 +1,4 @@
-/* User Master Module Styling */
+/* Customer / User Master Module Styling */
 .user-master-container {
   display: flex;
   flex-direction: column;
@@ -40,10 +40,11 @@
 .user-stat-icon {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .user-stat-info h4 {
@@ -56,7 +57,8 @@
 .user-stat-info p {
   font-size: 0.82rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .user-controls-card {
@@ -87,8 +89,11 @@
 }
 
 .user-search-box input {
-  width: 100%;
-  padding: 10px 14px 10px 42px !important;
+  width: 100% !important;
+  padding-left: 44px !important;
+  padding-right: 14px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
   border: 1px solid var(--light-border);
   border-radius: var(--radius-md);
   font-size: 0.88rem;
@@ -97,13 +102,13 @@
 }
 
 .user-search-box .search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  pointer-events: none;
-  z-index: 2;
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: var(--text-muted) !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
 }
 
 .filter-dropdown-group {
@@ -119,9 +124,11 @@
   white-space: nowrap;
 }
 
+/* Customer Grid Cards Layout */
+.user-cards-grid,
 .user-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
   gap: 1.25rem;
 }
 
@@ -132,150 +139,119 @@
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 1rem;
   box-shadow: var(--shadow-sm);
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   position: relative;
 }
 
 .user-card:hover {
-  border-color: rgba(250, 204, 21, 0.5);
+  border-color: var(--primary-yellow);
   box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .user-card-header {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 0.85rem;
 }
 
 .user-avatar-badge {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #FFFFFF;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
 }
 
-.user-card-meta {
-  flex: 1;
-  min-width: 0;
-}
-
-.user-card-name {
+.user-card-title {
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
-.user-card-email {
-  font-size: 0.82rem;
+.user-card-role {
+  font-size: 0.78rem;
+  font-weight: 600;
   color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-top: 2px;
 }
 
-.user-details-list {
+.user-card-body {
+  background: var(--light-background);
+  border: 1px solid var(--light-border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  font-size: 0.84rem;
-  background: var(--light-background);
-  padding: 0.75rem 0.88rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--light-border);
+  gap: 0.6rem;
 }
 
-.user-detail-row {
+.user-info-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.user-detail-label {
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.user-detail-value {
-  font-weight: 600;
+  gap: 0.65rem;
+  font-size: 0.85rem;
   color: var(--text-primary);
-  text-align: right;
+}
+
+.user-info-row .info-icon {
+  color: var(--primary-yellow-dark, #D97706);
+  flex-shrink: 0;
 }
 
 .user-card-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  pt: 0.5rem;
-  border-top: 1px solid var(--light-border);
+  gap: 0.65rem;
+  margin-top: 0.25rem;
 }
 
-.status-toggle-btn {
+.customer-call-btn,
+.customer-wa-btn {
+  flex: 1;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  font-size: 0.78rem;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s ease;
   border: none;
-  transition: all var(--transition-fast);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
 }
 
-.status-toggle-btn.active {
-  background: var(--success-bg);
-  color: var(--success-green);
+.customer-call-btn {
+  background: #10B981;
+  color: #FFFFFF;
 }
 
-.status-toggle-btn.inactive {
-  background: var(--danger-bg);
-  color: var(--danger-red);
+.customer-call-btn:hover {
+  background: #059669;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
 }
 
-.user-actions {
-  display: flex;
-  gap: 0.35rem;
+.customer-wa-btn {
+  background: #25D366;
+  color: #FFFFFF;
 }
 
-.action-btn-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--light-border);
-  background: var(--light-card);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.action-btn-icon:hover {
-  background: var(--primary-yellow-light);
-  color: var(--dark-charcoal);
-  border-color: var(--primary-yellow);
-}
-
-.action-btn-icon.delete:hover {
-  background: var(--danger-bg);
-  color: var(--danger-red);
-  border-color: var(--danger-red);
+.customer-wa-btn:hover {
+  background: #1EBE5A;
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.25);
 }
 
 .user-form-grid {
@@ -285,6 +261,11 @@
 }
 
 @media (max-width: 768px) {
+  .user-cards-grid,
+  .user-grid {
+    grid-template-columns: 1fr;
+  }
+
   .user-controls-card {
     padding: 0.88rem;
   }
@@ -304,10 +285,6 @@
   .filter-dropdown-group {
     width: 100%;
     justify-content: space-between;
-  }
-
-  .filter-field-label {
-    min-width: 60px;
   }
 }
 

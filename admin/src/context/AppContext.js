@@ -10,7 +10,8 @@ import {
   monthlyFinancialOverview,
   initialUsers,
   initialDropdownMasters,
-  masterCategoriesMeta
+  masterCategoriesMeta,
+  initialContactEnquiries
 } from '../data/initialData';
 
 const AppContext = createContext();
@@ -417,6 +418,27 @@ export const AppProvider = ({ children }) => {
     addNotification(`Successfully imported ${formatted.length} renovation appointments from CSV`);
   };
 
+  // Contact Enquiries State & Handlers
+  const [contactEnquiries, setContactEnquiries] = useState(initialContactEnquiries);
+
+  const addContactEnquiry = (enquiryData) => {
+    const newEntry = {
+      contact_id: `CNT-${new Date().getFullYear()}-${String(contactEnquiries.length + 1).padStart(3, '0')}`,
+      submission_date: new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+      status: 'New',
+      ...enquiryData
+    };
+    setContactEnquiries(prev => [newEntry, ...prev]);
+  };
+
+  const updateContactEnquiryStatus = (contact_id, newStatus) => {
+    setContactEnquiries(prev => prev.map(item => item.contact_id === contact_id ? { ...item, status: newStatus } : item));
+  };
+
+  const deleteContactEnquiry = (contact_id) => {
+    setContactEnquiries(prev => prev.filter(item => item.contact_id !== contact_id));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -467,6 +489,11 @@ export const AppProvider = ({ children }) => {
         importAppointments,
         monthlyFinancialOverview,
         exportToCSV,
+        // Contact Enquiries
+        contactEnquiries,
+        addContactEnquiry,
+        updateContactEnquiryStatus,
+        deleteContactEnquiry,
         // User Master
         users,
         addUser,

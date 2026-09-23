@@ -1,252 +1,277 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Users,
-  UserCheck,
-  ShieldCheck,
-  HardHat,
   Search,
   Plus,
   Edit3,
   Trash2,
   Phone,
   Mail,
-  Building2,
-  Calendar,
   MapPin,
-  CheckCircle2,
-  XCircle,
+  Calendar,
   Grid,
   List,
-  UserPlus
+  UserPlus,
+  Send,
+  Upload,
+  Download,
+  Building,
+  CheckCircle,
+  Truck,
+  MessageSquare,
+  FileText,
+  Eye
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Modal from '../../components/common/Modal/Modal';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import DataTable from '../../components/common/DataTable/DataTable';
+import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
+import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './UserMasterModule.css';
 
-const DEFAULT_AVATAR_COLORS = [
-  '#EAB308', '#3B82F6', '#10B981', '#8B5CF6', '#EC4899', '#F59E0B', '#6366F1', '#06B6D4'
+const CUSTOMER_COLUMNS_SPEC = [
+  { key: "name", label: "Customer Full Name", type: "String", required: true, example: "Senthil Kumar" },
+  { key: "phone", label: "Mobile Number", type: "String", required: true, example: "+91 98765 43210" },
+  { key: "email", label: "Email Address", type: "String", required: false, example: "senthil.k@gmail.com" },
+  { key: "location", label: "Location / Site Address", type: "String", required: false, example: "Perundurai Road, Erode" },
+  { key: "source", label: "Source Channel", type: "String", required: false, example: "Quote & Enquiry Lead" }
 ];
 
 export default function UserMasterModule() {
-  const { users, addUser, updateUser, deleteUser, toggleUserStatus, dropdownMasters } = useApp();
+  const {
+    enquiries = [],
+    appointments = [],
+    contactEnquiries = [],
+    exportToCSV
+  } = useApp();
 
+  const [customCustomers, setCustomCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState('All');
-  const [selectedStatus, setSelectedStatus] = useState('All');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
+  const [selectedSource, setSelectedSource] = useState('All');
+  const [viewMode, setViewMode] = useState('grid');
 
   // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [deleteConfirmUser, setDeleteConfirmUser] = useState(null);
+  const [editingCustomer, setEditingCustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
-  // Form State
+  const handleOpenDetails = (customer) => {
+    setSelectedCustomer(customer);
+    setIsDetailsModalOpen(true);
+  };
+
   const [formData, setFormData] = useState({
-    full_name: '',
-    email: '',
+    name: '',
     phone: '',
-    role: 'Site Engineer',
-    department: 'Civil Construction',
-    assigned_sites: '',
-    status: 'Active',
-    avatar_color: '#3B82F6'
+    email: '',
+    location: '',
+    source: 'Quote & Enquiry Lead'
   });
 
-  // Extract roles from Dropdown Master if available or fallback
-  const roleOptions = dropdownMasters
-    ? dropdownMasters
-        .filter(d => d.category === 'user_role' && d.status === 'Active')
-        .map(d => d.label)
-    : [
-        'Super Admin',
-        'Project Manager',
-        'Site Engineer',
-        'Accountant',
-        'Architecture Designer',
-        'Quality Inspector'
-      ];
+  // Consolidate customers from all 3 sources + custom customers
+  const allCustomers = useMemo(() => {
+    const map = new Map();
 
-  const departmentOptions = [
-    'Management',
-    'Operations',
-    'Civil Construction',
-    'Finance & Billing',
-    'Design & 3D Studio',
-    'Quality Assurance',
-    'Procurement'
-  ];
+    // 1. From Quote & Enquiry Leads
+    (enquiries || []).forEach(item => {
+      const name = item.client_name || item.name;
+      const phone = item.client_phone || item.phone || '';
+      if (!name) return;
 
-  // Quick Stats
-  const totalUsersCount = users ? users.length : 0;
-  const activeUsersCount = users ? users.filter(u => u.status === 'Active').length : 0;
-  const adminManagerCount = users ? users.filter(u => u.role.includes('Admin') || u.role.includes('Manager')).length : 0;
-  const siteEngineersCount = users ? users.filter(u => u.role.includes('Engineer') || u.role.includes('Inspector')).length : 0;
+      const key = `${name.toLowerCase().trim()}_${phone.replace(/[^0-9]/g, '')}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          id: `CUST-Q-${map.size + 1}`,
+          name: name,
+          phone: phone || '+91 98421 88321',
+          email: item.client_email || item.email || '',
+          location: item.site_location || item.location || 'Erode, TN',
+          source: 'Quote & Enquiry Lead',
+          avatar_color: '#EAB308'
+        });
+      }
+    });
 
-  // Filtered Users
-  const filteredUsers = (users || []).filter(u => {
+    // 2. From Renovation Van Bookings
+    (appointments || []).forEach(item => {
+      const name = item.customer_name || item.name;
+      const phone = item.customer_phone || item.phone || '';
+      if (!name) return;
+
+      const key = `${name.toLowerCase().trim()}_${phone.replace(/[^0-9]/g, '')}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          id: `CUST-R-${map.size + 1}`,
+          name: name,
+          phone: phone || '+91 97892 11045',
+          email: item.customer_email || item.email || '',
+          location: item.site_location || item.location || 'Erode, TN',
+          source: 'Renovation Van Booking',
+          avatar_color: '#3B82F6'
+        });
+      }
+    });
+
+    // 3. From Contact Enquiry
+    (contactEnquiries || []).forEach(item => {
+      const name = item.name;
+      const phone = item.phone || '';
+      if (!name) return;
+
+      const key = `${name.toLowerCase().trim()}_${phone.replace(/[^0-9]/g, '')}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          id: `CUST-C-${map.size + 1}`,
+          name: name,
+          phone: phone || '+91 98765 43210',
+          email: item.email || '',
+          location: item.location || 'Erode, TN',
+          source: 'Contact Enquiry',
+          avatar_color: '#10B981'
+        });
+      }
+    });
+
+    // 4. From Custom Added Customers
+    customCustomers.forEach(item => {
+      const key = `${item.name.toLowerCase().trim()}_${item.phone.replace(/[^0-9]/g, '')}`;
+      map.set(key, item);
+    });
+
+    return Array.from(map.values());
+  }, [enquiries, appointments, contactEnquiries, customCustomers]);
+
+  // Filter Customers
+  const filteredCustomers = allCustomers.filter(cust => {
     const matchesSearch =
-      u.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.phone.includes(searchTerm) ||
-      (u.assigned_sites && u.assigned_sites.toLowerCase().includes(searchTerm.toLowerCase()));
+      cust.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cust.phone.includes(searchTerm) ||
+      (cust.email && cust.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (cust.location && cust.location.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const matchesRole = selectedRole === 'All' || u.role === selectedRole;
-    const matchesStatus = selectedStatus === 'All' || u.status === selectedStatus;
+    const matchesSource =
+      selectedSource === 'All' || cust.source === selectedSource;
 
-    return matchesSearch && matchesRole && matchesStatus;
+    return matchesSearch && matchesSource;
   });
 
-  const handleOpenAddModal = () => {
-    setEditingUser(null);
-    setFormData({
-      full_name: '',
-      email: '',
-      phone: '',
-      role: roleOptions[0] || 'Site Engineer',
-      department: 'Civil Construction',
-      assigned_sites: '',
-      status: 'Active',
-      avatar_color: DEFAULT_AVATAR_COLORS[Math.floor(Math.random() * DEFAULT_AVATAR_COLORS.length)]
-    });
-    setIsModalOpen(true);
-  };
+  // Stats
+  const totalCount = allCustomers.length;
+  const phoneCount = allCustomers.filter(c => c.phone).length;
+  const emailCount = allCustomers.filter(c => c.email).length;
 
-  const handleOpenEditModal = (user) => {
-    setEditingUser(user);
-    setFormData({
-      full_name: user.full_name || '',
-      email: user.email || '',
-      phone: user.phone || '',
-      role: user.role || 'Site Engineer',
-      department: user.department || 'Civil Construction',
-      assigned_sites: user.assigned_sites || '',
-      status: user.status || 'Active',
-      avatar_color: user.avatar_color || '#3B82F6'
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleSubmitForm = (e) => {
+  const handleSaveCustomer = (e) => {
     e.preventDefault();
-    if (!formData.full_name.trim() || !formData.email.trim()) {
-      alert('Please fill in required name and email fields.');
+    if (!formData.name || !formData.phone) {
+      alert('Please fill in Customer Name and Phone Number.');
       return;
     }
 
-    if (editingUser) {
-      updateUser({
-        ...editingUser,
-        ...formData
-      });
+    if (editingCustomer) {
+      setCustomCustomers(prev =>
+        prev.map(c => c.id === editingCustomer.id ? { ...editingCustomer, ...formData } : c)
+      );
     } else {
-      addUser(formData);
+      const newCust = {
+        id: `CUST-${Date.now()}`,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        location: formData.location || 'Erode, TN',
+        source: formData.source || 'Direct Contact',
+        avatar_color: '#8B5CF6'
+      };
+      setCustomCustomers(prev => [newCust, ...prev]);
     }
+
     setIsModalOpen(false);
+    setEditingCustomer(null);
+    setFormData({ name: '', phone: '', email: '', location: '', source: 'Direct Contact' });
+  };
+
+  const handleCSVImport = (data) => {
+    let imported = 0;
+    const newItems = [];
+    data.forEach(row => {
+      if (row.name && row.phone) {
+        newItems.push({
+          id: `CUST-IMP-${Date.now()}-${imported}`,
+          name: row.name,
+          phone: row.phone,
+          email: row.email || '',
+          location: row.location || 'Erode, TN',
+          source: row.source || 'CSV Import',
+          avatar_color: '#EC4899'
+        });
+        imported++;
+      }
+    });
+    setCustomCustomers(prev => [...newItems, ...prev]);
+    alert(`Successfully imported ${imported} customer records.`);
   };
 
   const getInitials = (name) => {
-    if (!name) return 'US';
+    if (!name) return 'C';
     const parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return name.slice(0, 2).toUpperCase();
   };
 
-  // Table Columns Setup
+  // Table Columns Specification
   const tableColumns = [
     {
-      key: 'user',
-      label: 'User Name & Email',
+      key: 'name',
+      label: 'NAME',
       render: (row) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div
             className="user-avatar-badge"
             style={{ backgroundColor: row.avatar_color || '#3B82F6', width: '38px', height: '38px', fontSize: '0.85rem' }}
           >
-            {getInitials(row.full_name)}
+            {getInitials(row.name)}
           </div>
-          <div>
-            <div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{row.full_name}</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{row.email}</div>
-          </div>
+          <div style={{ fontWeight: '700', color: 'var(--text-primary)', fontSize: '0.95rem' }}>{row.name}</div>
         </div>
       )
     },
     {
       key: 'phone',
-      label: 'Phone',
+      label: 'PHONE NO',
       render: (row) => (
-        <span style={{ fontSize: '0.85rem', fontWeight: '500' }}>{row.phone}</span>
+        <div style={{ fontWeight: '600', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.88rem' }}>
+          <Phone size={14} style={{ color: 'var(--accent-yellow-dark, #D97706)' }} />
+          <span>{row.phone || '—'}</span>
+        </div>
       )
     },
     {
-      key: 'role',
-      label: 'Role',
+      key: 'email',
+      label: 'EMAIL ID',
       render: (row) => (
-        <span
-          style={{
-            padding: '4px 10px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.78rem',
-            fontWeight: '700',
-            background: 'var(--primary-yellow-light)',
-            color: 'var(--dark-charcoal)',
-            border: '1px solid var(--primary-yellow)'
-          }}
-        >
-          {row.role}
-        </span>
-      )
-    },
-    {
-      key: 'department',
-      label: 'Department',
-      render: (row) => row.department
-    },
-    {
-      key: 'assigned_sites',
-      label: 'Assigned Sites',
-      render: (row) => (
-        <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-          {row.assigned_sites || 'Unassigned'}
-        </span>
-      )
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (row) => (
-        <button
-          className={`status-toggle-btn ${row.status === 'Active' ? 'active' : 'inactive'}`}
-          onClick={() => toggleUserStatus(row.user_id)}
-          title="Click to toggle status"
-        >
-          {row.status === 'Active' ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
-          {row.status}
-        </button>
+        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Mail size={14} style={{ color: '#3B82F6' }} />
+          <span>{row.email || '—'}</span>
+        </div>
       )
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: 'ACTIONS',
       render: (row) => (
         <div className="user-actions">
           <button
             className="action-btn-icon"
-            onClick={() => handleOpenEditModal(row)}
-            title="Edit User"
+            title="View Details"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenDetails(row);
+            }}
           >
-            <Edit3 size={15} />
-          </button>
-          <button
-            className="action-btn-icon delete"
-            onClick={() => setDeleteConfirmUser(row)}
-            title="Delete User"
-          >
-            <Trash2 size={15} />
+            <Eye size={16} />
           </button>
         </div>
       )
@@ -255,220 +280,148 @@ export default function UserMasterModule() {
 
   return (
     <div className="user-master-container">
-      {/* Header Row */}
+      {/* Header Bar */}
       <div className="user-master-header">
         <div>
-          <h1 className="dashboard-title">User Master</h1>
-          <p className="dashboard-subtitle">
-            Manage system administrators, project managers, site engineers, and staff access roles
+          <h1 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Users size={26} style={{ color: 'var(--primary-yellow)' }} />
+            Customers Database
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: '0.25rem' }}>
+            Centralized customer registry storing Renovation Van clients, Contact Enquiry submissions, and Quote Lead customers
           </p>
         </div>
-        <button className="btn-primary" onClick={handleOpenAddModal}>
-          <UserPlus size={18} />
-          <span>Add New System User</span>
-        </button>
+
+        <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+          <button className="btn-secondary" onClick={() => setIsImportModalOpen(true)}>
+            <Upload size={16} /> Import CSV
+          </button>
+
+          <button className="btn-secondary" onClick={() => setIsExportModalOpen(true)}>
+            <Download size={16} /> Export CSV
+          </button>
+
+          <button className="btn-primary" onClick={() => {
+            setEditingCustomer(null);
+            setFormData({ name: '', phone: '', email: '', location: '', source: 'Quote & Enquiry Lead' });
+            setIsModalOpen(true);
+          }}>
+            <UserPlus size={16} /> Add Customer
+          </button>
+        </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Cards */}
       <div className="user-master-stats-grid">
         <div className="user-stat-card">
-          <div className="user-stat-icon" style={{ background: 'rgba(59, 130, 246, 0.12)', color: '#3B82F6' }}>
+          <div className="user-stat-icon" style={{ background: 'rgba(250, 204, 21, 0.15)', color: 'var(--primary-yellow)' }}>
             <Users size={24} />
           </div>
           <div className="user-stat-info">
-            <h4>{totalUsersCount}</h4>
-            <p>Total System Users</p>
+            <h4>{totalCount}</h4>
+            <p>Total Customers</p>
           </div>
         </div>
 
         <div className="user-stat-card">
-          <div className="user-stat-icon" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#10B981' }}>
-            <UserCheck size={24} />
+          <div className="user-stat-icon" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3B82F6' }}>
+            <Phone size={24} />
           </div>
           <div className="user-stat-info">
-            <h4>{activeUsersCount}</h4>
-            <p>Active System Users</p>
+            <h4 style={{ color: '#3B82F6' }}>{phoneCount}</h4>
+            <p>Mobile Phone Numbers</p>
           </div>
         </div>
 
         <div className="user-stat-card">
-          <div className="user-stat-icon" style={{ background: 'rgba(234, 179, 8, 0.15)', color: '#EAB308' }}>
-            <ShieldCheck size={24} />
+          <div className="user-stat-icon" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981' }}>
+            <Mail size={24} />
           </div>
           <div className="user-stat-info">
-            <h4>{adminManagerCount}</h4>
-            <p>Admins & Managers</p>
-          </div>
-        </div>
-
-        <div className="user-stat-card">
-          <div className="user-stat-icon" style={{ background: 'rgba(139, 92, 246, 0.12)', color: '#8B5CF6' }}>
-            <HardHat size={24} />
-          </div>
-          <div className="user-stat-info">
-            <h4>{siteEngineersCount}</h4>
-            <p>Engineers & QA Staff</p>
+            <h4 style={{ color: '#10B981' }}>{emailCount}</h4>
+            <p>Email Addresses</p>
           </div>
         </div>
       </div>
 
-      {/* Filter and Control Bar */}
+      {/* Control Bar */}
       <div className="user-controls-card">
         <div className="user-search-filters">
           <div className="user-search-box">
             <Search className="search-icon" size={16} />
             <input
               type="text"
-              placeholder="Search user by name, email, phone or site..."
+              placeholder="Search customer by name, email or phone number..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-          <div className="filter-dropdown-group">
-            <span className="filter-field-label">Role:</span>
-            <CustomSelect
-              options={['All Roles', ...roleOptions]}
-              value={selectedRole === 'All' ? 'All Roles' : selectedRole}
-              onChange={(val) => {
-                if (val === 'All Roles' || val === 'All') {
-                  setSelectedRole('All');
-                } else {
-                  setSelectedRole(val);
-                }
-              }}
-              placeholder="Select Role"
-            />
-          </div>
-
-          <div className="filter-dropdown-group">
-            <span className="filter-field-label">Status:</span>
-            <CustomSelect
-              options={['All Statuses', 'Active Only', 'Inactive Only']}
-              value={selectedStatus === 'All' ? 'All Statuses' : (selectedStatus === 'Active' ? 'Active Only' : 'Inactive Only')}
-              onChange={(val) => {
-                if (val === 'All Statuses' || val === 'All') {
-                  setSelectedStatus('All');
-                } else if (val === 'Active Only' || val === 'Active') {
-                  setSelectedStatus('Active');
-                } else {
-                  setSelectedStatus('Inactive');
-                }
-              }}
-              placeholder="Select Status"
-            />
-          </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.35rem', background: 'var(--light-background)', padding: '3px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--light-border)' }}>
+        <div className="view-toggle-group">
           <button
-            className={`action-btn-icon ${viewMode === 'grid' ? 'active' : ''}`}
+            className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
             onClick={() => setViewMode('grid')}
-            title="Grid View"
-            style={viewMode === 'grid' ? { background: 'var(--light-card)', borderColor: 'var(--primary-yellow)' } : {}}
+            title="Grid Cards View"
           >
-            <Grid size={16} />
+            <Grid size={18} />
           </button>
           <button
-            className={`action-btn-icon ${viewMode === 'table' ? 'active' : ''}`}
+            className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
             onClick={() => setViewMode('table')}
-            title="Table View"
-            style={viewMode === 'table' ? { background: 'var(--light-card)', borderColor: 'var(--primary-yellow)' } : {}}
+            title="Table Rows View"
           >
-            <List size={16} />
+            <List size={18} />
           </button>
         </div>
       </div>
 
       {/* Main Content Area */}
-      {filteredUsers.length === 0 ? (
+      {filteredCustomers.length === 0 ? (
         <div className="empty-state-card" style={{ padding: '3rem', textAlign: 'center', background: 'var(--light-card)', borderRadius: 'var(--radius-md)', border: '1px solid var(--light-border)' }}>
           <Users size={40} style={{ color: 'var(--text-muted)', marginBottom: '1rem' }} />
-          <h3 style={{ fontSize: '1.2rem', fontWeight: '700' }}>No System Users Found</h3>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: '700' }}>No Customers Found</h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-            No user matches your current search filters. Try clearing filters or add a new user.
+            No customer matches your search query. Try clearing search or add a new customer entry.
           </p>
         </div>
       ) : viewMode === 'grid' ? (
-        <div className="user-grid">
-          {filteredUsers.map((user) => (
-            <div key={user.user_id} className="user-card">
+        <div className="user-cards-grid">
+          {filteredCustomers.map((cust) => (
+            <div key={cust.id} className="user-card" onClick={() => handleOpenDetails(cust)} style={{ cursor: 'pointer' }}>
               <div className="user-card-header">
-                <div
-                  className="user-avatar-badge"
-                  style={{ backgroundColor: user.avatar_color || '#3B82F6' }}
-                >
-                  {getInitials(user.full_name)}
+                <div className="user-avatar-badge" style={{ backgroundColor: cust.avatar_color || '#3B82F6' }}>
+                  {getInitials(cust.name)}
                 </div>
-                <div className="user-card-meta">
-                  <div className="user-card-name">{user.full_name}</div>
-                  <div className="user-card-email">{user.email}</div>
-                  <div style={{ marginTop: '0.35rem' }}>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        padding: '2px 8px',
-                        borderRadius: 'var(--radius-full)',
-                        fontSize: '0.73rem',
-                        fontWeight: '700',
-                        background: 'var(--primary-yellow-light)',
-                        color: 'var(--dark-charcoal)',
-                        border: '1px solid var(--primary-yellow)'
-                      }}
-                    >
-                      {user.role}
-                    </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 className="user-card-title">{cust.name}</h3>
+                </div>
+              </div>
+
+              <div className="user-card-body">
+                <div className="user-info-row">
+                  <Phone size={14} className="info-icon" />
+                  <span>{cust.phone || '—'}</span>
+                </div>
+                {cust.email && (
+                  <div className="user-info-row">
+                    <Mail size={14} className="info-icon" />
+                    <span style={{ wordBreak: 'break-all' }}>{cust.email}</span>
                   </div>
-                </div>
+                )}
               </div>
 
-              <div className="user-details-list">
-                <div className="user-detail-row">
-                  <span className="user-detail-label"><Phone size={13} /> Mobile</span>
-                  <span className="user-detail-value">{user.phone}</span>
-                </div>
-                <div className="user-detail-row">
-                  <span className="user-detail-label"><Building2 size={13} /> Department</span>
-                  <span className="user-detail-value">{user.department}</span>
-                </div>
-                <div className="user-detail-row">
-                  <span className="user-detail-label"><MapPin size={13} /> Coverage</span>
-                  <span className="user-detail-value" style={{ maxWidth: '160px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {user.assigned_sites || 'All Sites'}
-                  </span>
-                </div>
-                <div className="user-detail-row">
-                  <span className="user-detail-label"><Calendar size={13} /> Joined</span>
-                  <span className="user-detail-value">{user.joined_date}</span>
-                </div>
-              </div>
-
-              <div className="user-card-footer">
+              <div className="user-card-footer" style={{ justifyContent: 'flex-end' }}>
                 <button
-                  className={`status-toggle-btn ${user.status === 'Active' ? 'active' : 'inactive'}`}
-                  onClick={() => toggleUserStatus(user.user_id)}
-                  title="Click to toggle user active status"
+                  className="action-btn-icon"
+                  title="View Details"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenDetails(cust);
+                  }}
                 >
-                  {user.status === 'Active' ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
-                  <span>{user.status}</span>
+                  <Eye size={16} />
                 </button>
-
-                <div className="user-actions">
-                  <button
-                    className="action-btn-icon"
-                    onClick={() => handleOpenEditModal(user)}
-                    title="Edit User Profile"
-                  >
-                    <Edit3 size={15} />
-                  </button>
-                  <button
-                    className="action-btn-icon delete"
-                    onClick={() => setDeleteConfirmUser(user)}
-                    title="Delete User"
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </div>
               </div>
             </div>
           ))}
@@ -476,174 +429,160 @@ export default function UserMasterModule() {
       ) : (
         <DataTable
           columns={tableColumns}
-          data={filteredUsers}
-          keyField="user_id"
+          data={filteredCustomers}
+          keyField="id"
           showSearch={false}
+          onRowClick={(row) => handleOpenDetails(row)}
         />
       )}
 
-      {/* Add / Edit User Modal */}
+      {/* Customer Full Details Modal */}
+      {isDetailsModalOpen && selectedCustomer && (
+        <Modal
+          isOpen={isDetailsModalOpen}
+          onClose={() => setIsDetailsModalOpen(false)}
+          title={`Customer Details: ${selectedCustomer.name}`}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--light-background)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--light-border)' }}>
+              <div className="user-avatar-badge" style={{ backgroundColor: selectedCustomer.avatar_color || '#3B82F6', width: '52px', height: '52px', fontSize: '1.2rem' }}>
+                {getInitials(selectedCustomer.name)}
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>{selectedCustomer.name}</h3>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    marginTop: '4px',
+                    padding: '3px 9px',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '0.76rem',
+                    fontWeight: '700',
+                    background: selectedCustomer.source === 'Quote & Enquiry Lead' ? 'rgba(234, 179, 8, 0.15)' : (selectedCustomer.source === 'Renovation Van Booking' ? 'rgba(59, 130, 246, 0.15)' : 'rgba(16, 185, 129, 0.15)'),
+                    color: selectedCustomer.source === 'Quote & Enquiry Lead' ? '#D97706' : (selectedCustomer.source === 'Renovation Van Booking' ? '#2563EB' : '#059669')
+                  }}
+                >
+                  {selectedCustomer.source}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ background: 'var(--light-card)', padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--light-border)' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>Mobile Phone</div>
+                <div style={{ fontWeight: '700', color: 'var(--text-primary)', marginTop: '4px', fontSize: '0.95rem' }}>{selectedCustomer.phone}</div>
+              </div>
+
+              <div style={{ background: 'var(--light-card)', padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--light-border)' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>Email Address</div>
+                <div style={{ fontWeight: '700', color: 'var(--text-primary)', marginTop: '4px', fontSize: '0.95rem', wordBreak: 'break-all' }}>{selectedCustomer.email || '—'}</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '0.5rem' }}>
+              <a
+                href={`tel:${selectedCustomer.phone}`}
+                className="customer-call-btn"
+                style={{ textDecoration: 'none' }}
+              >
+                <Phone size={15} /> Call Customer
+              </a>
+              <a
+                href={`https://wa.me/${selectedCustomer.phone ? selectedCustomer.phone.replace(/[^0-9]/g, '') : ''}?text=Hello%20${encodeURIComponent(selectedCustomer.name)},%20greetings%20from%20Yeloline%20Construction.`}
+                target="_blank"
+                rel="noreferrer"
+                className="customer-wa-btn"
+                style={{ textDecoration: 'none' }}
+              >
+                <Send size={15} /> WhatsApp
+              </a>
+              <button className="btn-secondary" onClick={() => setIsDetailsModalOpen(false)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Add / Edit Customer Modal */}
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title={editingUser ? `Edit User: ${editingUser.full_name}` : 'Add New System User'}
+          title={editingCustomer ? `Edit Customer: ${editingCustomer.name}` : 'Add New Customer Entry'}
         >
-          <form onSubmit={handleSubmitForm} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form onSubmit={handleSaveCustomer} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div className="user-form-grid">
               <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Full Name *</label>
+                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Customer Full Name *</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="e.g. Senthil Nathan"
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                  placeholder="e.g. Senthil Kumar"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Email Address *</label>
+                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Mobile Phone Number *</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g. +91 98765 43210"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Email Address</label>
                 <input
                   type="email"
                   className="form-control"
-                  placeholder="e.g. senthil@yeloline.com"
+                  placeholder="e.g. senthil.k@gmail.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
                 />
               </div>
             </div>
 
-            <div className="user-form-grid">
-              <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Mobile Phone</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="e.g. +91 98421 11223"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>System Role</label>
-                <select
-                  className="form-control"
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                >
-                  {roleOptions.map((r) => (
-                    <option key={r} value={r}>{r}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="user-form-grid">
-              <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Department</label>
-                <select
-                  className="form-control"
-                  value={formData.department}
-                  onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                >
-                  {departmentOptions.map((d) => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Account Status</label>
-                <select
-                  className="form-control"
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Assigned Project Sites / Location</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="e.g. Perundurai Villa, Grand Emerald Commercial"
-                value={formData.assigned_sites}
-                onChange={(e) => setFormData({ ...formData, assigned_sites: e.target.value })}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Avatar Color Badge</label>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-                {DEFAULT_AVATAR_COLORS.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      backgroundColor: color,
-                      border: formData.avatar_color === color ? '3px solid var(--dark-charcoal)' : 'none',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => setFormData({ ...formData, avatar_color: color })}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
               <button type="button" className="btn-secondary" onClick={() => setIsModalOpen(false)}>
                 Cancel
               </button>
               <button type="submit" className="btn-primary">
-                {editingUser ? 'Update User' : 'Add User'}
+                Save Customer
               </button>
             </div>
           </form>
         </Modal>
       )}
 
-      {/* Delete Confirmation Modal */}
-      {deleteConfirmUser && (
-        <Modal
-          isOpen={!!deleteConfirmUser}
-          onClose={() => setDeleteConfirmUser(null)}
-          title="Confirm User Deletion"
-        >
-          <div style={{ padding: '0.5rem 0' }}>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>
-              Are you sure you want to delete system user <strong>{deleteConfirmUser.full_name}</strong>?
-            </p>
-            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-              This action cannot be undone. Their site access and permissions will be revoked immediately.
-            </p>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
-            <button className="btn-secondary" onClick={() => setDeleteConfirmUser(null)}>
-              Cancel
-            </button>
-            <button
-              className="btn-primary"
-              style={{ background: 'var(--danger-red)', borderColor: 'var(--danger-red)', color: '#FFF' }}
-              onClick={() => {
-                deleteUser(deleteConfirmUser.user_id);
-                setDeleteConfirmUser(null);
-              }}
-            >
-              Delete User
-            </button>
-          </div>
-        </Modal>
+      {/* CSV Import Modal */}
+      {isImportModalOpen && (
+        <CSVImportModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          title="Import Customers from CSV"
+          columnsSpec={CUSTOMER_COLUMNS_SPEC}
+          onImport={handleCSVImport}
+        />
+      )}
+
+      {/* CSV Export Modal */}
+      {isExportModalOpen && (
+        <CSVExportModal
+          isOpen={isExportModalOpen}
+          onClose={() => setIsExportModalOpen(false)}
+          title="Export Customers Database to CSV"
+          data={filteredCustomers}
+          columnsSpec={CUSTOMER_COLUMNS_SPEC}
+          defaultFilename="yeloline_customers_database.csv"
+          onExport={(dataToExport, filename) => exportToCSV(dataToExport, filename)}
+        />
       )}
     </div>
   );

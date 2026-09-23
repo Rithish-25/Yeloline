@@ -233,6 +233,232 @@ div.search-box input[type="text"] {
   z-index: 5 !important;
 }
 
+/* Premium View Switcher Toggle Component */
+.view-toggle-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--light-background);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--light-border);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.view-toggle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.view-toggle-btn:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-primary);
+}
+
+.view-toggle-btn.active {
+  background: linear-gradient(135deg, var(--primary-yellow), var(--accent-yellow-dark));
+  color: var(--dark-charcoal);
+  border-color: var(--primary-yellow);
+  box-shadow: 0 2px 8px rgba(250, 204, 21, 0.45);
+}
+
+.view-toggle-btn.active svg {
+  transform: scale(1.1);
+  stroke-width: 2.3px;
+}
+
+/* Modern Status Toggle Badges & Icon Buttons */
+button.status-toggle-btn,
+.status-toggle-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 4px 10px !important;
+  border-radius: 99px !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  white-space: nowrap !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  outline: none !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+button.status-toggle-btn.active,
+.status-toggle-btn.active {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #059669 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+button.status-toggle-btn.active:hover,
+.status-toggle-btn.active:hover {
+  background: rgba(16, 185, 129, 0.24) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.25) !important;
+}
+
+button.status-toggle-btn.inactive,
+.status-toggle-btn.inactive {
+  background: rgba(239, 68, 68, 0.14) !important;
+  color: #DC2626 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+button.status-toggle-btn.inactive:hover,
+.status-toggle-btn.inactive:hover {
+  background: rgba(239, 68, 68, 0.24) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.25) !important;
+}
+
+.status-dropdown-container {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.status-toggle-btn.dropdown-pill {
+  position: relative !important;
+  padding-right: 22px !important;
+}
+
+.status-dropdown-arrow {
+  position: absolute !important;
+  right: 7px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
+  opacity: 0.75 !important;
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
+}
+
+.status-dropdown-arrow.open {
+  transform: translateY(-50%) rotate(180deg) !important;
+  opacity: 1 !important;
+}
+
+.status-toggle-btn.dropdown-pill:hover .status-dropdown-arrow {
+  opacity: 1 !important;
+}
+
+/* Custom Floating Status Popover Menu */
+.status-custom-menu {
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+  min-width: 135px !important;
+  background: var(--light-card, #ffffff) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  border-radius: 12px !important;
+  padding: 5px !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  animation: statusMenuPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes statusMenuPop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.status-menu-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 7px 10px !important;
+  border-radius: 8px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  color: var(--text-primary, #1e293b) !important;
+  text-align: left !important;
+}
+
+.status-menu-option.active-option:hover,
+.status-menu-option.active-option.selected {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #059669 !important;
+}
+
+.status-menu-option.active-option .option-icon {
+  color: #059669 !important;
+}
+
+.status-menu-option.inactive-option:hover,
+.status-menu-option.inactive-option.selected {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #dc2626 !important;
+}
+
+.status-menu-option.inactive-option .option-icon {
+  color: #dc2626 !important;
+}
+
+button.action-btn-icon,
+.action-btn-icon {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--light-border) !important;
+  background: var(--light-card) !important;
+  color: var(--text-secondary) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  outline: none !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+button.action-btn-icon:hover,
+.action-btn-icon:hover {
+  background: var(--primary-yellow-light) !important;
+  color: var(--dark-charcoal) !important;
+  border-color: var(--primary-yellow) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(250, 204, 21, 0.35) !important;
+}
+
+button.action-btn-icon.delete:hover,
+.action-btn-icon.delete:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #DC2626 !important;
+  border-color: #EF4444 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.25) !important;
+}
+
 [data-theme="dark"] .form-control,
 [data-theme="dark"] input[type="text"],
 [data-theme="dark"] input[type="email"],

@@ -17,7 +17,9 @@ import {
   Box,
   DollarSign,
   Wrench,
-  ShieldCheck
+  ShieldCheck,
+  FileText,
+  MessageSquare
 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import './Sidebar.css';
@@ -45,16 +47,16 @@ export default function Sidebar() {
 
   const showLabels = !isSidebarCollapsed || isMobile;
 
+  // Construction Specs has been cut from Admin Master and pasted into Quotes List
   const adminMasterSubMenus = [
     { key: 'All', label: 'All Categories', icon: Grid },
     { key: 'Leads', label: 'Leads & Enquiries', icon: TrendingUp },
-    { key: 'Materials', label: 'Construction Specs', icon: Box },
     { key: 'Finance', label: 'Finance & Purchases', icon: DollarSign },
     { key: 'Services', label: 'Services & Appointments', icon: Wrench },
     { key: 'Users', label: 'User Roles', icon: ShieldCheck }
   ];
 
-  const managementItems = [
+  const mainManagementItems = [
     {
       id: 'dashboard',
       label: 'Dashboard & Analytics',
@@ -76,9 +78,20 @@ export default function Sidebar() {
       icon: Truck
     },
     {
+      id: 'contact_enquiry',
+      label: 'Contact Enquiry',
+      icon: MessageSquare
+    },
+    {
       id: 'user_master',
-      label: 'User Master',
-      icon: UserCheck
+      label: 'Customers',
+      icon: Users
+    },
+    {
+      id: 'quotes_list',
+      label: 'Materials Master',
+      icon: FileText,
+      isMasterGroup: 'Materials'
     }
   ];
 
@@ -136,8 +149,12 @@ export default function Sidebar() {
     };
   }, []);
 
-  const handleNavClick = (tabId) => {
-    setActiveTab(tabId);
+  const handleNavClick = (item) => {
+    if (item.isMasterGroup) {
+      selectAdminMasterGroup(item.isMasterGroup);
+    } else {
+      setActiveTab(item.id);
+    }
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     if (window.innerWidth < 1024) {
       toggleSidebar();
@@ -155,12 +172,14 @@ export default function Sidebar() {
 
   const renderNavItem = (item) => {
     const IconComponent = item.icon;
-    const isActive = activeTab === item.id;
+    const isActive = item.id === 'quotes_list'
+      ? (activeTab === 'admin_master' && adminMasterGroupFilter === 'Materials')
+      : activeTab === item.id;
     return (
       <button
         key={item.id}
         className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
-        onClick={() => handleNavClick(item.id)}
+        onClick={() => handleNavClick(item)}
         title={item.label}
       >
         <div className="sidebar-nav-icon">
@@ -173,13 +192,13 @@ export default function Sidebar() {
     );
   };
 
-  const isAdminMasterActive = activeTab === 'admin_master';
+  const isAdminMasterActive = activeTab === 'admin_master' && adminMasterGroupFilter !== 'Materials';
 
   return (
     <aside ref={sidebarRef} className={`left-sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-nav-container">
         {showLabels && <div className="sidebar-section-label">Management Core</div>}
-        {managementItems.map(renderNavItem)}
+        {mainManagementItems.map(renderNavItem)}
 
         <div className="sidebar-divider" />
 

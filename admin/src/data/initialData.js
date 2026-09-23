@@ -557,3 +557,50 @@ export const initialDropdownMasters = [
   { id: "DM-1206", category: "user_role", label: "Quality Inspector", code: "QUALITY_INSP", color: "#F59E0B", status: "Active", sort_order: 6, description: "Concrete strength testing & safety checks" }
 ];
 
+export const initialContactEnquiries = [
+  {
+    contact_id: "CNT-2026-001",
+    name: "Senthil Kumar",
+    contact_info: "+91 98765 43210 / senthil.k@gmail.com",
+    phone: "+91 98765 43210",
+    email: "senthil.k@gmail.com",
+    message: "Interested in 3BHK house construction in Erode. Please share your project manager contact details and estimate workflow.",
+    submission_date: "2026-09-23 11:30 AM",
+    status: "New",
+    location: "Perundurai, Erode"
+  },
+  {
+    contact_id: "CNT-2026-002",
+    name: "Meenakshi Sundaram",
+    contact_info: "+91 94431 55678 / meenakshi.s@outlook.com",
+    phone: "+91 94431 55678",
+    email: "meenakshi.s@outlook.com",
+    message: "Need quote for complete home renovation and interior woodwork for our 15-year-old independent house.",
+    submission_date: "2026-09-22 04:15 PM",
+    status: "Contacted",
+    location: "Thindal, Erode"
+  },
+  {
+    contact_id: "CNT-2026-003",
+    name: "Rajesh Kannan",
+    contact_info: "+91 98941 12345 / rajesh.kannan@techmail.com",
+    phone: "+91 98941 12345",
+    email: "rajesh.kannan@techmail.com",
+    message: "Looking for commercial building structural elevation design and site inspection appointment for our upcoming office complex.",
+    submission_date: "2026-09-21 10:00 AM",
+    status: "In Progress",
+    location: "Collectorate Area, Erode"
+  },
+  {
+    contact_id: "CNT-2026-004",
+    name: "Deepa Ranganathan",
+    contact_info: "+91 97890 87654 / deepa.r@yahoo.com",
+    phone: "+91 97890 87654",
+    email: "deepa.r@yahoo.com",
+    message: "Requesting information about Yeloline Renovation Van booking packages and site visit schedules.",
+    submission_date: "2026-09-20 02:45 PM",
+    status: "Resolved",
+    location: "Bhavani Road, Erode"
+  }
+];
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Sliders,
   Plus,
@@ -8,6 +8,7 @@ import {
   RotateCcw,
   CheckCircle2,
   XCircle,
+  ChevronDown,
   Layers,
   Box,
   Building2,
@@ -61,6 +62,66 @@ const GROUP_TITLES = {
   }
 };
 
+function StatusDropdownPill({ status, onToggle }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
+  const handleSelect = (targetStatus) => {
+    if (targetStatus !== status) {
+      onToggle();
+    }
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="status-dropdown-container" ref={dropdownRef}>
+      <button
+        type="button"
+        className={`status-toggle-btn dropdown-pill ${status === 'Active' ? 'active' : 'inactive'}`}
+        onClick={() => setIsOpen(prev => !prev)}
+        title="Click to switch status"
+      >
+        {status === 'Active' ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
+        <span>{status}</span>
+        <ChevronDown size={12} className={`status-dropdown-arrow ${isOpen ? 'open' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div className="status-custom-menu">
+          <button
+            type="button"
+            className={`status-menu-option active-option ${status === 'Active' ? 'selected' : ''}`}
+            onClick={() => handleSelect('Active')}
+          >
+            <CheckCircle2 size={14} className="option-icon" />
+            <span>Active</span>
+          </button>
+          <button
+            type="button"
+            className={`status-menu-option inactive-option ${status === 'Inactive' ? 'selected' : ''}`}
+            onClick={() => handleSelect('Inactive')}
+          >
+            <XCircle size={14} className="option-icon" />
+            <span>Inactive</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminMasterModule() {
   const {
     dropdownMasters,
@@ -97,7 +158,6 @@ export default function AdminMasterModule() {
     code: '',
     color: '#3B82F6',
     status: 'Active',
-    sort_order: 1,
     description: ''
   });
 
@@ -146,7 +206,7 @@ export default function AdminMasterModule() {
     // Search query match
     const matchesSearch =
       item.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.code && item.code.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
       getCategoryName(item.category).toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -171,7 +231,6 @@ export default function AdminMasterModule() {
       code: '',
       color: PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)],
       status: 'Active',
-      sort_order: (dropdownMasters ? dropdownMasters.length + 1 : 1),
       description: ''
     });
     setIsModalOpen(true);
@@ -185,20 +244,9 @@ export default function AdminMasterModule() {
       code: option.code || '',
       color: option.color || '#3B82F6',
       status: option.status || 'Active',
-      sort_order: option.sort_order || 1,
       description: option.description || ''
     });
     setIsModalOpen(true);
-  };
-
-  const handleAutoGenerateCode = (labelStr) => {
-    if (!labelStr) return '';
-    return labelStr
-      .trim()
-      .toUpperCase()
-      .replace(/[^A-Z0-9\s]/g, '')
-      .replace(/\s+/g, '_')
-      .substring(0, 20);
   };
 
   const handleSubmitForm = (e) => {
@@ -208,7 +256,7 @@ export default function AdminMasterModule() {
       return;
     }
 
-    const finalCode = formData.code.trim() || handleAutoGenerateCode(formData.label);
+    const finalCode = formData.code.trim();
 
     if (editingOption) {
       updateDropdownOption({
@@ -227,9 +275,7 @@ export default function AdminMasterModule() {
 
   // Group options by Category for List View
   const groupedOptions = filteredCategoryList.reduce((acc, cat) => {
-    const items = filteredOptions
-      .filter(opt => opt.category === cat.key)
-      .sort((a, b) => a.sort_order - b.sort_order);
+    const items = filteredOptions.filter(opt => opt.category === cat.key);
 
     if (items.length > 0 || (selectedCategoryKey === cat.key && searchTerm === '')) {
       acc.push({
@@ -243,11 +289,6 @@ export default function AdminMasterModule() {
   // Table View Columns
   const tableColumns = [
     {
-      key: 'sort_order',
-      label: 'Order',
-      render: (row) => <span className="sort-order-pill">#{row.sort_order}</span>
-    },
-    {
       key: 'label',
       label: 'Option Label & Code',
       render: (row) => (
@@ -255,9 +296,11 @@ export default function AdminMasterModule() {
           <div className="option-color-dot" style={{ backgroundColor: row.color || '#3B82F6' }} />
           <div>
             <div style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{row.label}</div>
-            <div style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
-              {row.code}
-            </div>
+            {row.code && (
+              <div style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
+                {row.code}
+              </div>
+            )}
           </div>
         </div>
       )
@@ -284,14 +327,10 @@ export default function AdminMasterModule() {
       key: 'status',
       label: 'Status',
       render: (row) => (
-        <button
-          className={`status-toggle-btn ${row.status === 'Active' ? 'active' : 'inactive'}`}
-          onClick={() => toggleDropdownOptionStatus(row.id)}
-          title="Toggle Option Status"
-        >
-          {row.status === 'Active' ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
-          <span>{row.status}</span>
-        </button>
+        <StatusDropdownPill
+          status={row.status}
+          onToggle={() => toggleDropdownOptionStatus(row.id)}
+        />
       )
     },
     {
@@ -440,22 +479,20 @@ export default function AdminMasterModule() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.35rem', background: 'var(--light-background)', padding: '3px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--light-border)' }}>
+        <div className="view-toggle-group">
           <button
-            className={`action-btn-icon ${viewMode === 'list' ? 'active' : ''}`}
+            className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
             onClick={() => setViewMode('list')}
             title="Category Grouped View"
-            style={viewMode === 'list' ? { background: 'var(--light-card)', borderColor: 'var(--primary-yellow)' } : {}}
           >
-            <Grid size={16} />
+            <Grid size={18} />
           </button>
           <button
-            className={`action-btn-icon ${viewMode === 'table' ? 'active' : ''}`}
+            className={`view-toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
             onClick={() => setViewMode('table')}
             title="Flat Table View"
-            style={viewMode === 'table' ? { background: 'var(--light-card)', borderColor: 'var(--primary-yellow)' } : {}}
           >
-            <List size={16} />
+            <List size={18} />
           </button>
         </div>
       </div>
@@ -525,12 +562,11 @@ export default function AdminMasterModule() {
                 {group.items.map(option => (
                   <div key={option.id} className="master-option-card" style={{ border: 'none', borderRadius: 0, borderBottom: '1px solid var(--light-border)' }}>
                     <div className="option-left-info">
-                      <span className="sort-order-pill">#{option.sort_order}</span>
                       <div className="option-color-dot" style={{ backgroundColor: option.color || '#3B82F6' }} />
                       <div className="option-main-details">
                         <div className="option-title-row">
                           <span className="option-label-text">{option.label}</span>
-                          <span className="option-code-tag">{option.code}</span>
+                          {option.code && <span className="option-code-tag">{option.code}</span>}
                         </div>
                         {option.description && (
                           <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
@@ -541,14 +577,10 @@ export default function AdminMasterModule() {
                     </div>
 
                     <div className="option-right-actions">
-                      <button
-                        className={`status-toggle-btn ${option.status === 'Active' ? 'active' : 'inactive'}`}
-                        onClick={() => toggleDropdownOptionStatus(option.id)}
-                        title="Toggle Active/Inactive"
-                      >
-                        {option.status === 'Active' ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
-                        <span>{option.status}</span>
-                      </button>
+                      <StatusDropdownPill
+                        status={option.status}
+                        onToggle={() => toggleDropdownOptionStatus(option.id)}
+                      />
 
                       <div className="user-actions">
                         <button
@@ -604,20 +636,13 @@ export default function AdminMasterModule() {
                   className="form-control"
                   placeholder="e.g. UltraTech PPC Premium"
                   value={formData.label}
-                  onChange={(e) => {
-                    const newLabel = e.target.value;
-                    setFormData({
-                      ...formData,
-                      label: newLabel,
-                      code: formData.code || handleAutoGenerateCode(newLabel)
-                    });
-                  }}
+                  onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                   required
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Option Code / Identifier</label>
+                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Option Code / Identifier (Optional)</label>
                 <input
                   type="text"
                   className="form-control"
@@ -628,29 +653,16 @@ export default function AdminMasterModule() {
               </div>
             </div>
 
-            <div className="user-form-grid">
-              <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Display Status</label>
-                <select
-                  className="form-control"
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                >
-                  <option value="Active">Active (Visible in Dropdowns)</option>
-                  <option value="Inactive">Inactive (Disabled)</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Sort Order Position</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  min="1"
-                  value={formData.sort_order}
-                  onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })}
-                />
-              </div>
+            <div className="form-group">
+              <label className="form-label" style={{ fontWeight: '600', fontSize: '0.85rem' }}>Display Status</label>
+              <select
+                className="form-control"
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              >
+                <option value="Active">Active (Visible in Dropdowns)</option>
+                <option value="Inactive">Inactive (Disabled)</option>
+              </select>
             </div>
 
             <div className="form-group">

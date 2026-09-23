@@ -11,6 +11,7 @@ import ClientPaymentsModule from './modules/payments/ClientPaymentsModule';
 import AppointmentsModule from './modules/appointments/AppointmentsModule';
 import UserMasterModule from './modules/user_master/UserMasterModule';
 import AdminMasterModule from './modules/admin_master/AdminMasterModule';
+import ContactEnquiryModule from './modules/contact_enquiry/ContactEnquiryModule';
 import SplashLoader from './components/common/SplashLoader/SplashLoader';
 import './App.css';
 
@@ -41,6 +42,8 @@ function MainRouter() {
         return <ClientPaymentsModule />;
       case 'renovation_appointments':
         return <AppointmentsModule />;
+      case 'contact_enquiry':
+        return <ContactEnquiryModule />;
       case 'user_master':
         return <UserMasterModule />;
       case 'admin_master':
