@@ -2,12 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { Search, ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import './DataTable.css';
 
-export default function DataTable({ columns, data, searchPlaceholder, actions, pageSize = 8, onRowClick }) {
+export default function DataTable({ columns, data, searchPlaceholder, actions, pageSize = 8, onRowClick, showSearch = true }) {
   const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredData = useMemo(() => {
-    if (!query.trim()) return data || [];
+    if (!showSearch || !query.trim()) return data || [];
     const q = query.toLowerCase();
     return (data || []).filter(item => {
       return Object.values(item).some(val => {
@@ -16,7 +16,7 @@ export default function DataTable({ columns, data, searchPlaceholder, actions, p
         return String(val).toLowerCase().includes(q);
       });
     });
-  }, [data, query]);
+  }, [data, query, showSearch]);
 
   const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
   const paginatedData = useMemo(() => {
@@ -26,22 +26,26 @@ export default function DataTable({ columns, data, searchPlaceholder, actions, p
 
   return (
     <div className="datatable-wrapper">
-      <div className="datatable-header">
-        <div className="datatable-search">
-          <Search size={16} className="datatable-search-icon" />
-          <input
-            type="text"
-            className="datatable-search-input"
-            placeholder={searchPlaceholder || "Search table..."}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
+      {(showSearch || actions) && (
+        <div className="datatable-header">
+          {showSearch && (
+            <div className="datatable-search">
+              <Search size={16} className="datatable-search-icon" />
+              <input
+                type="text"
+                className="datatable-search-input"
+                placeholder={searchPlaceholder || "Search table..."}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
+          )}
+          {actions && <div className="datatable-actions">{actions}</div>}
         </div>
-        {actions && <div className="datatable-actions">{actions}</div>}
-      </div>
+      )}
 
       <div className="datatable-container">
         <table className="datatable">
@@ -49,7 +53,7 @@ export default function DataTable({ columns, data, searchPlaceholder, actions, p
             <tr>
               {columns.map((col, idx) => (
                 <th key={col.key || idx} style={col.width ? { width: col.width } : {}}>
-                  {col.header}
+                  {col.header || col.label || col.title}
                 </th>
               ))}
             </tr>

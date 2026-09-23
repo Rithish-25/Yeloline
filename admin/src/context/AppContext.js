@@ -7,7 +7,10 @@ import {
   initialPayments,
   initialAppointments,
   initialMasterHighlights,
-  monthlyFinancialOverview
+  monthlyFinancialOverview,
+  initialUsers,
+  initialDropdownMasters,
+  masterCategoriesMeta
 } from '../data/initialData';
 
 const AppContext = createContext();
@@ -89,6 +92,101 @@ export const AppProvider = ({ children }) => {
   const [purchases, setPurchases] = useState(initialPurchases);
   const [payments, setPayments] = useState(initialPayments);
   const [appointments, setAppointments] = useState(initialAppointments);
+
+  // User Master States & Handlers
+  const [users, setUsers] = useState(initialUsers);
+
+  const addUser = (userData) => {
+    const newUser = {
+      ...userData,
+      user_id: `USR-${101 + users.length}`,
+      joined_date: userData.joined_date || new Date().toISOString().split('T')[0],
+      status: userData.status || 'Active',
+      avatar_color: userData.avatar_color || '#3B82F6'
+    };
+    setUsers(prev => [newUser, ...prev]);
+    addNotification(`Created new system user: ${newUser.full_name} (${newUser.role})`);
+  };
+
+  const updateUser = (updatedUser) => {
+    setUsers(prev => prev.map(u => u.user_id === updatedUser.user_id ? updatedUser : u));
+    addNotification(`Updated system user profile: ${updatedUser.full_name}`);
+  };
+
+  const deleteUser = (user_id) => {
+    const userToDelete = users.find(u => u.user_id === user_id);
+    setUsers(prev => prev.filter(u => u.user_id !== user_id));
+    if (userToDelete) {
+      addNotification(`Deleted system user ${userToDelete.full_name}`);
+    }
+  };
+
+  const toggleUserStatus = (user_id) => {
+    setUsers(prev => prev.map(u => {
+      if (u.user_id === user_id) {
+        const newStatus = u.status === 'Active' ? 'Inactive' : 'Active';
+        addNotification(`Changed user status of ${u.full_name} to ${newStatus}`);
+        return { ...u, status: newStatus };
+      }
+      return u;
+    }));
+  };
+
+  // Dropdown Master States & Handlers
+  const [dropdownMasters, setDropdownMasters] = useState(initialDropdownMasters);
+  const [adminMasterGroupFilter, setAdminMasterGroupFilter] = useState('All');
+
+  const selectAdminMasterGroup = (groupKey) => {
+    setAdminMasterGroupFilter(groupKey || 'All');
+    setActiveTab('admin_master');
+  };
+
+  const addDropdownOption = (optionData) => {
+    const newOption = {
+      ...optionData,
+      id: `DM-${1300 + dropdownMasters.length}`,
+      status: optionData.status || 'Active',
+      sort_order: Number(optionData.sort_order) || (dropdownMasters.length + 1)
+    };
+    setDropdownMasters(prev => [...prev, newOption]);
+    addNotification(`Added new dropdown option "${newOption.label}" under category "${newOption.category}"`);
+  };
+
+  const updateDropdownOption = (updatedOption) => {
+    setDropdownMasters(prev => prev.map(item => item.id === updatedOption.id ? updatedOption : item));
+    addNotification(`Updated dropdown option: "${updatedOption.label}"`);
+  };
+
+  const deleteDropdownOption = (id) => {
+    const target = dropdownMasters.find(item => item.id === id);
+    setDropdownMasters(prev => prev.filter(item => item.id !== id));
+    if (target) {
+      addNotification(`Deleted dropdown option "${target.label}"`);
+    }
+  };
+
+  const toggleDropdownOptionStatus = (id) => {
+    setDropdownMasters(prev => prev.map(item => {
+      if (item.id === id) {
+        const newStatus = item.status === 'Active' ? 'Inactive' : 'Active';
+        addNotification(`Toggled status of option "${item.label}" to ${newStatus}`);
+        return { ...item, status: newStatus };
+      }
+      return item;
+    }));
+  };
+
+  const resetDropdownMastersToDefault = () => {
+    setDropdownMasters(initialDropdownMasters);
+    addNotification(`Reset all master dropdown options to system defaults`);
+  };
+
+  const getDropdownOptionsByCategory = (categoryKey) => {
+    return dropdownMasters
+      .filter(item => item.category === categoryKey && item.status === 'Active')
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map(item => item.label);
+  };
 
   const addMasterHighlight = (newHighlight) => {
     if (!newHighlight || !newHighlight.trim()) return;
@@ -368,7 +466,25 @@ export const AppProvider = ({ children }) => {
         assignTechnician,
         importAppointments,
         monthlyFinancialOverview,
-        exportToCSV
+        exportToCSV,
+        // User Master
+        users,
+        addUser,
+        updateUser,
+        deleteUser,
+        toggleUserStatus,
+        // Admin Dropdown Master
+        dropdownMasters,
+        masterCategoriesMeta,
+        addDropdownOption,
+        updateDropdownOption,
+        deleteDropdownOption,
+        toggleDropdownOptionStatus,
+        resetDropdownMastersToDefault,
+        getDropdownOptionsByCategory,
+        adminMasterGroupFilter,
+        setAdminMasterGroupFilter,
+        selectAdminMasterGroup
       }}
     >
       {children}
