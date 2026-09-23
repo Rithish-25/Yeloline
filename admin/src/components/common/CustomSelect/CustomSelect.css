@@ -2,7 +2,7 @@
 .custom-select-container {
   position: relative;
   display: inline-block;
-  min-width: 180px;
+  min-width: 210px;
   font-family: inherit;
 }
 
@@ -41,8 +41,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -62,8 +60,6 @@
 .custom-select-current-text {
   color: #0F172A;
   font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -83,14 +79,15 @@
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  right: 0;
   z-index: 1000;
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 12px;
   box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.08);
   padding: 6px;
-  min-width: 200px;
+  min-width: 100%;
+  width: max-content;
+  max-width: 400px;
   animation: dropdownSlideIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: top center;
 }
@@ -158,8 +155,6 @@
 
 .option-label {
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
