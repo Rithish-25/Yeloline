@@ -4,15 +4,9 @@ import {
   Phone,
   MessageSquare,
   Mail,
-  MapPin,
-  Clock,
-  Globe,
   Save,
   CheckCircle2,
   ExternalLink,
-  Share2,
-  Building2,
-  ShieldCheck,
   Smartphone
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -69,7 +63,7 @@ export default function SettingsModule() {
             <h1 className="module-title">System & Contact Settings</h1>
           </div>
           <p className="module-subtitle">
-            Manage official WhatsApp line, phone numbers, office location, and company details editable by Admin.
+            Manage official WhatsApp line, phone numbers, and contact details editable by Admin.
           </p>
         </div>
 
@@ -132,12 +126,12 @@ export default function SettingsModule() {
 
       {/* Main Settings Form */}
       <form onSubmit={handleSubmit} className="settings-form-wrapper">
-        {/* Section 1: WhatsApp & Phone Numbers */}
+        {/* Section: WhatsApp & Phone Numbers */}
         <div className="settings-card-section">
           <div className="settings-section-header">
             <Smartphone size={20} />
             <div>
-              <h3>1. WhatsApp & Primary Contact Numbers</h3>
+              <h3>WhatsApp & Contact Information</h3>
               <p>Configure official customer contact numbers & WhatsApp business integration line</p>
             </div>
           </div>
@@ -179,21 +173,7 @@ export default function SettingsModule() {
               <span className="field-hint">Main office helpline displayed on header and customer invoices.</span>
             </div>
 
-            <div className="form-field">
-              <label className="field-label">Secondary / Support Phone Number</label>
-              <div className="input-with-icon">
-                <Phone size={16} className="input-left-icon" />
-                <input
-                  type="text"
-                  className="form-input icon-padded"
-                  placeholder="e.g. +91 97892 11045"
-                  value={formData.secondary_phone}
-                  onChange={(e) => handleChange('secondary_phone', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-field">
+            <div className="form-field full-width">
               <label className="field-label">Official Support Email</label>
               <div className="input-with-icon">
                 <Mail size={16} className="input-left-icon" />
@@ -205,107 +185,6 @@ export default function SettingsModule() {
                   onChange={(e) => handleChange('support_email', e.target.value)}
                 />
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Section 2: Office Location & Timings */}
-        <div className="settings-card-section">
-          <div className="settings-section-header">
-            <Building2 size={20} />
-            <div>
-              <h3>2. Office Location & Working Timings</h3>
-              <p>Headquarters address, Google Maps link, and working hours</p>
-            </div>
-          </div>
-
-          <div className="settings-form-grid-2">
-            <div className="form-field full-width">
-              <label className="field-label">Head Office Address</label>
-              <div className="input-with-icon">
-                <MapPin size={16} className="input-left-icon" />
-                <input
-                  type="text"
-                  className="form-input icon-padded"
-                  placeholder="e.g. No. 45, Perundurai Road, Near Golden City, Erode - 638011, Tamil Nadu"
-                  value={formData.office_address}
-                  onChange={(e) => handleChange('office_address', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-field">
-              <label className="field-label">Working Days & Hours</label>
-              <div className="input-with-icon">
-                <Clock size={16} className="input-left-icon" />
-                <input
-                  type="text"
-                  className="form-input icon-padded"
-                  placeholder="e.g. Monday - Saturday: 8:30 AM - 7:00 PM"
-                  value={formData.business_hours}
-                  onChange={(e) => handleChange('business_hours', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-field">
-              <label className="field-label">Google Maps Location URL</label>
-              <div className="input-with-icon">
-                <Globe size={16} className="input-left-icon" />
-                <input
-                  type="text"
-                  className="form-input icon-padded"
-                  placeholder="e.g. https://maps.google.com/?q=..."
-                  value={formData.maps_link}
-                  onChange={(e) => handleChange('maps_link', e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Section 3: Website & Social Media */}
-        <div className="settings-card-section">
-          <div className="settings-section-header">
-            <Globe size={20} />
-            <div>
-              <h3>3. Digital & Social Media Links</h3>
-              <p>Official website and social media profiles</p>
-            </div>
-          </div>
-
-          <div className="settings-form-grid-3">
-            <div className="form-field">
-              <label className="field-label">Official Website URL</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="e.g. https://yeloline.com"
-                value={formData.website_url}
-                onChange={(e) => handleChange('website_url', e.target.value)}
-              />
-            </div>
-
-            <div className="form-field">
-              <label className="field-label">Instagram Profile Link</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="e.g. https://instagram.com/yeloline_constructions"
-                value={formData.instagram_url}
-                onChange={(e) => handleChange('instagram_url', e.target.value)}
-              />
-            </div>
-
-            <div className="form-field">
-              <label className="field-label">Facebook Page Link</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="e.g. https://facebook.com/yelolineconstructions"
-                value={formData.facebook_url}
-                onChange={(e) => handleChange('facebook_url', e.target.value)}
-              />
             </div>
           </div>
         </div>

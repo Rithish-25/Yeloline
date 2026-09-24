@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, ShoppingBag, Truck, CheckCircle2, Filter, Eye } from 'lucide-react';
+import { Plus, Download, Upload, ShoppingBag, Truck, CheckCircle2, Filter, Eye, FileSpreadsheet, FileText } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import StatusBadge from '../../components/common/StatusBadge/StatusBadge';

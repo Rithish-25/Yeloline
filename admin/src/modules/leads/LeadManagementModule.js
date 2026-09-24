@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, Edit3, Trash2, Phone, Mail, MapPin, Filter, Building2, Eye, Calendar, Layers, FileText, MessageSquare } from 'lucide-react';
+import { Plus, Download, Upload, Edit3, Trash2, Phone, Mail, MapPin, Filter, Building2, Eye, Calendar, Layers, FileText, MessageSquare, FileSpreadsheet } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import StatusBadge from '../../components/common/StatusBadge/StatusBadge';
@@ -284,15 +284,15 @@ export default function LeadManagementModule() {
           <div className="csv-action-group">
             <button
               className="btn-secondary"
-              onClick={() => setIsImportModalOpen(true)}
+              onClick={() => exportToCSV(enquiries, 'Yeloline_Quote_Leads')}
             >
-              <Upload size={16} /> Import CSV
+              <FileSpreadsheet size={16} /> Export XLS
             </button>
             <button
               className="btn-secondary"
-              onClick={() => setIsExportModalOpen(true)}
+              onClick={() => window.print()}
             >
-              <Download size={16} /> Export CSV
+              <FileText size={16} /> Export PDF
             </button>
           </div>
         </div>

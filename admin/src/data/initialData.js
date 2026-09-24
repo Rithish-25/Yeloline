@@ -230,40 +230,48 @@ export const initialExpenses = [
   {
     expense_id: "EXP-801",
     site_name: "Modern Minimalist Villa - Perundurai",
-    category: "Labor Wages",
+    category: "Labour",
+    work_category: "Masonry",
     amount: 85000,
     date: "2026-09-18",
     payment_mode: "Bank Transfer",
+    entered_by: "Suriya prakash",
     notes: "Weekly mason & helper labor payout for 2nd floor brickwork",
     receipt_attachment: "receipt_wages_sep18.pdf"
   },
   {
     expense_id: "EXP-802",
     site_name: "Grand Emerald Commercial Hub",
-    category: "Equipment Rental",
+    category: "Other Expense",
+    work_category: "Shuttering",
     amount: 42000,
     date: "2026-09-17",
     payment_mode: "UPI",
+    entered_by: "Bala",
     notes: "Concrete pump truck & 30m boom arm hire for slab casting",
     receipt_attachment: "rent_pump_sep17.jpg"
   },
   {
     expense_id: "EXP-803",
     site_name: "Heritage Home Renovation",
-    category: "Subcontractor",
+    category: "Labour",
+    work_category: "Electrical",
     amount: 68000,
     date: "2026-09-15",
     payment_mode: "Cheque",
+    entered_by: "Suriya prakash",
     notes: "Electrical wiring phase 1 advance payment to SmartLine Systems",
     receipt_attachment: "subcon_elec_sep15.pdf"
   },
   {
     expense_id: "EXP-804",
     site_name: "Modern Minimalist Villa - Perundurai",
-    category: "Utilities",
+    category: "Other Expense",
+    work_category: "Plumbing",
     amount: 14500,
     date: "2026-09-12",
     payment_mode: "UPI",
+    entered_by: "Bala",
     notes: "Temporary site electricity connection bill & diesel for backup generator",
     receipt_attachment: "tneb_bill_sep12.jpg"
   }
