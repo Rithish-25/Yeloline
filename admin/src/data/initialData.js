@@ -156,6 +156,13 @@ export const initialProjects = [
     overview: "Contemporary 4BHK architectural villa featuring floor-to-ceiling glass, teakwood joinery, automated lighting, and private courtyard garden.",
     featured: true,
     highlights: ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"],
+    quality_standards: [
+      "RCC Frame Structure (M25 Grade)",
+      "Vitrified Tiles - Premium Quality",
+      "UPVC Windows & Teak Wood Doors",
+      "Branded CP & Sanitary Fittings",
+      "Anti-termite & Waterproofing Treatment"
+    ],
     cover_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
     gallery_images: [
       { id: "img-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80", tag: "Elevation" },
@@ -177,6 +184,13 @@ export const initialProjects = [
     overview: "5-Storey commercial complex with RCC framed structure, structural glazing, basement parking, high-speed elevator wells, and seismic grade steel reinforcements.",
     featured: true,
     highlights: ["5-Storey Commercial Complex", "Basement Parking", "High-Speed Elevators", "Automated Lighting"],
+    quality_standards: [
+      "RCC Frame Structure (M25 Grade)",
+      "Vitrified Tiles - Premium Quality",
+      "UPVC Windows & Teak Wood Doors",
+      "Branded CP & Sanitary Fittings",
+      "Anti-termite & Waterproofing Treatment"
+    ],
     cover_image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
     gallery_images: [
       { id: "img-4", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80", tag: "Elevation" },
@@ -197,6 +211,13 @@ export const initialProjects = [
     overview: "Complete structural strengthening, waterproofing, modular kitchen replacement, modern Italian marble flooring, and exterior weather-coat repainting.",
     featured: false,
     highlights: ["Italian Marble Flooring", "Modular Kitchen", "Terrace Garden"],
+    quality_standards: [
+      "RCC Frame Structure (M25 Grade)",
+      "Vitrified Tiles - Premium Quality",
+      "UPVC Windows & Teak Wood Doors",
+      "Branded CP & Sanitary Fittings",
+      "Anti-termite & Waterproofing Treatment"
+    ],
     cover_image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
     gallery_images: [
       { id: "img-6", url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80", tag: "Living Room" },

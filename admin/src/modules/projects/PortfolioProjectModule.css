@@ -243,3 +243,56 @@
   line-height: 1.25;
 }
 
+/* Quality Standards Box Styling */
+.project-quality-standards-box {
+  background: var(--light-background, #f8fafc);
+  border: 1px solid var(--light-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 6px;
+}
+
+.quality-standards-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.hq-badge {
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.quality-standards-header h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary, #0f172a);
+  margin: 0;
+}
+
+.quality-standards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quality-standard-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary, #1e293b);
+}
+
+.quality-check-icon {
+  color: #10b981;
+  flex-shrink: 0;
+}
+

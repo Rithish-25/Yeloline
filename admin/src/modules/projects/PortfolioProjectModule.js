@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Star, MapPin, Clock, Edit3, Trash2, Layers, Filter, CheckSquare, Square } from 'lucide-react';
+import { Plus, Star, MapPin, Clock, Edit3, Trash2, Layers, Filter, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Modal from '../../components/common/Modal/Modal';
 import MultiImageUploader from '../../components/common/MultiImageUploader/MultiImageUploader';
@@ -9,6 +9,17 @@ import './PortfolioProjectModule.css';
 
 const CATEGORIES = ["Residential", "Commercial", "Villa", "Renovation"];
 const STATUSES = ["Completed", "Ongoing"];
+
+const DEFAULT_QUALITY_STANDARDS = [
+  "RCC Frame Structure (M25 Grade)",
+  "Vitrified Tiles - Premium Quality",
+  "UPVC Windows & Teak Wood Doors",
+  "Branded CP & Sanitary Fittings",
+  "Anti-termite & Waterproofing Treatment",
+  "TATA Tiscon 550D High Strength Steel",
+  "UltraTech Premium PPC Cement",
+  "Italian Marble & Granite Joinery"
+];
 
 export default function PortfolioProjectModule() {
   const {
@@ -30,6 +41,19 @@ export default function PortfolioProjectModule() {
   const [isAddingNewHighlight, setIsAddingNewHighlight] = useState(false);
   const [newHighlightText, setNewHighlightText] = useState('');
 
+  // Quality Standards state
+  const [masterQualityStandards, setMasterQualityStandards] = useState(DEFAULT_QUALITY_STANDARDS);
+  const [isAddingNewStandard, setIsAddingNewStandard] = useState(false);
+  const [newStandardText, setNewStandardText] = useState('');
+
+  const defaultStandards = [
+    "RCC Frame Structure (M25 Grade)",
+    "Vitrified Tiles - Premium Quality",
+    "UPVC Windows & Teak Wood Doors",
+    "Branded CP & Sanitary Fittings",
+    "Anti-termite & Waterproofing Treatment"
+  ];
+
   // Form State
   const [formData, setFormData] = useState({
     title: '',
@@ -41,6 +65,7 @@ export default function PortfolioProjectModule() {
     duration_months: 8,
     description: '',
     highlights: ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"],
+    quality_standards: defaultStandards,
     cover_image: '',
     gallery_images: [],
     featured: false
@@ -64,12 +89,15 @@ export default function PortfolioProjectModule() {
       duration_months: 8,
       description: '',
       highlights: ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"],
+      quality_standards: defaultStandards,
       cover_image: '',
       gallery_images: [],
       featured: false
     });
     setIsAddingNewHighlight(false);
     setNewHighlightText('');
+    setIsAddingNewStandard(false);
+    setNewStandardText('');
     setIsModalOpen(true);
   };
 
@@ -78,10 +106,13 @@ export default function PortfolioProjectModule() {
     setFormData({
       ...proj,
       status: proj.status || 'Completed',
-      highlights: proj.highlights || ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"]
+      highlights: proj.highlights || ["4 BHK Bedrooms", "2 Spacious Living Areas", "Modular Kitchen", "2 Covered Car Parkings"],
+      quality_standards: proj.quality_standards || defaultStandards
     });
     setIsAddingNewHighlight(false);
     setNewHighlightText('');
+    setIsAddingNewStandard(false);
+    setNewStandardText('');
     setIsModalOpen(true);
   };
 
@@ -116,6 +147,39 @@ export default function PortfolioProjectModule() {
     }
     setNewHighlightText('');
     setIsAddingNewHighlight(false);
+  };
+
+  const toggleQualityStandard = (item) => {
+    const currentList = formData.quality_standards || [];
+    if (currentList.includes(item)) {
+      setFormData({
+        ...formData,
+        quality_standards: currentList.filter(s => s !== item)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        quality_standards: [...currentList, item]
+      });
+    }
+  };
+
+  const handleAddNewStandardSubmit = (e) => {
+    e.preventDefault();
+    if (!newStandardText || !newStandardText.trim()) return;
+    const trimmed = newStandardText.trim();
+    if (!masterQualityStandards.includes(trimmed)) {
+      setMasterQualityStandards(prev => [...prev, trimmed]);
+    }
+    const currentList = formData.quality_standards || [];
+    if (!currentList.includes(trimmed)) {
+      setFormData(prev => ({
+        ...prev,
+        quality_standards: [...currentList, trimmed]
+      }));
+    }
+    setNewStandardText('');
+    setIsAddingNewStandard(false);
   };
 
   const handleSubmit = (e) => {
@@ -214,6 +278,24 @@ export default function PortfolioProjectModule() {
                       <div key={idx} className="highlight-card-item">
                         <Star size={16} className="highlight-card-star" />
                         <span className="highlight-card-text">{hl}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Materials & Quality Standards Display */}
+              {(proj.quality_standards && proj.quality_standards.length > 0) && (
+                <div className="project-quality-standards-box">
+                  <div className="quality-standards-header">
+                    <span className="hq-badge">HQ</span>
+                    <h4 style={{ margin: 0, fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-primary)' }}>Materials & Quality Standards</h4>
+                  </div>
+                  <div className="quality-standards-list">
+                    {proj.quality_standards.map((std, idx) => (
+                      <div key={idx} className="quality-standard-item">
+                        <CheckCircle2 size={18} fill="#10b981" color="#ffffff" className="quality-check-icon" />
+                        <span>{std}</span>
                       </div>
                     ))}
                   </div>
@@ -453,6 +535,71 @@ export default function PortfolioProjectModule() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Section: Materials & Quality Standards Checkbox Selector + Add Button */}
+          <div className="project-highlights-section" style={{ borderColor: 'var(--light-border)' }}>
+            <div className="highlights-header-row">
+              <div style={{ fontWeight: '800', fontSize: '0.92rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span className="hq-badge">HQ</span> Select Materials & Quality Standards
+              </div>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ padding: '4px 10px', fontSize: '0.78rem', gap: '4px' }}
+                onClick={() => setIsAddingNewStandard(!isAddingNewStandard)}
+              >
+                <Plus size={14} /> Add New Standard
+              </button>
+            </div>
+
+            {/* Inline Add New Standard Input Bar */}
+            {isAddingNewStandard && (
+              <div style={{ display: 'flex', gap: '8px', background: 'var(--light-card)', padding: '8px', borderRadius: '8px', border: '1px solid #10b981' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  style={{ flex: 1, padding: '4px 10px', fontSize: '0.84rem' }}
+                  placeholder="Type new quality standard (e.g., Schneider Switches & Fuses)..."
+                  value={newStandardText}
+                  onChange={(e) => setNewStandardText(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddNewStandardSubmit(e)}
+                />
+                <button
+                  type="button"
+                  className="btn-primary"
+                  style={{ padding: '4px 12px', fontSize: '0.78rem', backgroundColor: '#10b981', borderColor: '#10b981' }}
+                  onClick={handleAddNewStandardSubmit}
+                >
+                  Add Standard
+                </button>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  style={{ padding: '4px 10px', fontSize: '0.78rem' }}
+                  onClick={() => setIsAddingNewStandard(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
+            {/* Checkbox List for Quality Standards */}
+            <div className="highlight-checkboxes-grid">
+              {masterQualityStandards.map((std) => {
+                const isChecked = (formData.quality_standards || []).includes(std);
+                return (
+                  <label key={std} className="highlight-checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleQualityStandard(std)}
+                    />
+                    <span>{std}</span>
+                  </label>
+                );
+              })}
+            </div>
           </div>
 
           {/* Cover Image Drag & Drop Uploader */}
