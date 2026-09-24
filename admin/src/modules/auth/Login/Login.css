@@ -109,18 +109,29 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .login-input-icon {
   position: absolute;
   left: 14px;
-  color: #94A3B8;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748B;
   pointer-events: none;
+  z-index: 2;
 }
 
+.login-input-wrap input.login-input,
+.login-input-wrap input[type="email"],
+.login-input-wrap input[type="password"],
 .login-input {
   width: 100%;
-  padding: 12px 14px 12px 42px;
+  height: 46px;
+  padding-left: 44px !important;
+  padding-right: 44px !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border: 1.5px solid #E2E8F0;
   border-radius: var(--radius-md);
   font-size: 0.92rem;
@@ -128,6 +139,7 @@
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   background-color: #F8FAFC;
+  box-sizing: border-box;
 }
 
 .login-input:focus {
@@ -139,6 +151,9 @@
 .login-eye-btn {
   position: absolute;
   right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
   background: transparent;
   border: none;
   color: #94A3B8;

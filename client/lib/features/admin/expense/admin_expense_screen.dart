@@ -230,13 +230,13 @@ class _AdminExpenseScreenState extends State<AdminExpenseScreen> {
                     const SizedBox(height: 16),
                   ],
 
-                  // Payment Mode (Cash, GPay / UPI, Bank Toggle)
+                  // Payment Mode (Cash, GPay, Bank Toggle)
                   _buildLabel('Payment Mode'),
                   Row(
                     children: [
                       Expanded(child: _buildToggleButton('Cash', Icons.payments_rounded, _paymentMode == 'Cash', () => setState(() => _paymentMode = 'Cash'))),
                       const SizedBox(width: 8),
-                      Expanded(child: _buildToggleButton('GPay / UPI', Icons.qr_code_rounded, _paymentMode == 'GPay / UPI', () => setState(() => _paymentMode = 'GPay / UPI'))),
+                      Expanded(child: _buildToggleButton('GPay', Icons.qr_code_rounded, _paymentMode == 'GPay', () => setState(() => _paymentMode = 'GPay'))),
                       const SizedBox(width: 8),
                       Expanded(child: _buildToggleButton('Bank', Icons.account_balance_rounded, _paymentMode == 'Bank', () => setState(() => _paymentMode = 'Bank'))),
                     ],

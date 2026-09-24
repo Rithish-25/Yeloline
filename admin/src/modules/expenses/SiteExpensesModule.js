@@ -174,6 +174,23 @@ export default function SiteExpensesModule() {
       render: (r) => <strong style={{ color: 'var(--danger-red)' }}>₹{Number(r.amount).toLocaleString('en-IN')}</strong>
     },
     {
+      header: "Entered By",
+      key: "entered_by",
+      render: (r) => (
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          fontWeight: '700',
+          color: 'var(--text-primary)',
+          fontSize: '0.82rem'
+        }}>
+          <User size={13} style={{ color: 'var(--primary-yellow)' }} />
+          {r.entered_by || 'Suriya prakash'}
+        </span>
+      )
+    },
+    {
       header: "Actions",
       key: "actions",
       render: (r) => (

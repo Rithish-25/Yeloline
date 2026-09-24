@@ -1,28 +1,33 @@
 /* Custom Select Component Styling */
 .custom-select-container {
   position: relative;
-  display: inline-block;
-  min-width: 210px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: auto;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 .custom-select-trigger {
-  width: 100%;
-  display: flex;
+  width: auto;
+  height: 40px;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 8px 14px;
+  padding: 0 14px;
   background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 10px;
+  border-radius: 8px;
   color: #0F172A;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .custom-select-trigger:hover {
@@ -33,14 +38,14 @@
 
 .custom-select-trigger.active {
   border-color: #FACC15;
-  box-shadow: 0 0 0 3.5px rgba(250, 204, 21, 0.25);
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25);
   background-color: #FFFFFF;
 }
 
 .custom-select-trigger-content {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   white-space: nowrap;
 }
 
@@ -50,16 +55,17 @@
 }
 
 .custom-select-label-prefix {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: #64748B;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
 
 .custom-select-current-text {
   color: #0F172A;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -67,6 +73,7 @@
   color: #64748B;
   flex-shrink: 0;
   transition: transform 0.2s ease;
+  margin-left: 4px;
 }
 
 .custom-select-chevron.open {
@@ -82,7 +89,7 @@
   z-index: 1000;
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.08);
   padding: 6px;
   min-width: 100%;
@@ -90,6 +97,7 @@
   max-width: 400px;
   animation: dropdownSlideIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: top center;
+  box-sizing: border-box;
 }
 
 @keyframes dropdownSlideIn {
@@ -116,9 +124,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  font-size: 0.86rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.84rem;
   font-weight: 500;
   color: #334155;
   cursor: pointer;
@@ -168,10 +176,10 @@
 .option-badge {
   font-size: 0.72rem;
   font-weight: 700;
-  min-width: 22px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
   background-color: #E2E8F0;
   color: #475569;
   display: inline-flex;

@@ -353,14 +353,34 @@ export const AppProvider = ({ children }) => {
 
   // Purchases Handlers
   const addPurchase = (purchaseData) => {
+    const total = Number(purchaseData.total_amount || 0);
+    const paid = Number(purchaseData.amount_paid || 0);
+    let payStatus = "Unpaid";
+    if (paid >= total && total > 0) {
+      payStatus = "Paid";
+    } else if (paid > 0) {
+      payStatus = "Partially Paid";
+    }
+
     const newPO = {
-      ...purchaseData,
       purchase_id: `PO-${301 + purchases.length}`,
-      total_amount: Number(purchaseData.quantity || 0) * Number(purchaseData.unit_price || 0),
-      order_date: new Date().toISOString().split('T')[0]
+      site_name: purchaseData.site_name || "Skyline Residency",
+      department: purchaseData.department || "Masonry",
+      vendor_name: purchaseData.vendor_name || "Shree Ganesh Bricks",
+      material_category: purchaseData.material_category || "Red Bricks",
+      order_date: purchaseData.order_date || new Date().toISOString().split('T')[0],
+      total_amount: total,
+      amount_paid: paid,
+      delivery_status: purchaseData.delivery_status || "Ordered",
+      payment_status: payStatus,
+      invoice_number: purchaseData.invoice_number || `INV-PO-${301 + purchases.length}`
     };
     setPurchases(prev => [newPO, ...prev]);
-    addNotification(`Created material purchase order ${newPO.purchase_id}`);
+    addNotification(`Created material purchase order ${newPO.purchase_id} for ${newPO.site_name}`);
+  };
+
+  const deletePurchase = (purchase_id) => {
+    setPurchases(prev => prev.filter(p => p.purchase_id !== purchase_id));
   };
 
   const updatePurchaseDeliveryStatus = (purchase_id, status) => {
@@ -371,7 +391,6 @@ export const AppProvider = ({ children }) => {
     setPurchases(prev => prev.map(p => p.purchase_id === purchase_id ? { ...p, payment_status: status } : p));
   };
 
-  // Payments Handlers
   const addPayment = (paymentData) => {
     const newPayment = {
       ...paymentData,
@@ -379,7 +398,11 @@ export const AppProvider = ({ children }) => {
       payment_date: paymentData.payment_date || new Date().toISOString().split('T')[0]
     };
     setPayments(prev => [newPayment, ...prev]);
-    addNotification(`Recorded client payment ₹${newPayment.amount_received} from ${newPayment.client_name}`);
+    addNotification(`Recorded client payment ₹${newPayment.amount_received} for ${newPayment.site_name || newPayment.client_name}`);
+  };
+
+  const deletePayment = (payment_id) => {
+    setPayments(prev => prev.filter(p => p.payment_id !== payment_id));
   };
 
   // Appointments Handlers
@@ -551,11 +574,13 @@ export const AppProvider = ({ children }) => {
         importExpenses,
         purchases,
         addPurchase,
+        deletePurchase,
         updatePurchaseDeliveryStatus,
         updatePurchasePaymentStatus,
         importPurchases,
         payments,
         addPayment,
+        deletePayment,
         importPayments,
         appointments,
         addAppointment,
