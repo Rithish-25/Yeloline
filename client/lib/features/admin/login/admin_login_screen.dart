@@ -454,7 +454,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                       const SizedBox(height: 16),
                       // Header Logo & Title
                       Image.asset(
-                        'assets/logo.png',
+                        'assets/header.png',
                         height: 44,
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {

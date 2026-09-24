@@ -227,7 +227,7 @@ class _AdminMainLayoutState extends State<AdminMainLayout> {
               ? Row(
                   children: [
                     Image.asset(
-                      'assets/logo.png',
+                      'assets/header.png',
                       height: 34,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {

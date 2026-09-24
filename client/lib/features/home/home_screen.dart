@@ -19,77 +19,142 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: AppColors.darkCharcoal,
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Modern Hero Banner Section
-            _buildHeroSection(context),
+    return Stack(
+      children: [
+        ColoredBox(
+          color: AppColors.darkCharcoal,
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Modern Hero Banner Section
+                _buildHeroSection(context),
 
-            Container(
-              color: AppColors.backgroundLight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 14),
+                Container(
+                  color: AppColors.backgroundLight,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 14),
 
-                  // Core Services & Navigation Section
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                      // Core Services & Navigation Section
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 4,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryYellow,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 4,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryYellow,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Explore Services & Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textPrimary,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Explore Services & Details',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
+                            const SizedBox(height: 16),
+                            _buildQuickNavigationGrid(context),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        _buildQuickNavigationGrid(context),
-                      ],
-                    ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Featured Villa Projects Preview Section
+                      _buildFeaturedProjectsSection(context),
+
+                      const SizedBox(height: 28),
+
+                      // Company Statistics Dark Banner
+                      _buildCompanyStatsBanner(),
+
+                      const SizedBox(height: 28),
+
+                      // Call to Action Banner
+                      _buildQuoteCTABanner(context),
+
+                      const SizedBox(height: 32),
+                    ],
                   ),
-
-                  const SizedBox(height: 24),
-
-                  // Featured Villa Projects Preview Section
-                  _buildFeaturedProjectsSection(context),
-
-                  const SizedBox(height: 28),
-
-                  // Company Statistics Dark Banner
-                  _buildCompanyStatsBanner(),
-
-                  const SizedBox(height: 28),
-
-                  // Call to Action Banner
-                  _buildQuoteCTABanner(context),
-
-                  const SizedBox(height: 32),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
+        ),
+        // Persistent Floating Contact Buttons on Right Side
+        Positioned(
+          right: 16,
+          bottom: 24,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildFloatingContactButton(
+                context: context,
+                backgroundColor: const Color(0xFF2563EB), // Blue for Call Us
+                icon: const Icon(Icons.phone_in_talk_rounded, color: Colors.white, size: 22),
+                tooltip: 'Call Us',
+                onTap: () => _showContactModal(context, 'Call', '+91 98765 43210'),
+              ),
+              const SizedBox(height: 12),
+              _buildFloatingContactButton(
+                context: context,
+                backgroundColor: const Color(0xFF25D366), // Official Green for WhatsApp
+                icon: const WhatsAppIcon(size: 22, color: Colors.white),
+                tooltip: 'WhatsApp',
+                onTap: () => _showContactModal(context, 'WhatsApp', '+91 98765 43210'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFloatingContactButton({
+    required BuildContext context,
+    required Color backgroundColor,
+    required Widget icon,
+    required String tooltip,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: backgroundColor.withValues(alpha: 0.35),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: backgroundColor,
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Tooltip(
+            message: tooltip,
+            child: Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: icon,
+            ),
+          ),
         ),
       ),
     );
@@ -237,16 +302,6 @@ class HomeScreen extends StatelessWidget {
           icon: Icons.local_shipping_rounded,
           title: 'Renovation Van',
           onTap: () => onNavigateTab(3),
-        ),
-        QuickActionCard(
-          icon: Icons.phone_callback_rounded,
-          title: 'Call Us',
-          onTap: () => _showContactModal(context, 'Call', '+91 98765 43210'),
-        ),
-        QuickActionCard(
-          customIcon: const WhatsAppIcon(size: 15, color: AppColors.darkCharcoal),
-          title: 'WhatsApp',
-          onTap: () => _showContactModal(context, 'WhatsApp', '+91 98765 43210'),
         ),
       ],
     );
