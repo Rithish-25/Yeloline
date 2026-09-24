@@ -20,6 +20,7 @@ import {
   Truck,
   MessageSquare,
   FileText,
+  FileSpreadsheet,
   Eye
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -27,7 +28,6 @@ import Modal from '../../components/common/Modal/Modal';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import DataTable from '../../components/common/DataTable/DataTable';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './UserMasterModule.css';
 
 const CUSTOMER_COLUMNS_SPEC = [
@@ -43,7 +43,8 @@ export default function UserMasterModule() {
     enquiries = [],
     appointments = [],
     contactEnquiries = [],
-    exportToCSV
+    exportToXLS,
+    exportToPDF
   } = useApp();
 
   const [customCustomers, setCustomCustomers] = useState([]);
@@ -293,12 +294,12 @@ export default function UserMasterModule() {
         </div>
 
         <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-          <button className="btn-secondary" onClick={() => setIsImportModalOpen(true)}>
-            <Upload size={16} /> Import CSV
+          <button className="btn-secondary" onClick={() => exportToXLS(filteredCustomers, 'Yeloline_Customers_Database', 'Customers Database', CUSTOMER_COLUMNS_SPEC)}>
+            <FileSpreadsheet size={16} /> Export XLS
           </button>
 
-          <button className="btn-secondary" onClick={() => setIsExportModalOpen(true)}>
-            <Download size={16} /> Export CSV
+          <button className="btn-secondary" onClick={() => exportToPDF(filteredCustomers, 'Yeloline_Customers_Database', 'Customers Database', CUSTOMER_COLUMNS_SPEC)}>
+            <FileText size={16} /> Export PDF
           </button>
 
           <button className="btn-primary" onClick={() => {
@@ -569,19 +570,6 @@ export default function UserMasterModule() {
           title="Import Customers from CSV"
           columnsSpec={CUSTOMER_COLUMNS_SPEC}
           onImport={handleCSVImport}
-        />
-      )}
-
-      {/* CSV Export Modal */}
-      {isExportModalOpen && (
-        <CSVExportModal
-          isOpen={isExportModalOpen}
-          onClose={() => setIsExportModalOpen(false)}
-          title="Export Customers Database to CSV"
-          data={filteredCustomers}
-          columnsSpec={CUSTOMER_COLUMNS_SPEC}
-          defaultFilename="yeloline_customers_database.csv"
-          onExport={(dataToExport, filename) => exportToCSV(dataToExport, filename)}
         />
       )}
     </div>

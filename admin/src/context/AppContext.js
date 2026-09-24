@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { exportToXLS, exportToPDF } from '../utils/exportUtils';
 import {
   initialEnquiries,
   initialProjects,
@@ -563,6 +564,8 @@ export const AppProvider = ({ children }) => {
         importAppointments,
         monthlyFinancialOverview,
         exportToCSV,
+        exportToXLS,
+        exportToPDF,
         // Contact Enquiries
         contactEnquiries,
         addContactEnquiry,

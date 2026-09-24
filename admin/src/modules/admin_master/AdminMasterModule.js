@@ -23,7 +23,9 @@ import {
   LayoutGrid,
   List,
   Tag,
-  Filter
+  Filter,
+  FileSpreadsheet,
+  FileText
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Modal from '../../components/common/Modal/Modal';
@@ -132,7 +134,9 @@ export default function AdminMasterModule() {
     toggleDropdownOptionStatus,
     resetDropdownMastersToDefault,
     adminMasterGroupFilter,
-    setAdminMasterGroupFilter
+    setAdminMasterGroupFilter,
+    exportToXLS,
+    exportToPDF
   } = useApp();
 
   const activeGroup = adminMasterGroupFilter || 'All';
@@ -368,6 +372,22 @@ export default function AdminMasterModule() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button
+            className="btn-secondary"
+            onClick={() => exportToXLS(filteredOptions, 'Yeloline_System_Masters', 'System Master Options')}
+          >
+            <FileSpreadsheet size={16} />
+            <span>Export XLS</span>
+          </button>
+
+          <button
+            className="btn-secondary"
+            onClick={() => exportToPDF(filteredOptions, 'Yeloline_System_Masters', 'System Master Options')}
+          >
+            <FileText size={16} />
+            <span>Export PDF</span>
+          </button>
+
           <button
             className="btn-secondary"
             onClick={() => {

@@ -10,7 +10,8 @@ import {
   Eye,
   MapPin,
   Phone,
-  Mail
+  Mail,
+  FileSpreadsheet
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -27,7 +28,6 @@ import MetricCard from '../../components/common/MetricCard/MetricCard';
 import DataTable from '../../components/common/DataTable/DataTable';
 import StatusBadge from '../../components/common/StatusBadge/StatusBadge';
 import Modal from '../../components/common/Modal/Modal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './DashboardModule.css';
 
 const FINANCIAL_COLUMNS_SPEC = [
@@ -70,7 +70,8 @@ export default function DashboardModule() {
     payments,
     appointments,
     monthlyFinancialOverview,
-    exportToCSV
+    exportToXLS,
+    exportToPDF
   } = useApp();
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -114,8 +115,11 @@ export default function DashboardModule() {
           <p className="dashboard-subtitle">Real-time site metrics, quote leads, and financial summary overview</p>
         </div>
         <div className="header-action-group">
-          <button className="btn-primary" onClick={() => setIsExportModalOpen(true)}>
-            <Download size={16} /> Export Financial CSV
+          <button className="btn-secondary" onClick={() => exportToXLS(enquiries, 'Yeloline_Dashboard_Export', 'Dashboard & Financial Analytics', FINANCIAL_COLUMNS_SPEC)}>
+            <FileSpreadsheet size={16} /> Export XLS
+          </button>
+          <button className="btn-secondary" onClick={() => exportToPDF(enquiries, 'Yeloline_Dashboard_Export', 'Dashboard & Financial Analytics', FINANCIAL_COLUMNS_SPEC)}>
+            <FileText size={16} /> Export PDF
           </button>
         </div>
       </div>
@@ -361,17 +365,6 @@ export default function DashboardModule() {
           </div>
         </Modal>
       )}
-
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        title="Export Financial Analytics & Leads CSV"
-        moduleName="Financial Overview & Leads"
-        columns={FINANCIAL_COLUMNS_SPEC}
-        data={enquiries}
-        onConfirmExport={() => exportToCSV(enquiries, 'Yeloline_Dashboard_Export')}
-      />
     </div>
   );
 }

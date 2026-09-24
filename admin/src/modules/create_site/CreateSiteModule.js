@@ -20,7 +20,9 @@ import {
   Wrench,
   Grid,
   List,
-  AlertCircle
+  AlertCircle,
+  FileSpreadsheet,
+  FileText
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
@@ -29,7 +31,6 @@ import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CoverImageUploader from '../../components/common/CoverImageUploader/CoverImageUploader';
 import MultiImageUploader from '../../components/common/MultiImageUploader/MultiImageUploader';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './CreateSiteModule.css';
 
 const STRUCTURE_TYPES = [
@@ -128,7 +129,8 @@ export default function CreateSiteModule() {
     deleteSite,
     importSites,
     SITE_COLUMNS_SPEC,
-    exportToCSV
+    exportToXLS,
+    exportToPDF
   } = useApp();
 
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'table'
@@ -363,18 +365,18 @@ export default function CreateSiteModule() {
         <div className="module-header-actions">
           <button
             className="btn btn-secondary"
-            onClick={() => setIsImportModalOpen(true)}
+            onClick={() => exportToXLS(filteredSites, 'Yeloline_Construction_Sites', 'Construction Site Management', SITE_COLUMNS_SPEC)}
           >
-            <Upload size={16} />
-            <span>Import CSV</span>
+            <FileSpreadsheet size={16} />
+            <span>Export XLS</span>
           </button>
 
           <button
             className="btn btn-secondary"
-            onClick={() => setIsExportModalOpen(true)}
+            onClick={() => exportToPDF(filteredSites, 'Yeloline_Construction_Sites', 'Construction Site Management', SITE_COLUMNS_SPEC)}
           >
-            <Download size={16} />
-            <span>Export CSV</span>
+            <FileText size={16} />
+            <span>Export PDF</span>
           </button>
 
           <button className="btn btn-primary" onClick={openCreateModal}>
@@ -1126,18 +1128,6 @@ export default function CreateSiteModule() {
           flooring_spec: "Vitrified Tiles (Premium)",
           description: "4BHK luxury villa"
         }}
-      />
-
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        onExport={() => {
-          exportToCSV(sites, "Yeloline_Construction_Sites_Export");
-          setIsExportModalOpen(false);
-        }}
-        recordCount={sites.length}
-        moduleTitle="Construction Sites"
       />
     </div>
   );

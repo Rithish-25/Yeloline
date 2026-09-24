@@ -7,7 +7,6 @@ import Modal from '../../components/common/Modal/Modal';
 import MetricCard from '../../components/common/MetricCard/MetricCard';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './MaterialPurchaseModule.css';
 
 const MATERIAL_CATEGORIES = [
@@ -54,7 +53,7 @@ const SAMPLE_PURCHASE_ROW = {
 };
 
 export default function MaterialPurchaseModule() {
-  const { purchases, addPurchase, updatePurchaseDeliveryStatus, importPurchases, exportToCSV } = useApp();
+  const { purchases, addPurchase, updatePurchaseDeliveryStatus, importPurchases, exportToXLS, exportToPDF } = useApp();
   const [selectedMaterialFilter, setSelectedMaterialFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -161,15 +160,15 @@ export default function MaterialPurchaseModule() {
           <div className="csv-action-group">
             <button
               className="btn-secondary"
-              onClick={() => setIsImportModalOpen(true)}
+              onClick={() => exportToXLS(filteredPurchases, 'Yeloline_Material_Purchases', 'Material Purchase Orders', PURCHASE_COLUMNS_SPEC)}
             >
-              <Upload size={16} /> Import CSV
+              <FileSpreadsheet size={16} /> Export XLS
             </button>
             <button
               className="btn-secondary"
-              onClick={() => setIsExportModalOpen(true)}
+              onClick={() => exportToPDF(filteredPurchases, 'Yeloline_Material_Purchases', 'Material Purchase Orders', PURCHASE_COLUMNS_SPEC)}
             >
-              <Download size={16} /> Export CSV
+              <FileText size={16} /> Export PDF
             </button>
           </div>
         </div>
@@ -401,17 +400,6 @@ export default function MaterialPurchaseModule() {
         compulsoryColumns={PURCHASE_COLUMNS_SPEC}
         sampleRow={SAMPLE_PURCHASE_ROW}
         onImport={(data) => importPurchases(data)}
-      />
-
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        title="Export Material Purchase Orders CSV"
-        moduleName="Material Purchase Orders"
-        columns={PURCHASE_COLUMNS_SPEC}
-        data={purchases}
-        onConfirmExport={() => exportToCSV(purchases, 'Yeloline_Material_Purchases')}
       />
     </div>
   );

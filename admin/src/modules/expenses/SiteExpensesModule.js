@@ -5,7 +5,6 @@ import DataTable from '../../components/common/DataTable/DataTable';
 import Modal from '../../components/common/Modal/Modal';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './SiteExpensesModule.css';
 
 const EXPENSE_TYPES = [
@@ -60,7 +59,7 @@ const SAMPLE_EXPENSE_ROW = {
 };
 
 export default function SiteExpensesModule() {
-  const { expenses, projects, addExpense, deleteExpense, importExpenses, exportToCSV } = useApp();
+  const { expenses, projects, addExpense, deleteExpense, importExpenses, exportToXLS, exportToPDF } = useApp();
 
   const [selectedSiteName, setSelectedSiteName] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -212,13 +211,13 @@ export default function SiteExpensesModule() {
           <div className="csv-action-group">
             <button
               className="btn-secondary"
-              onClick={() => exportToCSV(expenses, 'Yeloline_Site_Expenses')}
+              onClick={() => exportToXLS(filteredExpenses, 'Yeloline_Site_Expenses', 'Site Expense Tracker', EXPENSE_COLUMNS_SPEC)}
             >
               <FileSpreadsheet size={16} /> Export XLS
             </button>
             <button
               className="btn-secondary"
-              onClick={() => window.print()}
+              onClick={() => exportToPDF(filteredExpenses, 'Yeloline_Site_Expenses', 'Site Expense Tracker', EXPENSE_COLUMNS_SPEC)}
             >
               <FileText size={16} /> Export PDF
             </button>
@@ -516,17 +515,6 @@ export default function SiteExpensesModule() {
         compulsoryColumns={EXPENSE_COLUMNS_SPEC}
         sampleRow={SAMPLE_EXPENSE_ROW}
         onImport={(data) => importExpenses(data)}
-      />
-
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        title="Export Site Expenses CSV"
-        moduleName="Site Expenses"
-        columns={EXPENSE_COLUMNS_SPEC}
-        data={expenses}
-        onConfirmExport={() => exportToCSV(expenses, 'Yeloline_Site_Expenses')}
       />
     </div>
   );

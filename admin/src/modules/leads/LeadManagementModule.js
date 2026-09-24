@@ -6,7 +6,6 @@ import StatusBadge from '../../components/common/StatusBadge/StatusBadge';
 import Modal from '../../components/common/Modal/Modal';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './LeadManagementModule.css';
 
 const STAGE_OPTIONS = [
@@ -119,7 +118,7 @@ const SAMPLE_ENQUIRY_ROW = {
 };
 
 export default function LeadManagementModule() {
-  const { enquiries, addEnquiry, updateEnquiryStage, deleteEnquiry, importEnquiries, exportToCSV } = useApp();
+  const { enquiries, addEnquiry, updateEnquiryStage, deleteEnquiry, importEnquiries, exportToXLS, exportToPDF } = useApp();
   const [selectedStageFilter, setSelectedStageFilter] = useState('ALL');
   
   // Modals state
@@ -284,13 +283,13 @@ export default function LeadManagementModule() {
           <div className="csv-action-group">
             <button
               className="btn-secondary"
-              onClick={() => exportToCSV(enquiries, 'Yeloline_Quote_Leads')}
+              onClick={() => exportToXLS(filteredEnquiries, 'Yeloline_Quote_Leads', 'Quote & Enquiry Lead Management', ENQUIRY_COLUMNS_SPEC)}
             >
               <FileSpreadsheet size={16} /> Export XLS
             </button>
             <button
               className="btn-secondary"
-              onClick={() => window.print()}
+              onClick={() => exportToPDF(filteredEnquiries, 'Yeloline_Quote_Leads', 'Quote & Enquiry Lead Management', ENQUIRY_COLUMNS_SPEC)}
             >
               <FileText size={16} /> Export PDF
             </button>
@@ -622,17 +621,6 @@ export default function LeadManagementModule() {
         compulsoryColumns={ENQUIRY_COLUMNS_SPEC}
         sampleRow={SAMPLE_ENQUIRY_ROW}
         onImport={(data) => importEnquiries(data)}
-      />
-
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        title="Export Quote & Enquiry Leads CSV"
-        moduleName="Quote & Enquiry Leads"
-        columns={ENQUIRY_COLUMNS_SPEC}
-        data={enquiries}
-        onConfirmExport={() => exportToCSV(enquiries, 'Yeloline_Quotes_Leads')}
       />
 
       {/* Full Enquiry Details View Modal */}

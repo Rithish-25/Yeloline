@@ -16,7 +16,9 @@ import {
   Building,
   Upload,
   Download,
-  Check
+  Check,
+  FileSpreadsheet,
+  FileText
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
@@ -24,7 +26,6 @@ import StatusBadge from '../../components/common/StatusBadge/StatusBadge';
 import Modal from '../../components/common/Modal/Modal';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './ContactEnquiryModule.css';
 
 const CONTACT_COLUMNS_SPEC = [
@@ -43,7 +44,8 @@ export default function ContactEnquiryModule() {
     addContactEnquiry,
     updateContactEnquiryStatus,
     deleteContactEnquiry,
-    exportToCSV
+    exportToXLS,
+    exportToPDF
   } = useApp();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -217,12 +219,12 @@ export default function ContactEnquiryModule() {
           </div>
 
           <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-            <button className="btn-secondary" onClick={() => setIsImportModalOpen(true)}>
-              <Upload size={16} /> Import CSV
+            <button className="btn-secondary" onClick={() => exportToXLS(filteredEnquiries, 'Yeloline_Contact_Enquiries', 'Contact Us Enquiries', CONTACT_COLUMNS_SPEC)}>
+              <FileSpreadsheet size={16} /> Export XLS
             </button>
 
-            <button className="btn-secondary" onClick={() => setIsExportModalOpen(true)}>
-              <Download size={16} /> Export CSV
+            <button className="btn-secondary" onClick={() => exportToPDF(filteredEnquiries, 'Yeloline_Contact_Enquiries', 'Contact Us Enquiries', CONTACT_COLUMNS_SPEC)}>
+              <FileText size={16} /> Export PDF
             </button>
 
             <button className="btn-primary" onClick={() => setIsAddModalOpen(true)}>
@@ -486,17 +488,6 @@ export default function ContactEnquiryModule() {
         />
       )}
 
-      {/* CSV Export Modal */}
-      {isExportModalOpen && (
-        <CSVExportModal
-          isOpen={isExportModalOpen}
-          onClose={() => setIsExportModalOpen(false)}
-          title="Export Contact Enquiries to CSV"
-          data={filteredEnquiries}
-          columnsSpec={CONTACT_COLUMNS_SPEC}
-          defaultFilename="yeloline_contact_enquiries.csv"
-          onExport={(dataToExport, filename) => exportToCSV(dataToExport, filename)}
-        />
       )}
     </div>
   );

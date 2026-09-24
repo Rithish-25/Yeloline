@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, CheckCircle, CreditCard, Printer, Filter } from 'lucide-react';
+import { Plus, Download, Upload, CheckCircle, CreditCard, Printer, Filter, FileSpreadsheet, FileText } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import Modal from '../../components/common/Modal/Modal';
 import MetricCard from '../../components/common/MetricCard/MetricCard';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './ClientPaymentsModule.css';
 
 const MILESTONES = [
@@ -51,7 +50,7 @@ const SAMPLE_PAYMENT_ROW = {
 };
 
 export default function ClientPaymentsModule() {
-  const { payments, addPayment, importPayments, exportToCSV } = useApp();
+  const { payments, addPayment, importPayments, exportToXLS, exportToPDF } = useApp();
   const [selectedMilestoneFilter, setSelectedMilestoneFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -143,15 +142,15 @@ export default function ClientPaymentsModule() {
           <div className="csv-action-group">
             <button
               className="btn-secondary"
-              onClick={() => setIsImportModalOpen(true)}
+              onClick={() => exportToXLS(filteredPayments, 'Yeloline_Milestone_Payments', 'Client Payments & Milestones', PAYMENT_COLUMNS_SPEC)}
             >
-              <Upload size={16} /> Import CSV
+              <FileSpreadsheet size={16} /> Export XLS
             </button>
             <button
               className="btn-secondary"
-              onClick={() => setIsExportModalOpen(true)}
+              onClick={() => exportToPDF(filteredPayments, 'Yeloline_Milestone_Payments', 'Client Payments & Milestones', PAYMENT_COLUMNS_SPEC)}
             >
-              <Download size={16} /> Export CSV
+              <FileText size={16} /> Export PDF
             </button>
           </div>
         </div>
@@ -362,17 +361,6 @@ export default function ClientPaymentsModule() {
         compulsoryColumns={PAYMENT_COLUMNS_SPEC}
         sampleRow={SAMPLE_PAYMENT_ROW}
         onImport={(data) => importPayments(data)}
-      />
-
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        title="Export Client Milestone Payments CSV"
-        moduleName="Client Milestone Payments"
-        columns={PAYMENT_COLUMNS_SPEC}
-        data={payments}
-        onConfirmExport={() => exportToCSV(payments, 'Yeloline_Milestone_Payments')}
       />
     </div>
   );

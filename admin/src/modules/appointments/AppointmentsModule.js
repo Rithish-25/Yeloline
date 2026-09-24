@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Plus, Download, Upload, Truck, Phone, Calendar, CheckCircle2, Filter, Eye, MapPin, Wrench, Clock, FileText } from 'lucide-react';
+import { Plus, Download, Upload, Truck, Phone, Calendar, CheckCircle2, Filter, Eye, MapPin, Wrench, Clock, FileText, FileSpreadsheet } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import DataTable from '../../components/common/DataTable/DataTable';
 import Modal from '../../components/common/Modal/Modal';
 import MetricCard from '../../components/common/MetricCard/MetricCard';
 import CustomSelect from '../../components/common/CustomSelect/CustomSelect';
 import CSVImportModal from '../../components/common/CSVImportModal/CSVImportModal';
-import CSVExportModal from '../../components/common/CSVExportModal/CSVExportModal';
 import './AppointmentsModule.css';
 
 const SERVICES_LIST = [
@@ -48,7 +47,7 @@ const SAMPLE_APPOINTMENT_ROW = {
 };
 
 export default function AppointmentsModule() {
-  const { appointments, addAppointment, updateAppointmentStatus, importAppointments, exportToCSV } = useApp();
+  const { appointments, addAppointment, updateAppointmentStatus, importAppointments, exportToXLS, exportToPDF } = useApp();
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -170,15 +169,15 @@ export default function AppointmentsModule() {
           <div className="csv-action-group">
             <button
               className="btn-secondary"
-              onClick={() => setIsImportModalOpen(true)}
+              onClick={() => exportToXLS(filteredAppointments, 'Yeloline_Renovation_Appointments', 'Renovation Van & Site Appointments', APPOINTMENT_COLUMNS_SPEC)}
             >
-              <Upload size={16} /> Import CSV
+              <FileSpreadsheet size={16} /> Export XLS
             </button>
             <button
               className="btn-secondary"
-              onClick={() => setIsExportModalOpen(true)}
+              onClick={() => exportToPDF(filteredAppointments, 'Yeloline_Renovation_Appointments', 'Renovation Van & Site Appointments', APPOINTMENT_COLUMNS_SPEC)}
             >
-              <Download size={16} /> Export CSV
+              <FileText size={16} /> Export PDF
             </button>
           </div>
         </div>
@@ -468,16 +467,6 @@ export default function AppointmentsModule() {
         onImport={(data) => importAppointments(data)}
       />
 
-      {/* CSV Export Modal */}
-      <CSVExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        title="Export Renovation Appointments CSV"
-        moduleName="Renovation Appointments"
-        columns={APPOINTMENT_COLUMNS_SPEC}
-        data={appointments}
-        onConfirmExport={() => exportToCSV(appointments, 'Yeloline_Renovation_Appointments')}
-      />
     </div>
   );
 }

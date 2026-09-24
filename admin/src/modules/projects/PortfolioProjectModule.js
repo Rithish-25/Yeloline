@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Star, MapPin, Clock, Edit3, Trash2, Layers, Filter, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Plus, Star, MapPin, Clock, Edit3, Trash2, Layers, Filter, CheckCircle2, ShieldCheck, FileSpreadsheet, FileText } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import Modal from '../../components/common/Modal/Modal';
 import MultiImageUploader from '../../components/common/MultiImageUploader/MultiImageUploader';
@@ -29,7 +29,9 @@ export default function PortfolioProjectModule() {
     deleteProject,
     toggleFeaturedProject,
     masterHighlights,
-    addMasterHighlight
+    addMasterHighlight,
+    exportToXLS,
+    exportToPDF
   } = useApp();
 
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -199,9 +201,17 @@ export default function PortfolioProjectModule() {
           <h1 className="dashboard-title">Portfolio Project Management</h1>
           <p className="dashboard-subtitle">Upload & showcase finished and ongoing construction showcase projects for client mobile app</p>
         </div>
-        <button className="btn-primary" onClick={openCreateModal}>
-          <Plus size={16} /> Create New Project
-        </button>
+        <div className="header-action-group" style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+          <button className="btn-secondary" onClick={() => exportToXLS(filteredProjects, 'Yeloline_Portfolio_Projects', 'Portfolio Projects Showcase')}>
+            <FileSpreadsheet size={16} /> Export XLS
+          </button>
+          <button className="btn-secondary" onClick={() => exportToPDF(filteredProjects, 'Yeloline_Portfolio_Projects', 'Portfolio Projects Showcase')}>
+            <FileText size={16} /> Export PDF
+          </button>
+          <button className="btn-primary" onClick={openCreateModal}>
+            <Plus size={16} /> Create New Project
+          </button>
+        </div>
       </div>
 
       {/* Category & Status Filter Bar */}
