@@ -42,12 +42,12 @@
 }
 
 .sidebar-divider {
-  margin: 16px 12px 10px;
+  margin: 14px 2px;
   height: 2px;
-  background: linear-gradient(90deg, #FACC15 0%, #EAB308 30%, #475569 100%);
-  border-radius: 99px;
-  box-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
-  opacity: 0.95;
+  background: linear-gradient(90deg, rgba(250, 204, 21, 0.6) 0%, rgba(250, 204, 21, 0.3) 70%, rgba(255, 255, 255, 0.1) 100%);
+  border-top: 2px solid rgba(250, 204, 21, 0.5);
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
+  opacity: 1;
 }
 
 .sidebar-nav-item {
@@ -129,6 +129,7 @@
 }
 
 @media (min-width: 1025px) {
+
   .left-sidebar,
   .left-sidebar.collapsed {
     width: 290px !important;
@@ -203,4 +204,3 @@
   font-weight: 700;
   border-left: 2px solid var(--primary-yellow);
 }
-

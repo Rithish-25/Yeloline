@@ -604,3 +604,144 @@ export const initialContactEnquiries = [
   }
 ];
 
+export const initialSites = [
+  {
+    site_id: "SITE-101",
+    site_name: "Modern Minimalist Villa - Perundurai",
+    client_name: "Ramesh Sundaram",
+    client_phone: "+91 98421 88321",
+    client_email: "ramesh.s@gmail.com",
+    location: "Perundurai Road, Erode",
+    structure_type: "Villa",
+    builtup_area_sqft: 3200,
+    number_of_floors: "G + 1 Floor",
+    estimated_budget: 7200000,
+    supervisor_in_charge: "Er. S. Prakash (Senior Engineer)",
+    start_date: "2026-02-15",
+    target_completion_date: "2026-11-30",
+    status: "In Progress",
+    progress_percentage: 65,
+    cement_brand: "UltraTech PPC (Premium)",
+    steel_brand: "TATA Tiscon 550D (High Strength)",
+    bricks_spec: "Red Bricks (Premium)",
+    flooring_spec: "Vitrified Tiles (Premium)",
+    description: "Contemporary 4BHK Villa project with structural RCC frame, modular kitchen & terrace garden.",
+    cover_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+    gallery_images: [
+      { id: "site-img-1", url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80", tag: "Elevation" },
+      { id: "site-img-2", url: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80", tag: "Living Room" }
+    ]
+  },
+  {
+    site_id: "SITE-102",
+    site_name: "Grand Emerald Commercial Hub",
+    client_name: "Karthik Subramanian",
+    client_phone: "+91 94432 99812",
+    client_email: "karthik.s@techcorp.io",
+    location: "Collectorate Area, Erode",
+    structure_type: "Commercial Building",
+    builtup_area_sqft: 5500,
+    number_of_floors: "G + 2 Floors",
+    estimated_budget: 14300000,
+    supervisor_in_charge: "Er. M. Rajan (Site Manager)",
+    start_date: "2026-01-10",
+    target_completion_date: "2027-01-15",
+    status: "Structure Phase",
+    progress_percentage: 45,
+    cement_brand: "ACC PPC (Premium)",
+    steel_brand: "SAIL TMT (Fe 550)",
+    bricks_spec: "Fly Ash Bricks (Eco Friendly)",
+    flooring_spec: "Granite Flooring (Premium)",
+    description: "Multi-story commercial office building featuring structural heavy-duty steel & glass façade.",
+    cover_image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+    gallery_images: [
+      { id: "site-img-3", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80", tag: "Elevation" }
+    ]
+  },
+  {
+    site_id: "SITE-103",
+    site_name: "Heritage Home Renovation",
+    client_name: "Anand & Lakshmi Krishnan",
+    client_phone: "+91 98940 54321",
+    client_email: "lakshmi.k@yahoo.in",
+    location: "Bhavani Main Rd, Erode",
+    structure_type: "Renovation & Remodeling",
+    builtup_area_sqft: 1800,
+    number_of_floors: "G + 1 Floor",
+    estimated_budget: 2520000,
+    supervisor_in_charge: "Er. K. Velumani",
+    start_date: "2026-04-01",
+    target_completion_date: "2026-09-30",
+    status: "Finishing Phase",
+    progress_percentage: 85,
+    cement_brand: "UltraTech PPC (Premium)",
+    steel_brand: "TATA Tiscon 550D (High Strength)",
+    bricks_spec: "Red Bricks (Premium)",
+    flooring_spec: "Vitrified Tiles (Premium)",
+    description: "Complete remodeling of 15-year old traditional bungalow with structural retrofit and top floor expansion.",
+    cover_image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+    gallery_images: []
+  },
+  {
+    site_id: "SITE-104",
+    site_name: "Green Valley Gated Residence",
+    client_name: "Priya Venkatesh",
+    client_phone: "+91 97892 11045",
+    client_email: "priya.v@outlook.com",
+    location: "Thindal, Erode",
+    structure_type: "Residential House",
+    builtup_area_sqft: 2400,
+    number_of_floors: "G + 1 Floor",
+    estimated_budget: 4680000,
+    supervisor_in_charge: "Er. S. Prakash (Senior Engineer)",
+    start_date: "2026-05-10",
+    target_completion_date: "2026-12-20",
+    status: "Foundation Phase",
+    progress_percentage: 25,
+    cement_brand: "Ambuja PPC (Premium)",
+    steel_brand: "JSW Neosteel (Premium)",
+    bricks_spec: "AAC Blocks (Lightweight)",
+    flooring_spec: "Vitrified Tiles (Premium)",
+    description: "Modern duplex home built with lightweight AAC block masonry and M30 grade RCC foundation.",
+    cover_image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+    gallery_images: []
+  }
+];
+
+export const SITE_COLUMNS_SPEC = [
+  { key: "site_id", label: "Site ID", type: "String", required: true, example: "SITE-101" },
+  { key: "site_name", label: "Site Name", type: "String", required: true, example: "Modern Minimalist Villa - Perundurai" },
+  { key: "client_name", label: "Client Name", type: "String", required: true, example: "Ramesh Sundaram" },
+  { key: "client_phone", label: "Client Phone", type: "String", required: true, example: "+91 98421 88321" },
+  { key: "client_email", label: "Client Email", type: "String", required: false, example: "ramesh.s@gmail.com" },
+  { key: "location", label: "Location / Address", type: "String", required: true, example: "Perundurai Road, Erode" },
+  { key: "structure_type", label: "Structure Type", type: "String", required: true, example: "Villa" },
+  { key: "builtup_area_sqft", label: "Area (sq ft)", type: "Number", required: true, example: "3200" },
+  { key: "number_of_floors", label: "Floors", type: "String", required: true, example: "G + 1 Floor" },
+  { key: "estimated_budget", label: "Estimated Budget (₹)", type: "Number", required: true, example: "7200000" },
+  { key: "supervisor_in_charge", label: "Site Supervisor", type: "String", required: true, example: "Er. S. Prakash" },
+  { key: "start_date", label: "Start Date", type: "Date", required: true, example: "2026-02-15" },
+  { key: "target_completion_date", label: "Target Completion Date", type: "Date", required: true, example: "2026-11-30" },
+  { key: "status", label: "Status", type: "String", required: true, example: "In Progress" },
+  { key: "progress_percentage", label: "Progress %", type: "Number", required: false, example: "65" },
+  { key: "cement_brand", label: "Cement Brand", type: "String", required: false, example: "UltraTech PPC (Premium)" },
+  { key: "steel_brand", label: "Steel Brand", type: "String", required: false, example: "TATA Tiscon 550D" },
+  { key: "bricks_spec", label: "Bricks / Blocks Spec", type: "String", required: false, example: "Red Bricks (Premium)" },
+  { key: "flooring_spec", label: "Flooring Spec", type: "String", required: false, example: "Vitrified Tiles (Premium)" },
+  { key: "description", label: "Notes / Description", type: "String", required: false, example: "Turnkey luxury villa" }
+];
+
+export const initialCompanySettings = {
+  whatsapp_number: "+91 98421 88321",
+  contact_number: "+91 98421 88321",
+  secondary_phone: "+91 97892 11045",
+  support_email: "contact@yeloline.com",
+  office_address: "No. 45, Perundurai Road, Near Golden City, Erode - 638011, Tamil Nadu",
+  business_hours: "Monday - Saturday: 8:30 AM - 7:00 PM",
+  maps_link: "https://maps.google.com/?q=Yeloline+Construction+Erode",
+  website_url: "https://yeloline.com",
+  instagram_url: "https://instagram.com/yeloline_constructions",
+  facebook_url: "https://facebook.com/yelolineconstructions"
+};
+
+

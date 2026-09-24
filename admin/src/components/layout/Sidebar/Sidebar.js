@@ -19,7 +19,8 @@ import {
   Wrench,
   ShieldCheck,
   FileText,
-  MessageSquare
+  MessageSquare,
+  Settings
 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import './Sidebar.css';
@@ -96,6 +97,11 @@ export default function Sidebar() {
   ];
 
   const adminCoreItems = [
+    {
+      id: 'create_site',
+      label: 'Create Site',
+      icon: Building2
+    },
     {
       id: 'site_expenses',
       label: 'Site Expense Tracker',
@@ -248,6 +254,14 @@ export default function Sidebar() {
             </div>
           )}
         </div>
+
+        <div className="sidebar-divider" />
+
+        {renderNavItem({
+          id: 'settings',
+          label: 'Settings',
+          icon: Settings
+        })}
       </div>
 
       <div className="sidebar-footer">

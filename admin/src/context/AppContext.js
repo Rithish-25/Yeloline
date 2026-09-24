@@ -11,7 +11,10 @@ import {
   initialUsers,
   initialDropdownMasters,
   masterCategoriesMeta,
-  initialContactEnquiries
+  initialContactEnquiries,
+  initialSites,
+  SITE_COLUMNS_SPEC,
+  initialCompanySettings
 } from '../data/initialData';
 
 const AppContext = createContext();
@@ -93,6 +96,26 @@ export const AppProvider = ({ children }) => {
   const [purchases, setPurchases] = useState(initialPurchases);
   const [payments, setPayments] = useState(initialPayments);
   const [appointments, setAppointments] = useState(initialAppointments);
+  const [sites, setSites] = useState(initialSites);
+
+  // Settings State & Handlers
+  const [companySettings, setCompanySettingsState] = useState(() => {
+    const saved = localStorage.getItem('yeloline_company_settings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return initialCompanySettings;
+      }
+    }
+    return initialCompanySettings;
+  });
+
+  const updateCompanySettings = (newSettings) => {
+    setCompanySettingsState(newSettings);
+    localStorage.setItem('yeloline_company_settings', JSON.stringify(newSettings));
+    addNotification('Company contact numbers & WhatsApp settings updated successfully!');
+  };
 
   // User Master States & Handlers
   const [users, setUsers] = useState(initialUsers);
@@ -265,6 +288,51 @@ export const AppProvider = ({ children }) => {
 
   const toggleFeaturedProject = (project_id) => {
     setProjects(prev => prev.map(p => p.project_id === project_id ? { ...p, featured: !p.featured } : p));
+  };
+
+  // Sites Handlers
+  const addSite = (siteData) => {
+    const newSite = {
+      ...siteData,
+      site_id: `SITE-${101 + sites.length}`,
+      progress_percentage: Number(siteData.progress_percentage) || 0,
+      builtup_area_sqft: Number(siteData.builtup_area_sqft) || 0,
+      estimated_budget: Number(siteData.estimated_budget) || 0,
+      status: siteData.status || 'Planning'
+    };
+    setSites(prev => [newSite, ...prev]);
+    addNotification(`Created new site record: ${newSite.site_name} (${newSite.site_id})`);
+  };
+
+  const updateSite = (updatedSite) => {
+    setSites(prev => prev.map(s => s.site_id === updatedSite.site_id ? {
+      ...updatedSite,
+      progress_percentage: Number(updatedSite.progress_percentage) || 0,
+      builtup_area_sqft: Number(updatedSite.builtup_area_sqft) || 0,
+      estimated_budget: Number(updatedSite.estimated_budget) || 0
+    } : s));
+    addNotification(`Updated site details for ${updatedSite.site_name}`);
+  };
+
+  const deleteSite = (site_id) => {
+    const siteToDelete = sites.find(s => s.site_id === site_id);
+    setSites(prev => prev.filter(s => s.site_id !== site_id));
+    if (siteToDelete) {
+      addNotification(`Deleted site record ${siteToDelete.site_name}`);
+    }
+  };
+
+  const importSites = (importedArray) => {
+    const formatted = importedArray.map((r, idx) => ({
+      ...r,
+      site_id: r.site_id || `SITE-IMP${idx + 1}`,
+      builtup_area_sqft: Number(r.builtup_area_sqft || 0),
+      estimated_budget: Number(r.estimated_budget || 0),
+      progress_percentage: Number(r.progress_percentage || 0),
+      status: r.status || "Planning"
+    }));
+    setSites(prev => [...formatted, ...prev]);
+    addNotification(`Successfully imported ${formatted.length} construction site records from CSV`);
   };
 
   // Expenses Handlers
@@ -470,6 +538,12 @@ export const AppProvider = ({ children }) => {
         toggleFeaturedProject,
         masterHighlights,
         addMasterHighlight,
+        sites,
+        addSite,
+        updateSite,
+        deleteSite,
+        importSites,
+        SITE_COLUMNS_SPEC,
         expenses,
         addExpense,
         deleteExpense,
@@ -511,7 +585,10 @@ export const AppProvider = ({ children }) => {
         getDropdownOptionsByCategory,
         adminMasterGroupFilter,
         setAdminMasterGroupFilter,
-        selectAdminMasterGroup
+        selectAdminMasterGroup,
+        // Company Settings
+        companySettings,
+        updateCompanySettings
       }}
     >
       {children}
